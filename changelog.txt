@@ -1,0 +1,3 @@
+VERSION 0.1
+
+Made getAssociatedEntities and getAssociatedAgents in EnvironmentInterfaceStandard public.
