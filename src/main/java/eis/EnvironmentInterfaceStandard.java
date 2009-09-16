@@ -831,7 +831,7 @@ public abstract class EnvironmentInterfaceStandard {
 	 * @param entity is the entity whose percepts should be retrieved.
 	 * @return a list of percepts.
 	 */
-	protected abstract LinkedList<Percept> getAllPerceptsFromEntity(String entity);
+	protected abstract LinkedList<Percept> getAllPerceptsFromEntity(String entity) throws PerceiveException, NoEnvironmentException;
 
 	
 	

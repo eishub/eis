@@ -13,9 +13,11 @@ import eis.iilang.Percept;
 
 public class EnvironmentInterface extends EnvironmentInterfaceStandard implements Runnable {
 	
-	private Environment env = new Environment();
+	private Environment env;
 	
 	public EnvironmentInterface() {
+		
+		env = new Environment();
 		
 		try {
 

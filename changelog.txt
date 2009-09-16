@@ -1,3 +1,9 @@
-VERSION 0.1
+CURRENT VERSION
 
-Made getAssociatedEntities and getAssociatedAgents in EnvironmentInterfaceStandard public.
+- made getAssociatedEntities and getAssociatedAgents in EnvironmentInterfaceStandard public.
+- getAllPerceptsFromEntity throws exceptions now.
+
+
+RELEASE 0.1
+
+First release.

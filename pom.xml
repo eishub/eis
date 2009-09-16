@@ -7,6 +7,7 @@
 
   <build>
     <plugins>
+    
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -16,6 +17,46 @@
           <target>1.5</target>
         </configuration>
       </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>client</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>my-client</classifier>
+                <includes>
+                  <include>**/pkg1/MyClass.class</include>
+                </includes>
+                <excludes>
+                  <exclude>**/pkg2/MyClass.class</exclude>
+                </excludes>
+              </configuration>
+            </execution>
+          <execution>
+            <id>server</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>my-server</classifier>
+                <includes>
+                  <include>**/pkg1/MyClass.class</include>
+                </includes>
+                <excludes>
+                  <exclude>**/pkg2/MyClass.class</exclude>
+                </excludes>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin> 
+            
     </plugins>
   </build>
 
@@ -27,5 +68,7 @@
       </plugin>
     </plugins>
   </reporting>
+
+
 
 </project> 
