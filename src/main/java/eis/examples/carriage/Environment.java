@@ -1,4 +1,4 @@
-package carriageexample;
+package eis.examples.carriage;
 
 enum RobotAction { PUSH,WAIT };
 
@@ -8,7 +8,7 @@ public class Environment implements Runnable {
 	
 	private RobotAction robotAction1 = RobotAction.WAIT;
 	private RobotAction robotAction2 = RobotAction.WAIT;
-	private long stepNum = 0;
+	private Long stepNum = new Long(0);
 
 	private int carriagePos = 0;
 
@@ -69,41 +69,61 @@ public class Environment implements Runnable {
 
 	public void robotPush1() {
 		
-		long currStep = stepNum;
+		System.out.println("Push 1");
 		
+		Long currStep = stepNum;
+		
+		System.out.println("Set action");
+
 		robotAction1 = RobotAction.PUSH;
+
+		System.out.println("Block");
+
+		while ( currStep.equals(stepNum) );
 		
-		while (currStep == stepNum);
-		
+		System.out.println("Done Push");
+
 	}
 	
 	public void robotPush2() {
 
-		long currStep = stepNum;
+		System.out.println("Push 2");
+
+		Long currStep = stepNum;
 
 		robotAction2 = RobotAction.PUSH;
 
-		while (currStep == stepNum);
+		while ( currStep.equals(stepNum) );
 
 	}	
 	
 	public void robotWait1() {
-		
-		long currStep = stepNum;
+
+		System.out.println("Wait 1");
+
+		Long currStep = stepNum;
+
+		System.out.println("Set action");
 
 		robotAction1 = RobotAction.WAIT;
 
-		while (currStep == stepNum);
+		System.out.println("Block");
+
+		while ( currStep.equals(stepNum) );
+
+		System.out.println("Done wait 1");
 
 	}
 	
 	public void robotWait2() {
-		
-		long currStep = stepNum;
+
+		System.out.println("Wait 2");
+
+		Long currStep = stepNum;
 
 		robotAction2 = RobotAction.WAIT;
 
-		while (currStep == stepNum);
+		while ( currStep.equals(stepNum) );
 
 	}
 

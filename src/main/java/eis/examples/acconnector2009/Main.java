@@ -1,4 +1,4 @@
-package acconnector2009;
+package eis.examples.acconnector2009;
 
 import java.util.LinkedList;
 

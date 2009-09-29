@@ -1,4 +1,4 @@
-package communicationexample;
+package eis.examples.communication;
 
 import eis.AgentListener;
 import eis.EnvironmentListener;

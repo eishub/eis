@@ -2,7 +2,9 @@ CURRENT VERSION
 
 - made getAssociatedEntities and getAssociatedAgents in EnvironmentInterfaceStandard public.
 - getAllPerceptsFromEntity throws exceptions now.
-
+- added the class eis.EILoader for loading interfaces from jar-files; jar-files have to include a main-class-entry
+  in the manifest that denotes the class that is the interface; renders the method eis.EnvironmentInterfaceStandard.fromJarFile
+  deprecated; the examples have been moved into the eis.examples package
 
 RELEASE 0.1
 

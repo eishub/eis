@@ -576,14 +576,49 @@ public abstract class EnvironmentInterfaceStandard {
 			throw new RelationException("Agent \"" + agent + "\" does not exist!");
 		
 		HashSet<String> ens = agentsToEntities.get(agent);
-		
-		this.freeEntities.addAll(ens);
 	
+		this.freeEntities.addAll(ens);
+
+		// TODO use listeners
+		
 		agentsToEntities.remove(agent);
 		
 		
 	}
 
+	/**
+	 * Removes a pair from the agents-entities-relation.
+	 * 
+	 * @param agent
+	 * @param entity
+	 * @throws RelationException
+	 */
+	public final void freePair(String agent, String entity) throws RelationException {
+
+		// check if exists
+		if( !registeredAgents.contains(agent) )
+			throw new RelationException("Agent \"" + agent + "\" does not exist!");
+
+		// check if exists
+		if( !entities.contains(entity) )
+			throw new RelationException("Entity \"" + entity + "\" does not exist!");
+	
+		HashSet<String> ens = agentsToEntities.get(agent);
+		
+		if ( ens == null || ens.contains(entity) == false)
+			throw new RelationException("Agent \"" + agent + " is not associated with entity \"" + entity + "\"!");
+
+		// update mapping
+		ens.remove(entity);
+		agentsToEntities.put(agent,ens);
+		
+		// store as free entity
+		this.freeEntities.add(entity);
+
+		// TODO use listeners
+	
+	}
+	
 	/**
 	 * Returns the entities associated to a given agent.
 	 * 
@@ -860,6 +895,7 @@ public abstract class EnvironmentInterfaceStandard {
 	 * @param jarFile the jar-file from which the environment-interface is supposed to be loaded.
 	 * @return an instance of the requested environment-interface.
 	 * @throws IOException is thrown if an attempt to load fails.
+	 * @deprecated use the eis.EILoader instead
 	 */
 	public static EnvironmentInterfaceStandard fromJarFile(File jarFile) throws IOException {
 		

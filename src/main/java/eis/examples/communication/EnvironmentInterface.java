@@ -1,4 +1,4 @@
-package communicationexample;
+package eis.examples.communication;
 
 import java.util.LinkedList;
 

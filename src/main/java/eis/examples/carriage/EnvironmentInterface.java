@@ -1,4 +1,4 @@
-package carriageexample;
+package eis.examples.carriage;
 
 import java.util.LinkedList;
 

@@ -56,6 +56,12 @@ public abstract class DataContainer extends IILElement {
 		
 	}
 
+	public void addParameter(Parameter p) {
+		
+		params.add(p);
+		
+	}
+	
 	/** 
 	 * Converts a data container to a percept.
 	 * 

@@ -21,41 +21,77 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+
         <executions>
+
           <execution>
-            <id>client</id>
+            <id>carriage</id>
             <phase>package</phase>
             <goals>
               <goal>jar</goal>
             </goals>
             <configuration>
-              <classifier>my-client</classifier>
-                <includes>
-                  <include>**/pkg1/MyClass.class</include>
-                </includes>
-                <excludes>
-                  <exclude>**/pkg2/MyClass.class</exclude>
-                </excludes>
-              </configuration>
-            </execution>
+              <classifier>carriage</classifier>
+              <archive>
+                <!--index>true</index-->
+                <manifest>
+                  <mainClass>eis.examples.carriage.EnvironmentInterface</mainClass>
+                  <packageName>eis.examples.carriage</packageName>
+                </manifest>
+                <manifestEntries>
+                  <mode>development</mode>
+                  <url>${pom.url}</url>
+                </manifestEntries>
+              </archive>
+            </configuration>
+          </execution>
+
           <execution>
-            <id>server</id>
+            <id>acconnector2009</id>
             <phase>package</phase>
             <goals>
               <goal>jar</goal>
             </goals>
             <configuration>
-              <classifier>my-server</classifier>
-                <includes>
-                  <include>**/pkg1/MyClass.class</include>
-                </includes>
-                <excludes>
-                  <exclude>**/pkg2/MyClass.class</exclude>
-                </excludes>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin> 
+              <classifier>acconnector2009</classifier>
+              <archive>
+                <!--index>true</index-->
+                <manifest>
+                  <mainClass>eis.examples.acconnector2009.EnvironmentInterface</mainClass>
+                  <packageName>eis.examples.acconnector2009</packageName>
+                </manifest>
+                <manifestEntries>
+                  <mode>development</mode>
+                  <url>${pom.url}</url>
+                </manifestEntries>
+              </archive>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>communication</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>communication</classifier>
+              <archive>
+                <!--index>true</index-->
+                <manifest>
+                  <mainClass>eis.examples.communication.EnvironmentInterface</mainClass>
+                  <packageName>eis.examples.communication</packageName>
+                </manifest>
+                <manifestEntries>
+                  <mode>development</mode>
+                  <url>${pom.url}</url>
+                </manifestEntries>
+              </archive>
+            </configuration>
+          </execution>
+
+        </executions>
+      </plugin> 
             
     </plugins>
   </build>

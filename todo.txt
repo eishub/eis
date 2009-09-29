@@ -1,5 +1,0 @@
-use manifest to load interfaces from jars
-
-make visual acconnector
-
-spread to diffent listeners; register agent with name and listener 
