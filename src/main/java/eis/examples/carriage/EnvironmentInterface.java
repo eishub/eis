@@ -11,7 +11,7 @@ import eis.iilang.Numeral;
 import eis.iilang.EnvironmentCommand;
 import eis.iilang.Percept;
 
-public class EnvironmentInterface extends EnvironmentInterfaceStandard implements Runnable {
+public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 	
 	private Environment env;
 	

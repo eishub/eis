@@ -2,6 +2,7 @@ package eis.examples.communication;
 
 import java.util.LinkedList;
 
+import eis.EIDefaultImpl;
 import eis.EnvironmentInterfaceStandard;
 import eis.exceptions.EntityException;
 import eis.exceptions.EnvironmentInterfaceException;
@@ -14,7 +15,7 @@ import eis.iilang.Parameter;
 import eis.iilang.Percept;
 
 
-public class EnvironmentInterface extends EnvironmentInterfaceStandard {
+public class EnvironmentInterface extends EIDefaultImpl {
 
 	public EnvironmentInterface() {
 		

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import eis.EILoader;
 import eis.EnvironmentListener;
 import eis.EnvironmentInterfaceStandard;
 import eis.exceptions.AgentException;
@@ -25,7 +26,7 @@ public class Platform implements EnvironmentListener {
 		// 1. loading environment interface
 		try {
 
-			ei = EnvironmentInterfaceStandard.fromJarFile(new File(jarFileName));
+			ei = EILoader.fromJarFile(new File(jarFileName));
 		
 			System.out.println("Environment interface loaded.");
 			

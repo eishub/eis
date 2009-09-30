@@ -14,7 +14,7 @@ import eis.iilang.EnvironmentCommand;
 import eis.iilang.Identifier;
 import eis.iilang.Percept;
 
-public class EntitiesAndActions extends EnvironmentInterfaceStandard {
+public class EntitiesAndActions extends EIDefaultImpl {
 
 	@Override
 	public LinkedList<Percept> getAllPerceptsFromEntity(String entity) {

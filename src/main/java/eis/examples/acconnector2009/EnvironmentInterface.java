@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
+import eis.EIDefaultImpl;
 import eis.EnvironmentInterfaceStandard;
 import eis.exceptions.ActException;
 import eis.exceptions.EntityException;
@@ -28,7 +29,7 @@ import eis.iilang.Percept;
  * @author tristanbehrens
  *
  */
-public class EnvironmentInterface extends EnvironmentInterfaceStandard implements ConnectionListener, Runnable {
+public class EnvironmentInterface extends EIDefaultImpl implements ConnectionListener, Runnable {
 
 	/** Used to facilitate the EIS-to-environment connection. */
 	private HashMap<String,Connection> entitiesToConnections = new HashMap<String,Connection>(); 
