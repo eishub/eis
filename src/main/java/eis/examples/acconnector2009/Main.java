@@ -2,7 +2,9 @@ package eis.examples.acconnector2009;
 
 import java.util.LinkedList;
 
+import eis.AgentListener;
 import eis.EnvironmentListener;
+
 import eis.EnvironmentInterfaceStandard;
 import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
@@ -15,7 +17,7 @@ import eis.iilang.Identifier;
 import eis.iilang.Numeral;
 import eis.iilang.EnvironmentEvent;
 
-public class Main implements EnvironmentListener {
+public class Main implements AgentListener,EnvironmentListener {
 
 	/**
 	 * @param args

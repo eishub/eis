@@ -18,6 +18,11 @@ import eis.iilang.Percept;
 public interface EnvironmentInterfaceStandard {
 
 	/**
+	 * 
+	 */
+	static String version = "0.2";
+
+	/**
 	 * Attaches an environment-listener.
 	 * <p/> 
 	 * If the listener is already attached, nothing will happen.

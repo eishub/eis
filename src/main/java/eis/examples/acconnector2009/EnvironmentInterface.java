@@ -161,7 +161,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 		// open socket
 		try {
 
-			c = new Connection(this, server.getValue(), ((Long)port.getValue()).intValue());
+			c = new Connection(this, server.getValue(), (port.getValue()).intValue());
 
 		} catch (UnknownHostException e) {
 	

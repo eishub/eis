@@ -2,6 +2,7 @@ package eis;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -48,8 +49,9 @@ import eis.iilang.Percept;
  * @author tristanbehrens
  *
  */
-public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard {
+public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Serializable {
 	
+
 	/**
 	 * This is a list of registered agents.
 	 * <p/>
