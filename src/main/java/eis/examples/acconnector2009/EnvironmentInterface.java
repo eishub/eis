@@ -7,13 +7,11 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import eis.EIDefaultImpl;
-import eis.EnvironmentInterfaceStandard;
 import eis.exceptions.ActException;
 import eis.exceptions.EntityException;
 import eis.exceptions.EnvironmentInterfaceException;
 import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
-import eis.iilang.ActionResult;
 import eis.iilang.Identifier;
 import eis.iilang.Numeral;
 import eis.iilang.DataContainer;
@@ -139,7 +137,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	 * @return the result of the action, either connected of failed.
 	 * @throws ActException
 	 */
-	public ActionResult actionconnect(String entity, Identifier server, Numeral port, Identifier user, Identifier password) throws ActException {
+	public Percept actionconnect(String entity, Identifier server, Numeral port, Identifier user, Identifier password) throws ActException {
 
 		Connection c = this.entitiesToConnections.get(entity);
 		
@@ -181,7 +179,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 		
 		if( result == false ) {
 			
-			return new ActionResult("failed");
+			return new Percept("failed");
 		
 		}
 		
@@ -191,7 +189,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 		// start thread
 		new Thread(c).start();
 		
-		return new ActionResult("connected");
+		return new Percept("connected");
 	
 	}
 
@@ -204,7 +202,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	 * @throws ActException
 	 * @throws NoEnvironmentException
 	 */
-	public ActionResult actionmove(String entity, Identifier direction) throws ActException, NoEnvironmentException {
+	public Percept actionmove(String entity, Identifier direction) throws ActException, NoEnvironmentException {
 
 		Connection c = this.entitiesToConnections.get(entity);
 		
@@ -213,7 +211,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 		
 		c.act(direction.getValue());
 		
-		return new ActionResult("moved");
+		return new Percept("moved");
 
 		
 	}
@@ -226,7 +224,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	 * @throws ActException
 	 * @throws NoEnvironmentException
 	 */
-	public ActionResult actionskip(String entity) throws ActException, NoEnvironmentException {
+	public Percept actionskip(String entity) throws ActException, NoEnvironmentException {
 
 		Connection c = this.entitiesToConnections.get(entity);
 		
@@ -235,7 +233,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 		
 		c.act("skip");
 		
-		return new ActionResult("skipped");
+		return new Percept("skipped");
 
 		
 	}

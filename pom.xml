@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion> 
   <groupId>org.eis</groupId> 
   <artifactId>eis</artifactId> 
-  <version>0.2</version> 
+  <version>0.2rc1</version> 
 
   <build>
     <plugins>
@@ -11,10 +11,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.2</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
+          <compilerVersion>1.6</compilerVersion>
+          <fork>true</fork> 
         </configuration>
       </plugin>
       
@@ -90,6 +92,28 @@
             </configuration>
           </execution>
 
+          <execution>
+            <id>entitygenerator</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>entitygenerator</classifier>
+              <archive>
+                <!--index>true</index-->
+                <manifest>
+                  <mainClass>eis.examples.entitygenerator.GeneratorInterface</mainClass>
+                  <packageName>eis.examples.entitygenerator</packageName>
+                </manifest>
+                <manifestEntries>
+                  <mode>development</mode>
+                  <url>${pom.url}</url>
+                </manifestEntries>
+              </archive>
+            </configuration>
+          </execution>
+
         </executions>
       </plugin> 
             
@@ -105,6 +129,13 @@
     </plugins>
   </reporting>
 
-
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.7</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
 </project> 

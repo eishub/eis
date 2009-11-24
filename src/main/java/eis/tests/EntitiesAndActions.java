@@ -9,7 +9,6 @@ import eis.exceptions.EntityException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
-import eis.iilang.ActionResult;
 import eis.iilang.EnvironmentCommand;
 import eis.iilang.Identifier;
 import eis.iilang.Percept;
@@ -25,22 +24,22 @@ public class EntitiesAndActions extends EIDefaultImpl {
 	public void manageEnvironment(EnvironmentCommand command, String... args) {
 	}
 
-	public ActionResult actionmove(String entity, Identifier dir1, Identifier dir2) throws ActException {
+	public Percept actionmove(String entity, Identifier dir1, Identifier dir2) throws ActException {
 				
 		if( entity.equals("thermostat") || entity.equals("clock") )
 			throw new ActException(entity + " cannot move");
 
 		System.out.println(entity + " moves to " + dir1.getValue() + dir2.getValue() );
 
-		return new ActionResult("success");
+		return new Percept("success");
 		
 	}
 
-	public ActionResult actionturn(String entity, Identifier state) throws ActException {
+	public Percept actionturn(String entity, Identifier state) throws ActException {
 		
 		System.out.println(entity + " is turned " + state.getValue() );
 		
-		return new ActionResult("success");
+		return new Percept("success");
 		
 	}
 

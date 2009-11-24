@@ -11,7 +11,6 @@ import eis.exceptions.AgentException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
-import eis.iilang.ActionResult;
 import eis.iilang.Percept;
 import eis.iilang.Identifier;
 import eis.iilang.Numeral;
@@ -78,7 +77,7 @@ public class Main implements AgentListener,EnvironmentListener {
 		
 		}
 	
-		LinkedList<ActionResult> ar = null;
+		LinkedList<Percept> ar = null;
 		try {
 
 			Action action = new Action(

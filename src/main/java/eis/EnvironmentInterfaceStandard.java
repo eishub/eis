@@ -6,12 +6,12 @@ import java.util.LinkedList;
 import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
 import eis.exceptions.EntityException;
+import eis.exceptions.EnvironmentInterfaceException;
 import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
-import eis.iilang.ActionResult;
 import eis.iilang.EnvironmentCommand;
 import eis.iilang.Percept;
 
@@ -165,7 +165,7 @@ public interface EnvironmentInterfaceStandard {
 	 * if the agent has no associated entities, if at least one of the given entities is not 
 	 * associated, or if at least one one the actions fails.
 	 */
-	LinkedList<ActionResult> performAction(String agent, Action action,
+	LinkedList<Percept> performAction(String agent, Action action,
 			String... entities) throws ActException, NoEnvironmentException;
 
 	/** 
@@ -200,4 +200,14 @@ public interface EnvironmentInterfaceStandard {
 	 */
 	boolean isConnected();
 
+	/**
+	 * Returns the type of an entity.
+	 * 
+	 * @param entity is the entity
+	 * @return either the type of the entity
+	 * @throws EntityException is thrown if the entity does not exist.
+	 */
+	String getType(String entity) throws EntityException;
+
+	
 }

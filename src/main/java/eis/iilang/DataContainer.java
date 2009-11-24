@@ -1,5 +1,6 @@
 package eis.iilang;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -8,7 +9,7 @@ import java.util.LinkedList;
  * @author tristanbehrens
  *
  */
-public abstract class DataContainer extends IILElement {
+public abstract class DataContainer extends IILElement implements Serializable {
 	
 	/** The name of the DataContainer. */
 	protected String name = null;
@@ -16,6 +17,12 @@ public abstract class DataContainer extends IILElement {
 	/** A list of parameters. */
 	protected LinkedList<Parameter> params = new LinkedList<Parameter>();
 
+	/** Time of creation */
+	protected long timeStamp = System.currentTimeMillis();
+	
+	/** Source of the data-container */
+	protected String source = null;
+	
 	protected DataContainer() {}
 	
 	
@@ -79,4 +86,26 @@ public abstract class DataContainer extends IILElement {
 		
 	}
 
+	/**
+	 * Sets the source of the data-container.
+	 * 
+	 * @param source is the source of the data-container.
+	 */
+	public void setSource(String source) {
+		
+		this.source = source;
+		
+	}
+	
+	/**
+	 * Returns the source of the data-container.
+	 * 
+	 * @return the source of the data-container.
+	 */
+	public String getSource() {
+		
+		return source;
+		
+	}
+	
 }

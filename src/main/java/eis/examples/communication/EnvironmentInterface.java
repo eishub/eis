@@ -7,7 +7,6 @@ import eis.EnvironmentInterfaceStandard;
 import eis.exceptions.EntityException;
 import eis.exceptions.EnvironmentInterfaceException;
 import eis.exceptions.ManagementException;
-import eis.iilang.ActionResult;
 import eis.iilang.Percept;
 import eis.iilang.EnvironmentCommand;
 import eis.iilang.Identifier;
@@ -31,7 +30,7 @@ public class EnvironmentInterface extends EIDefaultImpl {
 		
 	}
 	
-	public ActionResult actiontellall(String entity, Identifier message) {
+	public Percept actiontellall(String entity, Identifier message) {
 		
 		for( String e : this.getEntities() ) {
 			
@@ -48,7 +47,7 @@ public class EnvironmentInterface extends EIDefaultImpl {
 			
 		}
 		
-		return new ActionResult("success");
+		return new Percept("success");
 		
 	}
 

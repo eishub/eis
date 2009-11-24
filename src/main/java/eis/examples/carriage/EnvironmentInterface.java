@@ -5,11 +5,9 @@ import java.util.LinkedList;
 import eis.*;
 import eis.exceptions.EntityException;
 import eis.exceptions.EnvironmentInterfaceException;
-import eis.iilang.ActionResult;
 import eis.iilang.Percept;
 import eis.iilang.Numeral;
 import eis.iilang.EnvironmentCommand;
-import eis.iilang.Percept;
 
 public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 	
@@ -97,7 +95,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 		return ret;
 	}
 	
-	public ActionResult actionpush(String entity) {
+	public Percept actionpush(String entity) {
 		
 		// push
 		if( entity.equals("robot1") )
@@ -105,11 +103,11 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 		if( entity.equals("robot2") )
 			env.robotPush2();
 
-		return new ActionResult("success");
+		return new Percept("success");
 
 	}
 
-	public ActionResult actionwait(String entity) {
+	public Percept actionwait(String entity) {
 		
 		// push
 		if( entity.equals("robot1") )
@@ -117,7 +115,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 		if( entity.equals("robot2") )
 			env.robotWait2();
 
-		return new ActionResult("success");
+		return new Percept("success");
 
 	}
 
