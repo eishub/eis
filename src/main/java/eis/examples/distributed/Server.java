@@ -8,16 +8,22 @@ import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.iilang.EnvironmentCommand;
+import eis.iilang.Identifier;
+import eis.iilang.Parameter;
 import eis.iilang.Percept;
 import eis.rmi.EIServerDefaultImpl;
 
 public class Server extends EIServerDefaultImpl implements Runnable {
 
-	boolean running = true;
+	private Environment env = new Environment();
+	
+	private InterfaceWindow window = new InterfaceWindow();
+	
+	private boolean running = true;
 	
 	public Server() {
 		super();
-		
+	
 		try {
 			this.addEntity("entity1");
 			this.addEntity("entity2");
@@ -35,23 +41,11 @@ public class Server extends EIServerDefaultImpl implements Runnable {
 		return null;
 	}
 
-	@Override
-	public boolean isConnected() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void manageEnvironment(EnvironmentCommand command, String... args)
-			throws ManagementException, NoEnvironmentException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void release() {
 	
 		running = false;
+		
+		window.setVisible(false);
 		
 	}
 
@@ -61,6 +55,9 @@ public class Server extends EIServerDefaultImpl implements Runnable {
 		while(running) {
 			
 			try {
+				
+				window.update(this,env);
+				
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -71,10 +68,40 @@ public class Server extends EIServerDefaultImpl implements Runnable {
 		
 	}
 
-	public Percept actiondo(String entity) {
+	public Percept actionshout(String entity, Identifier sentence) {
+		
+		window.logPrintln(entity + " says <i>" + sentence.toProlog() + "</i>");
+		
+		// todo notify others
 		
 		return new Percept("done");
 		
 	}
+
+	public Percept actioncallMeBack(String entity) {
+
+		System.out.println("TA");
+		
+		this.notifyDeletedEntity("entityDeleted");
+		this.notifyNewEntity("entityNew");
+		this.notifyFreeEntity("entityFree");
+		
+		return new Percept("done");
+		
+	}
+
+	@Override
+	public boolean isConnected() throws RemoteException {
+
+		return true;
 	
+	}
+
+	@Override
+	public void manageEnvironment(EnvironmentCommand command, String... args)
+			throws ManagementException, NoEnvironmentException, RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -1,12 +1,14 @@
 package eis.iilang;
 
+import java.io.Serializable;
+
 /**
  * Represents an element of the <i>Interface Immediate Language</i>. 
  * 
  * @author tristanbehrens
  *
  */
-public abstract class IILElement {
+public abstract class IILElement implements Serializable {
 
 	/** 
 	 * Returns a string-representation.

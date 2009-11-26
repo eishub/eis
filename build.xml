@@ -1,0 +1,29 @@
+<project name="2apl">
+  
+  <property name="releasedir" location="release"/>
+  <property name="srcdir" location="src/main/java/"/>
+  <property name="jardir" location="target"/>
+  <property name="docdir" location="target/site/apidocs/"/>
+	
+  <target name="release">
+    
+  	<mkdir dir="${releasedir}"/>
+    <copy todir="${releasedir}">
+      <fileset dir="${jardir}">
+      	<include name="*.jar"/>
+      </fileset>
+    </copy>	  
+  	
+    <mkdir dir="${releasedir}/src"/>
+    <copy todir="${releasedir}/src">
+      <fileset dir="${srcdir}"/>
+    </copy>	  
+
+    <mkdir dir="${releasedir}/javadoc"/>
+    <copy todir="${releasedir}/javadoc">
+      <fileset dir="${docdir}"/>
+    </copy>	  
+
+  </target>
+
+</project>

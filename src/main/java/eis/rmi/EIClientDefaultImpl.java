@@ -4,12 +4,16 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 import eis.AgentListener;
 import eis.EnvironmentInterfaceStandard;
 import eis.EnvironmentListener;
+import eis.examples.distributed.Server;
 import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
 import eis.exceptions.EntityException;
@@ -30,11 +34,63 @@ import eis.iilang.Percept;
  */
 public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandard,EIClientRemote {
 
-	protected EnvironmentInterfaceStandardRemote server = null;
+	protected EIServerRemote server = null;
 	
 	public static boolean debug = true;
 	
 	protected LinkedList<String> localRegisteredAgents = new LinkedList<String>();
+
+	/**
+	 * This collection stores the listeners that are used to notify about certain events.
+	 * <p/> 
+	 * The collection can be changed by invoking the respective methods for attaching and
+	 * detaching listeners.
+	 */
+	private Vector<EnvironmentListener> environmentListeners = null;
+	
+	/**
+	 * Stores for each agent (represented by a string) a set of listeners.
+	 */
+	private ConcurrentHashMap<String,HashSet<AgentListener>> agentsToAgentListeners = null;
+
+	public EIClientDefaultImpl(String serverName) {
+
+		// set up data structures
+		environmentListeners = new Vector<EnvironmentListener>();
+		agentsToAgentListeners = new ConcurrentHashMap<String,HashSet<AgentListener>>();
+
+		// connect to server, if this fails instantiate one
+		try {
+			connect("EIServer");
+		} catch (RemoteException e) {
+		
+			debugPrintln("Could not establish a connection. Creating server.");
+		
+			server = instantiateServer();
+			
+			try {
+				
+				connect("EIServer");
+			
+			} catch (RemoteException e1) {
+			
+				debugPrintln(e1);
+				debugPrintln("Failed again.");
+			
+			} catch (NotBoundException e1) {
+
+				debugPrintln("Could not! 2");
+
+			}
+			
+			
+		} catch (NotBoundException e) {
+			
+			debugPrintln("Could not! 3");
+		
+		}
+		
+	}
 	
 	public void debugPrintln(Object obj) {
 		
@@ -43,17 +99,23 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 		
 	}
 
-	public void connect(String className) throws RemoteException, NotBoundException {
+	public void connect(String serverName) throws RemoteException, NotBoundException {
 		
 		debugPrintln("Getting registry...");
 	    Registry registry = LocateRegistry.getRegistry();
 
 		debugPrintln("Getting interface...");
-		EnvironmentInterfaceStandardRemote s = (EnvironmentInterfaceStandardRemote) registry.lookup( className ); 
+		EIServerRemote s = (EIServerRemote) registry.lookup( serverName ); 
 	    
 		debugPrintln( "Connected to server" ); 
 
 		server = s;
+
+		// add as listener
+		s.attachClientListener((EIClientRemote)this);
+		//UnicastRemoteObject.exportObject(this);
+
+		debugPrintln( "Added as listener" ); 
 		
 	}
 	
@@ -63,7 +125,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 
 		try {
 
-			server.stubAssociateEntity(agent, entity);
+			server.associateEntity(agent, entity);
 		
 		} catch (RemoteException e) {
 			
@@ -75,25 +137,25 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 
 	@Override
 	public void attachAgentListener(String agent, AgentListener listener) {
-		// TODO perform via RMI
+		// TODO 
 		
 	}
 
 	@Override
 	public void attachEnvironmentListener(EnvironmentListener listener) {
-		// TODO perform via RMI
+		// TODO 
 		
 	}
 
 	@Override
 	public void detachAgentListener(String agent, AgentListener listener) {
-		// TODO perform via RMI
+		// TODO 
 		
 	}
 
 	@Override
 	public void detachEnvironmentListener(EnvironmentListener listener) {
-		// TODO perform via RMI
+		// TODO 
 		
 	}
 
@@ -101,7 +163,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 	public void freeAgent(String agent) throws RelationException {
 
 		try {
-			server.stubFreeAgent(agent);
+			server.freeAgent(agent);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -112,7 +174,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 	public void freeEntity(String entity) throws RelationException {
 
 		try {
-			server.stubFreeEntity(entity);
+			server.freeEntity(entity);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -123,7 +185,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 	public void freePair(String agent, String entity) throws RelationException {
 
 		try {
-			server.stubFreePair(agent,entity);
+			server.freePair(agent,entity);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -134,7 +196,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 	public LinkedList<String> getAgents() {
 
 		try {
-			return server.stubGetAgents();
+			return server.getAgents();
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			return null;
@@ -154,7 +216,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 			throws EntityException {
 
 		try {
-			return server.stubGetAssociatedAgents(entity);
+			return server.getAssociatedAgents(entity);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			return null;
@@ -167,7 +229,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 			throws AgentException {
 
 		try {
-			return server.stubGetAssociatedEntities(agent);
+			return server.getAssociatedEntities(agent);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			return null;
@@ -179,7 +241,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 	public LinkedList<String> getEntities() {
 
 		try {
-			return server.stubGetEntities();
+			return server.getEntities();
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			return null;
@@ -191,7 +253,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 	public LinkedList<String> getFreeEntities() {
 
 		try {
-			return server.stubGetFreeEntities();
+			return server.getFreeEntities();
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			return null;
@@ -203,7 +265,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 	public String getType(String entity) throws EntityException {
 
 		try {
-			return server.stubGetType(entity);
+			return server.getType(entity);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			return null;
@@ -213,7 +275,14 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 	@Override
 	public boolean isConnected() {
 
-		return server!=null;
+		if( server == null) return false;
+		
+		try {
+			return server.isConnected();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			return false;
+		}
 	
 	}
 
@@ -229,7 +298,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 			String... entities) throws ActException, NoEnvironmentException {
 
 		try {
-			return server.stubPerformAction(agent, action, entities);
+			return server.performAction(agent, action, entities);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			return null;
@@ -244,7 +313,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 		
 		try {
 			
-			server.stubRegisterAgent(agent);
+			server.registerAgent(agent);
 		
 			localRegisteredAgents.add(agent); 
 			
@@ -268,7 +337,7 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 		
 		try {
 			
-			server.stubUnregisterAgent(agent);
+			server.registerAgent(agent);
 		
 			localRegisteredAgents.remove(agent); 
 			
@@ -288,27 +357,32 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 
 	@Override
 	public void notifyDeletedEntity(String entity) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+
+		debugPrintln("Deleted entity " + entity);
+
 	}
 
 	@Override
 	public void notifyEnvironmentEvent(EnvironmentEvent event)
 			throws RemoteException {
-		// TODO Auto-generated method stub
-		
+
+
 	}
 
 	@Override
 	public void notifyFreeEntity(String entity) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+
+		debugPrintln("Free entity " + entity);
+
 	}
 
 	@Override
 	public void notifyNewEntity(String entity) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+
+		debugPrintln("New entity " + entity);
+
 	}
 
+	public abstract EIServerRemote instantiateServer();
+	
 }

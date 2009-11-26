@@ -11,50 +11,21 @@ import eis.exceptions.EntityException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
+import eis.iilang.Identifier;
 import eis.rmi.EIClientDefaultImpl;
-import eis.rmi.EnvironmentInterfaceStandardRemote;
+import eis.rmi.EIServerRemote;
 
 public class Client extends EIClientDefaultImpl implements Runnable {
 
 	public boolean running = true;
 	
 	public Client() {
+		super("EIServer");
 		
-		// TODO export to default implementation and use reflection
-		
-		try {
-			connect("EIServer");
-		} catch (RemoteException e) {
-		
-			debugPrintln("Could not establish a connection. Creating server.");
-		
-			new Server();
-			
-			try {
-				
-				connect("EIServer");
-			
-			} catch (RemoteException e1) {
-			
-				debugPrintln("Failed again.");
-			
-			} catch (NotBoundException e1) {
-
-				debugPrintln("Could not! 2");
-
-			}
-			
-			
-		} catch (NotBoundException e) {
-			
-			debugPrintln("Could not! 3");
-		
-		}
-			
-		debugPrintln("Client started.");
-
 		new Thread(this).start();
-	
+
+		debugPrintln("Client started");
+
 	}	
 	
 	@Override
@@ -108,7 +79,10 @@ public class Client extends EIClientDefaultImpl implements Runnable {
 			debugPrintln("Type (entity2): " + this.getType("entity2"));
 			
 			debugPrintln("");
-			debugPrintln("Action result: " + this.performAction("agent1", new Action("do")));
+			debugPrintln("Action result: " + this.performAction("agent1", new Action("shout", new Identifier("can you hear me?"))));
+
+			debugPrintln("");
+			debugPrintln("Action result: " + this.performAction("agent1", new Action("callMeBack")));
 			
 		} catch (AgentException e) {
 
@@ -138,11 +112,19 @@ public class Client extends EIClientDefaultImpl implements Runnable {
 		
 	}
 
+	@Override
+	public EIServerRemote instantiateServer() {
+
+		return new Server();
+	
+	}
+
 	public static void main(String[] args) {
 		
 		new Client();
 		
 	}
+
 
 	
 }
