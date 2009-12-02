@@ -21,7 +21,7 @@ public class EntitiesAndActions extends EIDefaultImpl {
 	}
 
 	@Override
-	public void manageEnvironment(EnvironmentCommand command, String... args) {
+	public void manageEnvironment(EnvironmentCommand command) {
 	}
 
 	public Percept actionmove(String entity, Identifier dir1, Identifier dir2) throws ActException {
@@ -158,6 +158,11 @@ public class EntitiesAndActions extends EIDefaultImpl {
 	public boolean isConnected() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public String requiredVersion() {
+		return "0.2rc2";
 	}
 
 }

@@ -33,7 +33,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 	}
 	
 	@Override
-	public void manageEnvironment(EnvironmentCommand command, String... args) {
+	public void manageEnvironment(EnvironmentCommand command) {
 
 		// TODO implement something fancy
 		
@@ -133,6 +133,11 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 
 		return true;
 	
+	}
+
+	@Override
+	public String requiredVersion() {
+		return "0.2rc1";
 	}
 
 }

@@ -431,6 +431,32 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		
 	}
 
+	/** 
+	 * Adds an entity to the environment.
+	 * 
+	 * @param entity is the identifier of the entity that is to be added.
+	 * @param type is the type of the entity.
+	 * @throws PlatformException is thrown if the entity already exists.
+	 */
+	protected void addEntity(String entity,String type) throws EntityException {
+
+		// fail if entity does exist
+		if( entities.contains(entity) )
+			throw new EntityException("Entity \"" + entity + "\" does already exist");
+		
+		// add
+		entities.add(entity);
+		freeEntities.add(entity);
+		
+		// set type
+		this.setType(entity, type);
+		
+		// notify
+		notifyNewEntity(entity);
+		
+	}
+	
+	
 	/**
 	 * Deletes an entity, by removing its id from the internal list, and disassociating 
 	 * it from the respective agent.
@@ -847,7 +873,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	/* (non-Javadoc)
 	 * @see eis.EnvironmentInterfaceStandard#manageEnvironment(eis.iilang.EnvironmentCommand, java.lang.String[])
 	 */
-	public abstract void manageEnvironment(EnvironmentCommand command, String... args) 
+	public abstract void manageEnvironment(EnvironmentCommand command) 
 	throws ManagementException,NoEnvironmentException;
 
 	
@@ -956,7 +982,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			throw new EntityException("Entity \"" + entity + "\" already has a type!");
 	
 		entitiesToTypes.put(entity, type);
-		
+
 	}
 	
 }

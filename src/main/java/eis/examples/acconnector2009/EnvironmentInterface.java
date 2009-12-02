@@ -107,7 +107,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	}
 
 	@Override
-	public void manageEnvironment(EnvironmentCommand command, String... args)
+	public void manageEnvironment(EnvironmentCommand command)
 			throws ManagementException {
 
 		assert false : "Implement!";
@@ -297,6 +297,11 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 			
 		}
 		
+	}
+
+	@Override
+	public String requiredVersion() {
+		return "0.2rc2";
 	}
 	
 }

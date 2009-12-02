@@ -20,7 +20,7 @@ public interface EnvironmentInterfaceStandard {
 	/**
 	 * 
 	 */
-	static String version = "0.2";
+	static String version = "0.2rc1";
 
 	/**
 	 * Attaches an environment-listener.
@@ -184,9 +184,8 @@ public interface EnvironmentInterfaceStandard {
 	 * Invoked to manage the environment and/or its execution.
 	 * 
 	 * @param command is the command that is to be executed.
-	 * @param args is an array of arguments to the command
 	 */
-	void manageEnvironment(EnvironmentCommand command, String... args)
+	void manageEnvironment(EnvironmentCommand command)
 			throws ManagementException, NoEnvironmentException;
 
 	/**
@@ -209,5 +208,6 @@ public interface EnvironmentInterfaceStandard {
 	 */
 	String getType(String entity) throws EntityException;
 
+	String requiredVersion();
 	
 }

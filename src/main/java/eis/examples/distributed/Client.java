@@ -8,10 +8,15 @@ import java.rmi.registry.Registry;
 import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
 import eis.exceptions.EntityException;
+import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
+import eis.iilang.EnvironmentCommand;
+import eis.iilang.Function;
 import eis.iilang.Identifier;
+import eis.iilang.Numeral;
+import eis.iilang.Parameter;
 import eis.rmi.EIClientDefaultImpl;
 import eis.rmi.EIServerRemote;
 
@@ -83,7 +88,17 @@ public class Client extends EIClientDefaultImpl implements Runnable {
 
 			debugPrintln("");
 			debugPrintln("Action result: " + this.performAction("agent1", new Action("callMeBack")));
-			
+
+			debugPrintln("");
+			this.manageEnvironment(
+					new EnvironmentCommand(
+							EnvironmentCommand.INIT, 
+							(Parameter)new Function("gridWidth", new Numeral(10)),
+							(Parameter)new Function("gridHeight", new Numeral(10)),
+							(Parameter)new Function("entities", new Numeral(4))
+							)
+					);
+
 		} catch (AgentException e) {
 
 			e.printStackTrace();
@@ -97,6 +112,9 @@ public class Client extends EIClientDefaultImpl implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoEnvironmentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ManagementException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -125,6 +143,9 @@ public class Client extends EIClientDefaultImpl implements Runnable {
 		
 	}
 
-
+	@Override
+	public String requiredVersion() {
+		return "0.2rc2";
+	}
 	
 }

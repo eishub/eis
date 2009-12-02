@@ -287,10 +287,16 @@ public abstract class EIClientDefaultImpl implements EnvironmentInterfaceStandar
 	}
 
 	@Override
-	public void manageEnvironment(EnvironmentCommand command, String... args)
+	public void manageEnvironment(EnvironmentCommand command)
 			throws ManagementException, NoEnvironmentException {
-		// TODO perform via RMI
-		
+	
+		try {
+			server.manageEnvironment(command);
+		} catch (RemoteException e) {
+			System.out.println(e);
+			throw new NoEnvironmentException("Failed");
+		}
+
 	}
 
 	@Override

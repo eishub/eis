@@ -1,6 +1,8 @@
 SET-UP
 
-Run "ant install" to compile classes, generate jar-files and javadoc.
+Run "mvn package" to compile classes and generate jar-file.
+
+Run "mvn eclipse:eclipse" to generate an eclipse project.
 
 DIRECTORIES
 

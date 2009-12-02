@@ -20,8 +20,6 @@ import eis.EnvironmentInterfaceStandard;
  */
 public class EILoader {
 	
-	public static String requiredVersion = "0.2";
-	
 	public static EnvironmentInterfaceStandard fromJarFile(File file) throws IOException {
 		
 		// 1. locate file, check for existence, check for being a jar
@@ -72,8 +70,8 @@ public class EILoader {
 		} 
 
 		// check version
-		if( ei.version.equals(requiredVersion) == false )
-			throw new IOException("Loaded environment interface version does not match the required one \"" + requiredVersion + "\"");
+		if( EnvironmentInterfaceStandard.version.equals(ei.requiredVersion()) == false )
+			throw new IOException("Loaded environment interface version does not match the required one \"" + EnvironmentInterfaceStandard.version + "\" vs. \"" + ei.requiredVersion() + "\"");
 		
 		return ei;
 

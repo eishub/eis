@@ -75,15 +75,17 @@ public class Function extends Parameter {
 	public String toProlog() {
 		
 		String ret = name;
+				
+		if( params.size() > 0 ) {
+			ret += "(";
+
+			ret += params.getFirst().toProlog();
 		
-		ret += "(";
+			for( int a = 1 ; a < params.size() ; a++ )
+				ret += "," + params.get(a).toProlog();
 		
-		ret += params.getFirst().toProlog();
-		
-		for( int a = 1 ; a < params.size() ; a++ )
-			ret += "," + params.get(a).toProlog();
-		
-		ret+=")";
+			ret+=")";
+		}
 		
 		return ret;
 	

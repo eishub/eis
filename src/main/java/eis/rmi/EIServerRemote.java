@@ -49,7 +49,7 @@ public interface EIServerRemote extends Remote {
 	LinkedList<Percept> getAllPercepts(String agent, String... entities)
 			throws PerceiveException, NoEnvironmentException,RemoteException;
 
-	void manageEnvironment(EnvironmentCommand command, String... args)
+	void manageEnvironment(EnvironmentCommand command)
 			throws ManagementException, NoEnvironmentException,RemoteException;
 
 	void release() throws RemoteException;

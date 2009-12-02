@@ -57,7 +57,7 @@ public class EnvironmentInterface extends EIDefaultImpl {
 	}
 
 	@Override
-	public void manageEnvironment(EnvironmentCommand command, String... args)
+	public void manageEnvironment(EnvironmentCommand command)
 			throws ManagementException {
 	}
 
@@ -74,5 +74,9 @@ public class EnvironmentInterface extends EIDefaultImpl {
 	
 	}
 	
+	@Override
+	public String requiredVersion() {
+		return "0.2rc1";
+	}
 
 }

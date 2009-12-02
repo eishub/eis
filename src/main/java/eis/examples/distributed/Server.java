@@ -98,9 +98,12 @@ public class Server extends EIServerDefaultImpl implements Runnable {
 	}
 
 	@Override
-	public void manageEnvironment(EnvironmentCommand command, String... args)
+	public void manageEnvironment(EnvironmentCommand command)
 			throws ManagementException, NoEnvironmentException, RemoteException {
-		// TODO Auto-generated method stub
+
+		assert false : "Implement init!";
+		
+		window.logPrintln(command.toProlog());
 		
 	}
 
