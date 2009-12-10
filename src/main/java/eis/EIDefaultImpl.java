@@ -31,38 +31,25 @@ import eis.iilang.Percept;
 
 
 /**
- * This class represents the general environment interface class.
+ * This class represents the default-implementation for <code>EnvironmentInterfaceStandard</code>.
  * <p/>
- * A special environment interface has to extend this class and implement he abstract methods.
- * <p/>
- * It supports the following functionalities:
+ * This class implements these functionalities of <code>EnvironmentInterfaceStandard</code>:
  * <ul>
- * <li>attaching, detaching, and notifying listeners;</li>
+ * <li>attaching and detaching listeners;</li>
  * <li>registering and unregistering agents;</li>
- * <li>adding and removing entities;</li>
  * <li>managing the agents-entities-relationship;</li>
  * <li>performing actions and retrieving percepts;</li>
- * <li>managing the environment; and</li>
- * <li>loading environment-interfaces from jar-files.</li>
  * </ul>
- * 
- * @author tristanbehrens
- *
- */
-/**
- * @author tristanbehrens
- *
- */
-/**
- * @author tristanbehrens
- *
- */
-/**
+ * <p/>
+ * It also implements these:
+ * <ul>
+ * <li>notifying listeners;</li>
+ * <li>adding and removing entities.</li>
+ * </ul>
  * @author tristanbehrens
  *
  */
 public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Serializable {
-	
 
 	/**
 	 * This is a list of registered agents.
@@ -250,7 +237,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * Sends a percept to an agent/several agents via a given array of entities.
 	 * 
 	 * @param percept
-	 * @param entity
+	 * @param pEntities an array of entities
 	 * @throws EnvironmentInterfaceException
 	 */
 	protected void notifyAgentsViaEntity(Percept percept, String...pEntities) throws EnvironmentInterfaceException {
@@ -410,95 +397,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		
 	}
 
-	/** 
-	 * Adds an entity to the environment.
-	 * 
-	 * @param entity is the identifier of the entity that is to be added.
-	 * @throws PlatformException is thrown if the entity already exists.
-	 */
-	protected void addEntity(String entity) throws EntityException {
-
-		// fail if entity does exist
-		if( entities.contains(entity) )
-			throw new EntityException("Entity \"" + entity + "\" does already exist");
-		
-		// add
-		entities.add(entity);
-		freeEntities.add(entity);
-		
-		// notify
-		notifyNewEntity(entity);
-		
-	}
-
-	/** 
-	 * Adds an entity to the environment.
-	 * 
-	 * @param entity is the identifier of the entity that is to be added.
-	 * @param type is the type of the entity.
-	 * @throws PlatformException is thrown if the entity already exists.
-	 */
-	protected void addEntity(String entity,String type) throws EntityException {
-
-		// fail if entity does exist
-		if( entities.contains(entity) )
-			throw new EntityException("Entity \"" + entity + "\" does already exist");
-		
-		// add
-		entities.add(entity);
-		freeEntities.add(entity);
-		
-		// set type
-		this.setType(entity, type);
-		
-		// notify
-		notifyNewEntity(entity);
-		
-	}
-	
-	
-	/**
-	 * Deletes an entity, by removing its id from the internal list, and disassociating 
-	 * it from the respective agent.
-	 * 
-	 * @param entity the id of the entity that is to be removed.
-	 * @throws PlatformException if the agent does not exist.
-	 */
-	// TODO use freeEntity here
-	protected void deleteEntity(String entity) throws EntityException {
-	
-		// fail if entity does not exist
-		if( !entities.contains(entity) )
-			throw new EntityException("Entity \"" + entity + "\" does not exist");
-
-		// find the association and remove
-		for( Entry<String,HashSet<String>> entry : agentsToEntities.entrySet()) {
-			
-			String agent = entry.getKey();
-			HashSet<String> ens = entry.getValue();
-			
-			if( ens.contains(entity) ) {
-				
-				ens.remove(entity);
-				
-				agentsToEntities.put(agent, ens);
-				
-				break;
-			}
-			
-		}
-
-		// finally delete
-		entities.remove(entity);
-		freeEntities.remove(entity);
-
-		// notify 
-		notifyDeletedEntity(entity);
-		
-	}
-
-	
-		
 	/* (non-Javadoc)
 	 * @see eis.EnvironmentInterfaceStandard#getEntities()
 	 */
@@ -525,7 +423,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			throw new RelationException("Entity \"" + entity + "\" does not exist!");
 
 		if( !registeredAgents.contains(agent) )
-			throw new RelationException("Agent \"" + entity + "\" has not been registered!");
+			throw new RelationException("Agent \"" + agent + "\" has not been registered!");
 
 		// check if associated
 		if( !freeEntities.contains(entity) )
@@ -815,6 +713,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	public LinkedList<Percept> getAllPercepts(String agent, String...entities) 
 	throws PerceiveException, NoEnvironmentException {
 		
+		// fail if no connection
+		if( isConnected() == false ) 
+			throw new NoEnvironmentException("environment not available");
+		
 		// fail if ther agent is not registered
 		if( registeredAgents.contains(agent) == false)
 			throw new PerceiveException("Agent \"" + agent + "\" is not registered.");
@@ -832,8 +734,19 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		// gather all percepts
 		if( entities.length == 0 ) {
 
-			for( String entity : associatedEntities )
-				ret.addAll( getAllPerceptsFromEntity(entity) );
+			for( String entity : associatedEntities ) {
+				
+				// get all percepts
+				LinkedList<Percept> all = getAllPerceptsFromEntity(entity);
+				
+				// add annonation
+				for( Percept p : all )
+					p.setSource(entity);
+				
+				// done
+				ret.addAll( all );
+
+			}
 
 		}
 		// only from specified entities
@@ -843,8 +756,16 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 				
 				if( associatedEntities.contains(entity) == false)
 					throw new PerceiveException("Entity \"" + entity + "\" has not been associated with the agent \"" + agent + "\".");
+
+				// get all percepts
+				LinkedList<Percept> all = getAllPerceptsFromEntity(entity);
 				
-				ret.addAll( getAllPerceptsFromEntity(entity) );
+				// add annonation
+				for( Percept p : all )
+					p.setSource(entity);
+				
+				// done
+				ret.addAll( all );
 				
 			}
 			
@@ -876,67 +797,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	public abstract void manageEnvironment(EnvironmentCommand command) 
 	throws ManagementException,NoEnvironmentException;
 
-	
-	
 	/*
 	 * Misc functionality.
 	 */
 	
-	/**
-	 * Loads a specific environment interface from a given jar-file and returns an instance of the respective class.
-	 * 
-	 * @param jarFile the jar-file from which the environment-interface is supposed to be loaded.
-	 * @return an instance of the requested environment-interface.
-	 * @throws IOException is thrown if an attempt to load fails.
-	 * @deprecated use the eis.EILoader instead
-	 */
-	public static EIDefaultImpl fromJarFile(File jarFile) throws IOException {
-		
-		// 1. locate file, check for existence, check for being a jar
-		if( jarFile.exists() == false )
-			throw new IOException("\"" + jarFile.getAbsolutePath() + "\" does not exist.");
-			
-		if( jarFile.getName().endsWith(".jar") == false )
-			throw new IOException("\"" + jarFile.getAbsolutePath() + "\" is not a jar-file.");
-				
-		// 2. add the jar file to the classpath
-		URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-		Class<URLClassLoader> sysclass = URLClassLoader.class;
-		URL url = jarFile.toURI().toURL();
-		
-		try {
-			Method method = sysclass.getDeclaredMethod("addURL",new Class[]{URL.class});
-			method.setAccessible(true);
-			method.invoke(sysloader,new Object[]{ url });
-		} catch (Throwable t) {
-			t.printStackTrace();
-			throw new IOException("Error, could not add URL to system classloader");
-		}
-	
-		// 3. retrieve class name = file-name withoud postfix + .EnvironmentInterface
-		String jarName = jarFile.getName();
-		String className = jarName.substring(0, jarName.length() -4 ) + ".EnvironmentInterface";
-		URLClassLoader loader = new URLClassLoader(new URL[]{url});
-		Class<?> envInterfaceClass = null;
-		try {
-			envInterfaceClass = loader.loadClass(className);
-		} catch (ClassNotFoundException e) {
-			throw new IOException("Class \"" + className + "\" could not be loaded from \"" + jarFile + "\"");
-		}
-	
-		// 3. TODO get an instance of the class
-		Constructor<?> c = null;
-		EIDefaultImpl ei = null;
-		try {
-			c = envInterfaceClass.getConstructor();
-			ei = (EIDefaultImpl)(c.newInstance());
-		} catch (Exception e) {
-			throw new IOException("Class \"" + className + "\" could not be loaded from \"" + jarFile + "\"");
-		} 
-		
-		return ei;
-		
-	}
 
 	/* (non-Javadoc)
 	 * @see eis.EnvironmentInterfaceStandard#release()
@@ -965,7 +829,93 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		
 	}
 
+	/** 
+	 * Adds an entity to the environment.
+	 * 
+	 * @param entity is the identifier of the entity that is to be added.
+	 * @throws PlatformException is thrown if the entity already exists.
+	 */
+	protected void addEntity(String entity) throws EntityException {
+
+		// fail if entity does exist
+		if( entities.contains(entity) )
+			throw new EntityException("Entity \"" + entity + "\" does already exist");
+		
+		// add
+		entities.add(entity);
+		freeEntities.add(entity);
+		
+		// notify
+		notifyNewEntity(entity);
+		
+	}
+
+	/** 
+	 * Adds an entity to the environment.
+	 * 
+	 * @param entity is the identifier of the entity that is to be added.
+	 * @param type is the type of the entity.
+	 * @throws PlatformException is thrown if the entity already exists.
+	 */
+	protected void addEntity(String entity,String type) throws EntityException {
+
+		// fail if entity does exist
+		if( entities.contains(entity) )
+			throw new EntityException("Entity \"" + entity + "\" does already exist");
+		
+		// add
+		entities.add(entity);
+		freeEntities.add(entity);
+		
+		// set type
+		this.setType(entity, type);
+		
+		// notify
+		notifyNewEntity(entity);
+		
+	}
 	
+	
+	/**
+	 * Deletes an entity, by removing its id from the internal list, and disassociating 
+	 * it from the respective agent.
+	 * 
+	 * @param entity the id of the entity that is to be removed.
+	 * @throws PlatformException if the agent does not exist.
+	 */
+	// TODO use freeEntity here
+	protected void deleteEntity(String entity) throws EntityException {
+	
+		// fail if entity does not exist
+		if( !entities.contains(entity) )
+			throw new EntityException("Entity \"" + entity + "\" does not exist");
+
+		// find the association and remove
+		for( Entry<String,HashSet<String>> entry : agentsToEntities.entrySet()) {
+			
+			String agent = entry.getKey();
+			HashSet<String> ens = entry.getValue();
+			
+			if( ens.contains(entity) ) {
+				
+				ens.remove(entity);
+				
+				agentsToEntities.put(agent, ens);
+				
+				break;
+			}
+			
+		}
+
+		// finally delete
+		entities.remove(entity);
+		freeEntities.remove(entity);
+
+		// notify 
+		notifyDeletedEntity(entity);
+		
+	}
+
 	/**
 	 * Sets the type of an entity.
 	 * 

@@ -15,6 +15,24 @@ import eis.iilang.Action;
 import eis.iilang.EnvironmentCommand;
 import eis.iilang.Percept;
 
+/**
+ * This interface is the main-interface of EIS. 
+ * All environment-interfaces have to implement this interface and its methods.
+ * <p/>
+ * Each environment interface should implement these functionalities:
+ * <ul>
+ * <li>attaching and detaching listeners;</li>
+ * <li>registering and unregistering agents;</li>
+ * <li>adding and removing entities;</li>
+ * <li>managing the agents-entities-relationship;</li>
+ * <li>performing actions and retrieving percepts;</li>
+ * <li>managing the environment; and</li>
+ * <li>loading environment-interfaces from jar-files.</li>
+ * </ul>
+ * 
+ * @author tristanbehrens
+ *
+ */
 public interface EnvironmentInterfaceStandard {
 
 	/**
@@ -150,13 +168,19 @@ public interface EnvironmentInterfaceStandard {
 	LinkedList<String> getFreeEntities();
 
 	/**
-	 * Lets an agent perform an agent.
+	 * Lets an agent perform an action.
 	 * <p/>
 	 * This method firstly determines the entities through which the agent should act.
 	 * Secondly Java-reflection is used to determine the methods that belong to the
 	 * given action. Finally, those methods are invoked and the return-values are gathered.
-	 * 
-	 * @param agent is the agent that is supposed to act.
+	 * <p/>
+	 * An action could fail if the action is not
+     * supported by the environment (e.g. you try to move an entity to the north, but the environment
+     * is a database), if it has wrong parameters (i.e, the number and/or the type of parameters is wrong),
+     * or if it cannot be executed because of the state of the environment (e.g. moving to the north 
+     * would fail if there is a wall).
+     * 
+	 * @param agent is the agent whose associated entities are supposed to act.
 	 * @param action is the action. The action's name determines the name of the method that is called.
 	 * @param entities is an array of entities through which an agent is supposed to act. If the 
 	 * array is empty, all entities are used.

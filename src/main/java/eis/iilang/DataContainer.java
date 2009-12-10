@@ -9,7 +9,7 @@ import java.util.LinkedList;
  * @author tristanbehrens
  *
  */
-public abstract class DataContainer extends IILElement implements Serializable {
+public abstract class DataContainer extends IILElement {
 	
 	/** The name of the DataContainer. */
 	protected String name = null;
@@ -40,11 +40,25 @@ public abstract class DataContainer extends IILElement implements Serializable {
 			this.params.add(p);
 		
 	}
-	
+
+	/** 
+	 * Contructs an DataContainer.
+	 * 
+	 * @param name
+	 * @param parameters
+	 */
+	public DataContainer(String name, LinkedList<Parameter> parameters) {
+		
+		this.name = name;
+
+		this.params = parameters;
+		
+	}
+
 	/**
 	 * Returns the name.
 	 * 
-	 * @return
+	 * @return the name of the data-container
 	 */
 	public String getName() {
 		
@@ -52,10 +66,21 @@ public abstract class DataContainer extends IILElement implements Serializable {
 		
 	}
 
+	/**
+	 * Sets the name.
+	 * 
+	 * @param name the name of the data-container.
+	 */
+	public void setName(String name) {
+		
+		this.name = name;
+		
+	}
+	
 	/** 
 	 * Returns the parameters.
 	 * 
-	 * @return
+	 * @return the parameters of the data-container
 	 */
 	public LinkedList<Parameter> getParameters() {
 		
@@ -63,6 +88,41 @@ public abstract class DataContainer extends IILElement implements Serializable {
 		
 	}
 
+	/** 
+	 * Returns the parameters. Returns the parameters as a clone.
+	 * 
+	 * @return the parameters of the data-container
+	 */
+	public LinkedList<Parameter> getClonedParameters() {
+		
+		LinkedList<Parameter> ret = new LinkedList<Parameter>();
+		
+		for( Parameter p : params ) {
+			
+			ret.add((Parameter) p.clone());
+			
+		}
+		
+		return ret;
+		
+	}
+
+	/**
+	 * Sets the parameters.
+	 * 
+	 * @param params the parameters of the data-container
+	 */
+	public void setParameters(LinkedList<Parameter> params) {
+		
+		this.params = params;
+		
+	}
+	
+	/**
+	 * Adds a parameter to the data-container.
+	 * 
+	 * @param p the new data-container
+	 */
 	public void addParameter(Parameter p) {
 		
 		params.add(p);
@@ -73,7 +133,7 @@ public abstract class DataContainer extends IILElement implements Serializable {
 	 * Converts a data container to a percept.
 	 * 
 	 * @param container
-	 * @return
+	 * @return the percept
 	 */
 	public static Percept toPercept(DataContainer container) {
 		
@@ -107,5 +167,5 @@ public abstract class DataContainer extends IILElement implements Serializable {
 		return source;
 		
 	}
-	
+		
 }

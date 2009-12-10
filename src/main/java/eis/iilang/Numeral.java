@@ -44,6 +44,11 @@ public class Numeral extends Parameter {
 		return value;
 		
 	}
+
+	@Override
+	public Object clone() {
+		return new Numeral(value);
+	}
 	
 /*	public int toInt() {
 		

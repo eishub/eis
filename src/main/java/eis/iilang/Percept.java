@@ -1,5 +1,7 @@
 package eis.iilang;
 
+import java.util.LinkedList;
+
 /**
  * A percept.
  * <p/>
@@ -17,6 +19,16 @@ public class Percept extends DataContainer {
 	 * @param parameters the parameters.
 	 */
 	public Percept(String name, Parameter...parameters) {
+		super(name, parameters);
+	}
+
+	/** 
+	 * Contructs a percept from a name and an array of parameters.
+	 * 
+	 * @param name the name.
+	 * @param parameters the parameters.
+	 */
+	public Percept(String name, LinkedList<Parameter> parameters) {
 		super(name, parameters);
 	}
 
@@ -44,6 +56,25 @@ public class Percept extends DataContainer {
 	@Override
 	public String toProlog() {
 		
+		String ret = "";
+		
+		ret+=name;
+
+		if( params.isEmpty() == false) {
+			ret+="(";
+			
+			for( Parameter p : params ) 
+				ret += "," + p.toProlog();
+			
+			ret+=")";
+		}
+		
+		return ret;
+	
+	}
+
+	/*	public String toProlog() {
+		
 		String ret = "percept";
 		
 		ret+="(";
@@ -54,6 +85,17 @@ public class Percept extends DataContainer {
 			ret += "," + p.toProlog();
 		
 		ret+=")";
+		
+		return ret;
+	
+	}*/
+
+	@Override
+	public Object clone() {
+
+		Percept ret = new Percept(this.name, this.getClonedParameters());
+		
+		ret.source = this.source;
 		
 		return ret;
 	

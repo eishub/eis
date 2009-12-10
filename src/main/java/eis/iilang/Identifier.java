@@ -25,7 +25,7 @@ public class Identifier extends Parameter {
 	/**
 	 * Returns the identifier.
 	 * 
-	 * @return
+	 * @return the identifier as a string
 	 */
 	public String getValue() {
 		
@@ -46,6 +46,13 @@ public class Identifier extends Parameter {
 		String ret = value;
 		
 		return ret;
+	
+	}
+
+	@Override
+	public Object clone() {
+
+		return new Identifier(this.value);
 	
 	}
 	

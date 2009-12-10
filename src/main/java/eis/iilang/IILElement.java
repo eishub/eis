@@ -62,7 +62,7 @@ public abstract class IILElement implements Serializable {
 	/**
 	 * Returns an indentation.
 	 * @param depth is the depth of the indentation.
-	 * @return
+	 * @return the string-representation with indentation
 	 */
 	protected String indent(int depth) {
 		
@@ -74,5 +74,10 @@ public abstract class IILElement implements Serializable {
 		return ret;
 		
 	}
-	
+
+	/**
+	 * Creates a clone of the iilang-element.
+	 */
+	public abstract Object clone();
+
 }

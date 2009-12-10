@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -349,16 +351,18 @@ public class Connection extends Socket implements Runnable {
 				//System.out.println("Received: " + xmlToString(doc) );
 		
 				// 2. evaluate document
-				DataContainer container = evaluateDocument(doc);
+				LinkedList<Percept> percepts = evaluateDocument(doc);
 				
 				// 3. notify
-				listener.handleMessage(this, container);
+				listener.handleMessage(this, percepts);
 				
 			} catch (IOException e) {
 
 				// terminate connection etc...
 
-				listener.handleMessage(this, new Percept("connectionlost"));
+				LinkedList<Percept> percepts = new LinkedList<Percept>();
+				percepts.add(new Percept("connectionLost"));
+				listener.handleMessage(this, percepts);
 
 				executing = false;
 
@@ -381,11 +385,13 @@ public class Connection extends Socket implements Runnable {
 	 * @param doc is the document to be transformed.
 	 * @return the result of the transformation.
 	 */
-	private DataContainer evaluateDocument(Document doc) {
+	private LinkedList<Percept> evaluateDocument(Document doc) {
+
+		// return value
+		LinkedList<Percept> ret = new LinkedList<Percept>();
 
 		Element root = doc.getDocumentElement();
 		String type = root.getAttribute("type");
-		
 		if( type.equals("sim-start") ) {
 			
 			NodeList nodes = root.getChildNodes();
@@ -401,38 +407,60 @@ public class Connection extends Socket implements Runnable {
 			
 			NamedNodeMap attributes = sim.getAttributes();
 			
-			DataContainer ret = new Percept(
-					"simStart",
-					new Function(
-							"corral",
-							new Numeral( new Integer(attributes.getNamedItem("corralx0").getNodeValue())),
-							new Numeral( new Integer(attributes.getNamedItem("corraly0").getNodeValue())),
-							new Numeral( new Integer(attributes.getNamedItem("corralx1").getNodeValue())),
-							new Numeral( new Integer(attributes.getNamedItem("corraly1").getNodeValue()))
-							),
-					new Function(
-							"grid",
-							new Numeral( new Integer(attributes.getNamedItem("gsizex").getNodeValue()) ),
-							new Numeral( new Integer(attributes.getNamedItem("gsizey").getNodeValue()) )
-					),
-					new Function(
-							"id",
-							new Numeral( new Integer(attributes.getNamedItem("id").getNodeValue()) )
-					),
-					new Function(
-							"lineOfSight",
-							new Numeral( new Integer(attributes.getNamedItem("lineOfSight").getNodeValue()) )
-					),
-					new Function(
-							"opponent",
-							new Identifier( attributes.getNamedItem("opponent").getNodeValue() )
-					),
-					new Function(
-							"steps",
-							new Numeral( new Integer(attributes.getNamedItem("steps").getNodeValue()) )
-					)
-			);
+			Percept percept = null;
+			
+			// sim-start
+			percept = new Percept("simStart");
+			ret.add(percept);
+			
+			// corral-pos
+			percept = new Percept(
+					"corralPos",
+					new Numeral( new Integer(attributes.getNamedItem("corralx0").getNodeValue())),
+					new Numeral( new Integer(attributes.getNamedItem("corraly0").getNodeValue())),
+					new Numeral( new Integer(attributes.getNamedItem("corralx1").getNodeValue())),
+					new Numeral( new Integer(attributes.getNamedItem("corraly1").getNodeValue()))
+					);
+			ret.add(percept);
 		
+			// grid-size
+			percept = new Percept(
+					"gridSize",
+					new Numeral( new Integer(attributes.getNamedItem("gsizex").getNodeValue()) ),
+					new Numeral( new Integer(attributes.getNamedItem("gsizey").getNodeValue()) )
+				);
+			ret.add(percept);
+			
+			// simlation id
+			percept = new Percept(
+					"simId",
+					new Numeral( new Integer(attributes.getNamedItem("id").getNodeValue()) )
+				);
+			ret.add(percept);
+			
+			// line-of-sight
+			percept = new Percept(
+					"lineOfSight",
+					new Numeral( new Integer(attributes.getNamedItem("lineOfSight").getNodeValue()) )
+			);
+			ret.add(percept);
+
+			// opponent
+			percept = new Percept(
+					"opponent",
+					new Identifier( attributes.getNamedItem("opponent").getNodeValue() )
+			);
+			ret.add(percept);
+
+			// steps
+			percept = new Percept(
+					"steps",
+					new Numeral( new Integer(attributes.getNamedItem("steps").getNodeValue()) )
+			);
+			ret.add(percept);
+		
+			//System.out.println(ret);
+			
 			return ret;
 			
 		}
@@ -456,18 +484,34 @@ public class Connection extends Socket implements Runnable {
 
 			NamedNodeMap attributes = result.getAttributes();
 		
-			DataContainer ret = new Percept(
-					"simend",
-					new Identifier( attributes.getNamedItem("result").getNodeValue()),
+			// 
+			Percept percept = null;
+			
+			percept = new Percept(
+					"simend"
+			); 
+			ret.add(percept);
+				
+			percept = new Percept(
+					"result",
+					new Numeral( new Integer( attributes.getNamedItem("score").getNodeValue() ))
+			);
+			ret.add(percept);
+			
+			percept = new Percept(
+					"finalScore",
 					new Numeral( new Integer( attributes.getNamedItem("score").getNodeValue() ))
 			); 
+			ret.add(percept);
 			
 			return ret;
 			
 		}
 		else if ( type.equals("bye") ) {
 		
-			return new Percept("bye");
+			ret.add(new Percept("bye"));
+			
+			return ret;
 			
 		}
 		else if( type.equals("request-action") ) {
@@ -480,21 +524,19 @@ public class Connection extends Socket implements Runnable {
 
 			NodeList children = root.getChildNodes();
 			
-			Node percept = null;
+			Node perceptNode = null;
 			for( int a = 0 ; a < children.getLength() ; a++ ) {
 			
 				if( children.item(a).getNodeName().equals("perception") )
-					percept = children.item(a);
+					perceptNode = children.item(a);
 			
 			}
 			
-			assert percept != null;
+			assert perceptNode != null;
 			
-			ParameterList cells = new ParameterList();
-			
-			NamedNodeMap attributes = percept.getAttributes();
+			NamedNodeMap attributes = perceptNode.getAttributes();
 
-			NodeList cellNodes = percept.getChildNodes();
+			NodeList cellNodes = perceptNode.getChildNodes();
 
 			for( int a = 0 ; a < cellNodes.getLength() ; a++ ) {
 				
@@ -558,14 +600,14 @@ public class Connection extends Socket implements Runnable {
 					
 					//System.out.println( cellNode.getChildNodes().getLength() );
 					
-					Function cell = new Function(
+					Percept cell = new Percept(
 							"cell",
 							new Numeral( new Integer( attributesCell.getNamedItem("x").getNodeValue() ) ),
 							new Numeral( new Integer( attributesCell.getNamedItem("y").getNodeValue() ) ),
 							new Identifier( item )
 					);
 				
-					cells.add(cell);
+					ret.add(cell);
 					
 				}
 
@@ -573,28 +615,37 @@ public class Connection extends Socket implements Runnable {
 
 			actionId = attributes.getNamedItem("id").getNodeValue();
 			
-			DataContainer ret = new Percept(
-					"percept",
-					new Function(
-							"id", 
-							new Numeral( new Integer(attributes.getNamedItem("id").getNodeValue()) ) 
-					),
-					new Function(
-							"pos",
-							new Numeral( new Integer(attributes.getNamedItem("posx").getNodeValue()) ),
-							new Numeral( new Integer(attributes.getNamedItem("posy").getNodeValue()) )
-					),
-					new Function(
-							"score", 
-							new Numeral( new Integer(attributes.getNamedItem("score").getNodeValue()) ) 
-					),
-					new Function(
-							"step", 
-							new Numeral( new Integer(attributes.getNamedItem("step").getNodeValue()) ) 
-					),
-					cells
-			);
+			Percept percept = null;
 			
+			// id
+			percept = new Percept(
+					"id", 
+					new Numeral( new Integer(attributes.getNamedItem("id").getNodeValue()) ) 
+			);
+			ret.add(percept);
+
+			// pos
+			percept = new Percept(
+					"pos",
+					new Numeral( new Integer(attributes.getNamedItem("posx").getNodeValue()) ),
+					new Numeral( new Integer(attributes.getNamedItem("posy").getNodeValue()) )
+			);
+			ret.add(percept);
+
+			// currentScore
+			percept = new Percept(
+					"currentScore", 
+					new Numeral( new Integer(attributes.getNamedItem("score").getNodeValue()) ) 
+			);
+			ret.add(percept);
+
+			// currentStep
+			percept = new Percept(
+					"currentStep", 
+					new Numeral( new Integer(attributes.getNamedItem("step").getNodeValue()) ) 
+			);
+			ret.add(percept);
+
 			return ret;
 		}
 		else {

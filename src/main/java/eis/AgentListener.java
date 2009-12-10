@@ -12,10 +12,10 @@ import eis.iilang.Percept;
 public interface AgentListener {
 
 	/**
-	 * Handles an event that is sent to a specific agent-
+	 * Handles a percept that is sent to a specific agent-
 	 * 
-	 * @param agent
-	 * @param event
+	 * @param agent the recipient of the percept
+	 * @param percept the percept itself
 	 */
 	void handlePercept(String agent, Percept percept);
 

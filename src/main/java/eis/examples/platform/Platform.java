@@ -48,6 +48,7 @@ public class Platform implements EnvironmentListener {
 			String agent = params.removeFirst();
 			String entity = params.removeFirst();
 			
+			// register agent
 			try {
 
 				ei.registerAgent(agent);
@@ -59,6 +60,7 @@ public class Platform implements EnvironmentListener {
 			
 			}
 
+			// associate with entity
 			try {
 				
 				ei.associateEntity(agent, entity);
@@ -71,6 +73,8 @@ public class Platform implements EnvironmentListener {
 
 			}
 			
+			// TODO add listener
+			
 		}
 		
 		// 5. showing entities
@@ -78,7 +82,30 @@ public class Platform implements EnvironmentListener {
 		
 	}	
 
-	
+	public void handlePercept(String agent, Percept percept) {
+
+		System.out.println(agent + " received this percept " + "\n" + percept);
+		
+	}
+
+	public void handleDeletedEntity(String entity) {
+		
+	}
+
+	public void handleEnvironmentEvent(EnvironmentEvent event) {
+		
+	}
+
+	public void handleFreeEntity(String entity) {
+		
+		System.out.println(entity + " is free");
+		
+	}
+
+	public void handleNewEntity(String entity) {
+		
+	}
+
 	public static void main(String[] args) {
 		
 		if(args.length == 0) {
@@ -109,30 +136,6 @@ public class Platform implements EnvironmentListener {
 		}
 			
 		platform.loadMAS(jarFileName, params);
-		
-	}
-
-	public void handlePercept(String agent, Percept percept) {
-
-		System.out.println(agent + " received this percept " + "\n" + percept);
-		
-	}
-
-	public void handleDeletedEntity(String entity) {
-		
-	}
-
-	public void handleEnvironmentEvent(EnvironmentEvent event) {
-		
-	}
-
-	public void handleFreeEntity(String entity) {
-		
-		System.out.println(entity + " is free");
-		
-	}
-
-	public void handleNewEntity(String entity) {
 		
 	}
 

@@ -29,7 +29,21 @@ public class Function extends Parameter {
 			this.params.add(p);
 		
 	}
-	
+
+	/**
+	 * Instantiates a function.
+	 * 
+	 * @param name the name of the function.
+	 * @param parameters the parameters.
+	 */
+	public Function(String name, LinkedList<Parameter> parameters) {
+		
+		this.name = name;
+
+		this.params = parameters;
+		
+	}
+
 	/**
 	 * Returns the name of the function.
 	 * 
@@ -42,6 +56,17 @@ public class Function extends Parameter {
 	}
 
 	/**
+	 * Sets the name of the function
+	 * 
+	 * @param name the name of the function
+	 */
+	public void setName(String name) {
+		
+		this.name = name;
+
+	}
+	
+	/**
 	 * Returns the parameters of the function.
 	 * 
 	 * @return the parameters of the function.
@@ -49,6 +74,36 @@ public class Function extends Parameter {
 	public LinkedList<Parameter> getParameters() {
 		
 		return params;
+		
+	}
+
+	/**
+	 * Sets the parameters.
+	 * 
+	 * @param parameters
+	 */
+	public void setParameters(LinkedList<Parameter> parameters) {
+		
+		this.params = parameters;
+		
+	}
+	
+	/** 
+	 * Returns the parameters. Returns the parameters as a clone.
+	 * 
+	 * @return the parameters of the function
+	 */
+	public LinkedList<Parameter> getClonedParameters() {
+		
+		LinkedList<Parameter> ret = new LinkedList<Parameter>();
+		
+		for( Parameter p : params ) {
+			
+			ret.add((Parameter) p.clone());
+			
+		}
+		
+		return ret;
 		
 	}
 
@@ -89,6 +144,13 @@ public class Function extends Parameter {
 		
 		return ret;
 	
+	}
+
+	@Override
+	public Object clone() {
+
+		return new Function(this.name, this.getClonedParameters());
+		
 	}
 
 }

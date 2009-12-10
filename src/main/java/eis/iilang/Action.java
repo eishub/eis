@@ -1,11 +1,14 @@
 package eis.iilang;
 
+import java.util.LinkedList;
+
 /**
  * An action that can be performed by an agent through its associated entity/ies.
  * @author tristanbehrens
  *
  */
 public class Action extends DataContainer {
+
 
 	/**
 	 * Constructs an action.
@@ -14,6 +17,16 @@ public class Action extends DataContainer {
 	 * @param parameters
 	 */
 	public Action(String name, Parameter...parameters) {
+		super(name, parameters);
+	}
+
+	/**
+	 * Constructs an action.
+	 * 
+	 * @param name
+	 * @param parameters
+	 */
+	public Action(String name, LinkedList<Parameter> parameters) {
 		super(name, parameters);
 	}
 
@@ -54,6 +67,17 @@ public class Action extends DataContainer {
 		
 		return ret;
 	
+	}
+
+	@Override
+	public Object clone() {
+
+		Action ret = new Action(this.name, this.getClonedParameters());
+		
+		ret.setSource(this.source);
+		
+		return ret;
+		
 	}
 
 }

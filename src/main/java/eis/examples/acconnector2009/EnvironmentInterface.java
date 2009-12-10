@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Vector;
 import java.util.Map.Entry;
 
 import eis.EIDefaultImpl;
@@ -27,13 +28,14 @@ import eis.iilang.Percept;
  * @author tristanbehrens
  *
  */
+@SuppressWarnings("serial")
 public class EnvironmentInterface extends EIDefaultImpl implements ConnectionListener, Runnable {
 
-	/** Used to facilitate the EIS-to-environment connection. */
+	/** Used to facilitate the EIS-to-environment connection. Each entity is a connection. */
 	private HashMap<String,Connection> entitiesToConnections = new HashMap<String,Connection>(); 
 	
-	/** Store the last percept. */
-	private HashMap<String,Percept> entitiesToPercepts = new HashMap<String,Percept>();
+	/** Stores the percept-queue. getAllPercepts returns the first element. */
+	private HashMap<String, LinkedList<LinkedList<Percept>>> entitiesToPercepts = new HashMap<String,LinkedList<LinkedList<Percept>>>();
 	
 	/** For checking connections. */
 	private boolean running = true;
@@ -68,20 +70,21 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	}
 	
 	/**
-	 * Returns the percepts of an entity. That is the last percept that has been
-	 * receved from the massim server.
+	 * Returns the percepts of an entity. That is first percept in the queue, 
+	 * that contains the percepts sent by the server.
 	 */
 	@Override
 	public LinkedList<Percept> getAllPerceptsFromEntity(String entity) {
 
-		Percept p = entitiesToPercepts.get(entity);
+		LinkedList<LinkedList<Percept>> queue = entitiesToPercepts.get(entity);
 		
-		LinkedList<Percept> ret = new LinkedList<Percept>();
+		if( queue == null )
+			return new LinkedList<Percept>();
 		
-		if ( p == null)
-			ret.add( new Percept("empty") );
-		else 
-			ret.add(p);
+		if( queue.isEmpty() )
+			return new LinkedList<Percept>();
+		
+		LinkedList<Percept> ret = queue.removeFirst();
 		
 		return ret;
 		
@@ -90,6 +93,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	@Override
 	public boolean isConnected() {
 		
+		/*
 		// no connection, no environment
 		if( entitiesToConnections.values().size() == 0 ) 
 			return false;
@@ -100,7 +104,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 			if( c.isConnected() == false) 
 				return false;
 			
-		}
+		}*/
 		
 		return true;
 
@@ -110,8 +114,11 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	public void manageEnvironment(EnvironmentCommand command)
 			throws ManagementException {
 
-		assert false : "Implement!";
-
+		if(command.getType()==EnvironmentCommand.RESET) {
+			
+			
+		}
+		
 	}
 
 	@Override
@@ -120,14 +127,18 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 		// stop execution
 		running = false;
 
-		// TODO take down all connections
+		// take down all connections
 		
-		assert false : "Implement!";
-
+		for( Connection c : this.entitiesToConnections.values() )
+			try {
+				c.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	}
 
 	/**
-	 * Connect to a MASSim-server.
+	 * Connects to a MASSim-server.
 	 * 
 	 * @param entity the entity that is going to be associated to the connection.
 	 * @param server the server.
@@ -178,8 +189,13 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 		boolean result = c.authenticate(user.getValue(), password.getValue());
 		
 		if( result == false ) {
-			
-			return new Percept("failed");
+
+			LinkedList<Percept> percepts = new LinkedList<Percept>();
+			Percept percept = new Percept("failed");
+			percepts.add(percept);
+			enqueuePercepts(entity,percepts);
+
+			return percept;
 		
 		}
 		
@@ -189,8 +205,36 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 		// start thread
 		new Thread(c).start();
 		
-		return new Percept("connected");
+		// return success
+		LinkedList<Percept> percepts = new LinkedList<Percept>();
+		Percept percept = new Percept("connected");
+		percepts.add(percept);
+		enqueuePercepts(entity, percepts);
+
+		return percept;
 	
+	}
+
+	/**
+	 * Puts a list of percepts into the percept-queue.
+	 * 
+	 * @param entity
+	 * @param percepts
+	 */
+	private void enqueuePercepts(String entity, LinkedList<Percept> percepts) {
+
+		LinkedList<LinkedList<Percept>> queue = entitiesToPercepts.get(entity);
+		
+		if( queue == null ) {
+			
+			queue = new LinkedList<LinkedList<Percept>>();
+			
+		}
+
+		queue.add(percepts);
+
+		entitiesToPercepts.put(entity, queue);
+		
 	}
 
 	/**
@@ -242,7 +286,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	/** 
 	 * Handles an incoming message.
 	 */
-	public void handleMessage(Connection connection, DataContainer container) {
+	public void handleMessage(Connection connection, LinkedList<Percept> percepts) {
 
 		for( Entry<String,Connection> e : this.entitiesToConnections.entrySet() ) {
 			
@@ -252,12 +296,13 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 				String entity = e.getKey();
 				
 				// store last percept
-				entitiesToPercepts.put(entity, DataContainer.toPercept(container));
+				enqueuePercepts(entity,percepts);
 				
 				// notify agents
-				if( container instanceof Percept )
+				LinkedList<Percept> prefixedPercepts = prefixPercepts(percepts, "event");
+				for( Percept p : prefixedPercepts )
 					try {
-						this.notifyAgentsViaEntity((Percept)container, entity);
+						this.notifyAgentsViaEntity(p, entity);
 					} catch (EnvironmentInterfaceException e1) {
 						e1.printStackTrace();
 					}
@@ -268,6 +313,31 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 		
 		
 		//System.out.println(container);
+		
+	}
+
+	/**
+	 * Prefixes a list of percepts. Returns a new list that contains the same
+	 * percepts with a prefix added.
+	 * 
+	 * @param percepts the percepts to be prefixed
+	 * @param prefix the prefix itself
+	 * @return a new list with prefixed percepts
+	 */
+	private LinkedList<Percept> prefixPercepts(LinkedList<Percept> percepts,
+			String prefix) {
+
+		LinkedList<Percept> ret = new LinkedList<Percept>();
+	
+		for( Percept p : percepts ) {
+			
+			Percept prefixed = (Percept) p.clone();
+			prefixed.setName(prefix + p.getName());
+			ret.add(prefixed);
+			
+		}
+		
+		return ret;
 		
 	}
 
@@ -301,7 +371,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 
 	@Override
 	public String requiredVersion() {
-		return "0.2rc2";
+		return "0.2rc1";
 	}
 	
 }

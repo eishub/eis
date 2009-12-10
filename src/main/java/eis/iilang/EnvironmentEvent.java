@@ -1,5 +1,8 @@
 package eis.iilang;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+
 /**
  * Environments are sent by the environment-interface to notify about certain changes.
  * 
@@ -32,7 +35,7 @@ public class EnvironmentEvent extends DataContainer {
 	/**
 	 * Constructs an environment-event that is not of type MISC.
 	 * 
-	 * @param name the name of the event.
+	 * @param type the type of the event.
 	 * @param parameters the event's parameters.
 	 */
 	public EnvironmentEvent(int type, Parameter...parameters) {
@@ -44,6 +47,36 @@ public class EnvironmentEvent extends DataContainer {
 		// do not get fooled by the caller
 		if( this.type < 1 || this.type > 6)
 			this.type = 0;
+
+		if( this.type == MISC ) {
+
+			this.params.addAll(Arrays.asList(parameters));
+			
+		}
+	
+	}
+
+	/**
+	 * Constructs an environment-event that is not of type MISC.
+	 * 
+	 * @param type the type of the event.
+	 * @param parameters the event's parameters.
+	 */
+	public EnvironmentEvent(int type, LinkedList<Parameter> parameters) {
+
+		super(); // no name, no params
+		
+		this.type = type;
+		
+		// do not get fooled by the caller
+		if( this.type < 1 || this.type > 6)
+			this.type = 0;
+
+		if( this.type == MISC ) {
+
+			this.params = parameters;
+			
+		}
 	
 	}
 
@@ -148,5 +181,16 @@ public class EnvironmentEvent extends DataContainer {
 		return type;
 	
 	}
+
+	@Override
+	public Object clone() {
+
+		EnvironmentEvent ret = new EnvironmentEvent(this.type,this.getClonedParameters());
+		
+		ret.source = this.source;
+		
+		return ret;
 	
+	}
+
 }

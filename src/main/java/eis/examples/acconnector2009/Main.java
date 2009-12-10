@@ -19,7 +19,7 @@ import eis.iilang.EnvironmentEvent;
 public class Main implements AgentListener,EnvironmentListener {
 
 	/**
-	 * @param args
+	 * @param args not used
 	 */
 	public static void main(String[] args) {
 		
@@ -29,7 +29,7 @@ public class Main implements AgentListener,EnvironmentListener {
 
 	
 	/**
-	 * @param args
+	 * Instantiates the class.
 	 */
 	public Main() {
 
@@ -123,24 +123,29 @@ public class Main implements AgentListener,EnvironmentListener {
 	
 	}
 
+	@Override
 	public void handlePercept(String agent, Percept event) {
 
 		System.out.println("Event for agent " + agent + " " + event.toXML() );
 		
 	}
 
+	@Override
 	public void handleDeletedEntity(String entity) {
 		
 	}
 
+	@Override
 	public void handleEnvironmentEvent(EnvironmentEvent event) {
 		
 	}
 
+	@Override
 	public void handleFreeEntity(String entity) {
 		
 	}
 
+	@Override
 	public void handleNewEntity(String entity) {
 		
 	}

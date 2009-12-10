@@ -63,7 +63,7 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 
 	/**
 	 * Checks for emptyness.
-	 * @return
+	 * @return true if empty, false otherwise
 	 */
 	public boolean isEmpty() {
 		
@@ -113,4 +113,19 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 		return ret;
 	
 	}
+
+	@Override
+	public Object clone() {
+		
+		ParameterList ret = new ParameterList();
+		
+		for( Parameter p : list ) {
+			
+			ret.add( (Parameter) p.clone() );
+		
+		}
+		
+		return ret;
+	}
+
 }

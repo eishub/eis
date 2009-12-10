@@ -1,6 +1,7 @@
 package eis.iilang;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 
 /**
  * This enum represents commands that can be sent to the environment.
@@ -54,6 +55,28 @@ public class EnvironmentCommand extends DataContainer {
 		else if( this.type == MISC ) {
 
 			this.params.addAll(Arrays.asList(params));
+			
+		}
+		
+	}
+	
+	public EnvironmentCommand(int type, LinkedList<Parameter> params) {
+		super(); // no name, no params
+		
+		this.type = type;
+		
+		// do not get fooled by the caller
+		if( this.type < 1 || this.type > 6)
+			this.type = 0;
+		
+		if( this.type == INIT ) {
+			
+			this.params = params;
+			
+		}
+		else if( this.type == MISC ) {
+
+			this.params = params;
 			
 		}
 		
@@ -177,4 +200,15 @@ public class EnvironmentCommand extends DataContainer {
 
 	}
 	
+	@Override
+	public Object clone() {
+
+		EnvironmentCommand ret = new EnvironmentCommand(this.type,this.getClonedParameters());
+		
+		ret.source = this.source;
+		
+		return ret;
+	
+	}
+
 }
