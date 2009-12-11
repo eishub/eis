@@ -114,10 +114,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	public void manageEnvironment(EnvironmentCommand command)
 			throws ManagementException {
 
-		if(command.getType()==EnvironmentCommand.RESET) {
-			
-			
-		}
+		throw new ManagementException("No environment-commands supported.");
 		
 	}
 
@@ -299,8 +296,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 				enqueuePercepts(entity,percepts);
 				
 				// notify agents
-				LinkedList<Percept> prefixedPercepts = prefixPercepts(percepts, "event");
-				for( Percept p : prefixedPercepts )
+				for( Percept p : percepts )
 					try {
 						this.notifyAgentsViaEntity(p, entity);
 					} catch (EnvironmentInterfaceException e1) {
@@ -342,7 +338,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	}
 
 	/**
-	 * Check all connections every 4 connections.
+	 * Check all connections every couple of seconds.
 	 */
 	public void run() {
 
@@ -361,7 +357,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 			}
 			
 			try {
-				Thread.sleep(4000);
+				Thread.sleep(60000);
 			} catch (InterruptedException e) {
 			}
 			

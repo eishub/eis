@@ -59,6 +59,9 @@ public class EnvironmentInterface extends EIDefaultImpl {
 	@Override
 	public void manageEnvironment(EnvironmentCommand command)
 			throws ManagementException {
+
+		throw new ManagementException("No environment-commands supported.");
+		
 	}
 
 	@Override

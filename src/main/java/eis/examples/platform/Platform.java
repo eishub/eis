@@ -77,6 +77,7 @@ public class Platform implements EnvironmentListener {
 			
 		}
 		
+		ei.getAllPercepts("", "");
 		// 5. showing entities
 		System.out.println("Free entities: " + ei.getFreeEntities());
 		

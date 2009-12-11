@@ -39,14 +39,14 @@ public class GeneratorInterface extends EIDefaultImpl implements Runnable {
 
 	@Override
 	public boolean isConnected() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public void manageEnvironment(EnvironmentCommand command)
-			throws ManagementException, NoEnvironmentException {
-		// TODO Auto-generated method stub
+			throws ManagementException {
+
+		throw new ManagementException("No environment-commands supported.");
 		
 	}
 

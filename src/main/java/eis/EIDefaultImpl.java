@@ -376,6 +376,9 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		// remove from mapping, might be null
 		agentsToEntities.remove(agent);
 		
+		// remove listeners
+		agentsToAgentListeners.remove(agent);
+		
 		// finally remove from registered list
 		registeredAgents.remove(agent);
 

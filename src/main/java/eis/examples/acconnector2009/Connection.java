@@ -227,10 +227,10 @@ public class Connection extends Socket implements Runnable {
 			
 			doc = documentbuilderfactory.newDocumentBuilder().newDocument();
 			Element root = doc.createElement("message");
-			root.setAttribute("type","auth-request");
+			root.setAttribute("type","action");
 			doc.appendChild(root);
 			
-			Element auth = doc.createElement("authentication");
+			Element auth = doc.createElement("action");
 			auth.setAttribute("id",actionId);
 			auth.setAttribute("type",action);
 			root.appendChild(auth);
@@ -434,7 +434,7 @@ public class Connection extends Socket implements Runnable {
 			// simlation id
 			percept = new Percept(
 					"simId",
-					new Numeral( new Integer(attributes.getNamedItem("id").getNodeValue()) )
+					new Identifier( attributes.getNamedItem("id").getNodeValue() )
 				);
 			ret.add(percept);
 			
@@ -488,13 +488,13 @@ public class Connection extends Socket implements Runnable {
 			Percept percept = null;
 			
 			percept = new Percept(
-					"simend"
+					"simEnd"
 			); 
 			ret.add(percept);
 				
 			percept = new Percept(
 					"result",
-					new Numeral( new Integer( attributes.getNamedItem("score").getNodeValue() ))
+					new Identifier( attributes.getNamedItem("score").getNodeValue() )
 			);
 			ret.add(percept);
 			
@@ -573,6 +573,11 @@ public class Connection extends Socket implements Runnable {
 						else if( str.equals("obstacle") ) {
 							
 							item = "obstacle";
+							
+						}
+						else if( str.equals("switch") ) {
+							
+							item = "switch";
 							
 						}
 						else if( str.equals("fence") ) {

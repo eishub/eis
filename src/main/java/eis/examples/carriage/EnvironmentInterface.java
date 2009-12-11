@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import eis.*;
 import eis.exceptions.EntityException;
 import eis.exceptions.EnvironmentInterfaceException;
+import eis.exceptions.ManagementException;
 import eis.iilang.Percept;
 import eis.iilang.Numeral;
 import eis.iilang.EnvironmentCommand;
@@ -33,12 +34,12 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 	}
 	
 	@Override
-	public void manageEnvironment(EnvironmentCommand command) {
+	public void manageEnvironment(EnvironmentCommand command)
+			throws ManagementException {
 
-		// TODO implement something fancy
+		throw new ManagementException("No environment-commands supported.");
 		
 	}
-
 
 	public void run() {
 
