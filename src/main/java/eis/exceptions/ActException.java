@@ -13,15 +13,118 @@ package eis.exceptions;
 @SuppressWarnings("serial")
 public class ActException extends EnvironmentInterfaceException {
 
+	/** No type. */
+	public static int NOTSPECIFIC = 0;
+	
+	/** if the agent is not registered */
+	public static int NOTREGISTERED = 1;
+	
+	/** if the agent has no entities */
+	public static int NOENTITIES = 2;
+	
+	/** if there is a wrong entity */
+	public static int WRONGENTITY = 3;
+	
+	/** if the action is not supported by the type */
+	public static int NOTSUPPORTEDBYTYPE = 4;
+	
+	/** if the syntax is wrong */
+	public static int WRONGSYNTAX = 5;
+	
+	/** if the action cannot be executed */
+	public static int FAILURE = 6; 
+	
+	/** the type */
+	private int type = NOTSPECIFIC;
+
+	/**
+	 * @param string
+	 */
 	public ActException(String string) {
 		super(string);
 	}
 
+	/**
+	 * @param message
+	 * @param cause
+	 */
 	public ActException(String message, Exception cause) {
 		super(message);
 		
 		this.initCause(cause);
 		
 	} 
+
+	/**
+	 * @param string
+	 * @param type
+	 */
+	public ActException(String string, int type) {
+		super(string);
+		
+		setType(type);
+		
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 * @param type
+	 */
+/*	public ActException(String message, Exception cause, int type) {
+		super(message);
+		
+		this.initCause(cause);
+
+		setType(type);
+
+	}*/ 
+	
+	public ActException(int type) {
+		super("");
+		
+		setType(type);
+		
+	}
+	
+	public ActException(int type, String message) {
+		super(message);
+		
+		setType(type);
+		
+	}
+
+	public ActException(int type, String message, Exception cause) {
+		super(message);
+		
+		setType(type);
+		initCause(cause);
+		
+	}
+
+	/**
+	 * @return
+	 */
+	public int getType() {
+		
+		return type;
+		
+	}
+	
+	/**
+	 * @param type
+	 */
+	public void setType(int type) {
+
+		if( type < 0 || type > 6) {
+			
+			assert false: "Type \"" + type + "\" not supported.";
+			type = 0;
+	
+		}
+		
+		this.type = type;
+		
+	}
 	
 }

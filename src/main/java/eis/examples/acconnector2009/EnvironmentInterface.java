@@ -155,7 +155,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 			try {
 				c.close();
 			} catch (IOException e) {
-				throw new ActException("Existing connection could not be closed", e);
+				throw new ActException(ActException.FAILURE, "Existing connection could not be closed", e);
 			}
 
 			c = null; 
@@ -171,12 +171,12 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 
 		} catch (UnknownHostException e) {
 	
-			throw new ActException("Unknown host " + server.getValue());
+			throw new ActException(ActException.FAILURE, "Unknown host " + server.getValue());
 		
 		} catch (IOException e) {
 
 			e.printStackTrace();
-			throw new ActException("IO Error");
+			throw new ActException(ActException.FAILURE, "IO Error");
 		
 		}
 		

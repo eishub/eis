@@ -604,14 +604,14 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 
 		// unregistered agents cannot act
 		if( registeredAgents.contains(agent) == false )
-			throw new ActException("Agent \"" + agent + "\" is not registered." );
+			throw new ActException( ActException.NOTREGISTERED );
 		
 		// get the associated entities
 		HashSet<String> associatedEntities = agentsToEntities.get(agent);
 		
 		// no associated entity/ies -> trivial reject
 		if( associatedEntities == null || associatedEntities.size() == 0 )
-			throw new ActException("Agent \"" + agent + "\" has no associated entities." );
+			throw new ActException( ActException.NOENTITIES );
 
 		// entities that should perform the action
 		HashSet<String> targetEntities = null;
@@ -627,7 +627,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			for( String entity : entities ) {
 				
 				if( associatedEntities.contains(entity) == false)
-					throw new ActException("Entity \"" + entity + "\" is not associated to agent \"" + agent + "\"." );
+					throw new ActException( ActException.WRONGENTITY );
 			
 				targetEntities.add(entity);
 				
@@ -648,17 +648,28 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		for( int a = 0 ; a < params.size() ; a++ )
 			classParams[a+1] = params.get(a).getClass();
 
+		//for( Class<?> p : classParams )
+		  //System.out.println(p);
+		
 		// return value
 		LinkedList<Percept> rets = new LinkedList<Percept>();
 		
 		try {
 
 			// lookup the method
-			Method m = this.getClass().getMethod("action" + action.getName(),classParams);
+			String methodName = "action" + action.getName();
+			//System.out.println(methodName);
+			
+			Method m = this.getClass().getMethod(methodName,classParams);
 
 			if( Class.forName("eis.iilang.Percept").isAssignableFrom(m.getReturnType()) == false)
-				throw new ActException("Wrong return-type");
+				throw new ActException( ActException.WRONGSYNTAX, "The return-type is wrong" );
 
+			//System.out.println("Method: " + m);
+			
+			// make accessible; hope this is not a bug
+			m.setAccessible(true);
+			
 			// invoke
 			for( String entity : targetEntities ) {
 
@@ -675,23 +686,24 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 
 		} catch (ClassNotFoundException e) {
 
-			throw new ActException("Class not found", e);
+			throw new ActException( ActException.WRONGSYNTAX, "Class not found", e);
 			
 		} catch (SecurityException e) {
 
-			throw new ActException("Security exception", e);
+			throw new ActException(ActException.WRONGSYNTAX, "Security exception", e);
 
 		} catch (NoSuchMethodException e) {
 
-			throw new ActException("No such method", e);
+			throw new ActException(ActException.WRONGSYNTAX, "No such method", e);
 			
 		} catch (IllegalArgumentException e) {
 
-			throw new ActException("Illegal argument", e);
+			throw new ActException(ActException.WRONGSYNTAX, "Illegal argument", e);
 		
 		} catch (IllegalAccessException e) {
+			System.out.println(e.getMessage());
 
-			throw new ActException("Illegal access", e);
+			throw new ActException(ActException.WRONGSYNTAX, "Illegal access", e);
 
 		} catch (InvocationTargetException e) {
 
@@ -701,7 +713,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			else if(e.getCause() instanceof NoEnvironmentException)
 				throw (NoEnvironmentException) e.getCause(); // rethrow
 	
-			throw new ActException("Invocation target exception", e);
+			throw new ActException(ActException.WRONGSYNTAX, "Invocation target exception", e);
 		
 		}
 		
