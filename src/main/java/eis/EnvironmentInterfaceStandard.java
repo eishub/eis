@@ -38,7 +38,7 @@ public interface EnvironmentInterfaceStandard {
 	/**
 	 * 
 	 */
-	static String version = "0.2rc1";
+	static String version = "0.2";
 
 	/**
 	 * Attaches an environment-listener.

@@ -79,7 +79,7 @@ public class EnvironmentInterface extends EIDefaultImpl {
 	
 	@Override
 	public String requiredVersion() {
-		return "0.2rc1";
+		return "0.2";
 	}
 
 }

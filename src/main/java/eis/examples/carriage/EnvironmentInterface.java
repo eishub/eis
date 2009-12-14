@@ -46,8 +46,8 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 		while(true) {
 
 			// notify about free entities
-			for( String free : this.getFreeEntities() )
-				this.notifyFreeEntity(free);
+			//for( String free : this.getFreeEntities() )
+				//this.notifyFreeEntity(free);
 						
 			// tell current step
 			long step = env.getStepNumber();
@@ -138,7 +138,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 
 	@Override
 	public String requiredVersion() {
-		return "0.2rc1";
+		return "0.2";
 	}
 
 }

@@ -97,7 +97,7 @@ public class GeneratorInterface extends EIDefaultImpl implements Runnable {
 
 	@Override
 	public String requiredVersion() {
-		return "0.2rc1";
+		return "0.2";
 	}
 	
 	public Percept actionshout(String entity, Identifier sentence) {

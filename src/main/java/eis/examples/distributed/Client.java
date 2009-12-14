@@ -145,7 +145,7 @@ public class Client extends EIClientDefaultImpl implements Runnable {
 
 	@Override
 	public String requiredVersion() {
-		return "0.2rc2";
+		return "0.2";
 	}
 	
 }

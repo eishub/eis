@@ -367,7 +367,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 
 	@Override
 	public String requiredVersion() {
-		return "0.2rc1";
+		return "0.2";
 	}
 	
 }
