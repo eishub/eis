@@ -1,7 +1,7 @@
 package eis.iilang;
 
 /**
- * An identifier is a string.
+ * An identifier is an arbitrary string.
  * 
  * @author tristanbehrens
  *

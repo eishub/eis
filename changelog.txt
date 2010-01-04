@@ -1,4 +1,4 @@
-CURRENT VERSION
+CURRENT VERSION 0.2
 
 - made getAssociatedEntities and getAssociatedAgents in EnvironmentInterfaceStandard public.
 - getAllPerceptsFromEntity throws exceptions now.
@@ -10,6 +10,7 @@ CURRENT VERSION
 - fixed a bug within notifyAgents
 - added getType to EnvironmentInterfaceStandard; implemented getType and setType in EIDefaultImpl
 - added timestamp and source to DataContainer
+- added type to ActionException
 
 RELEASE 0.1
 

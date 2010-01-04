@@ -3,7 +3,8 @@ package eis.iilang;
 import java.util.LinkedList;
 
 /**
- * Represents a function over parameters.
+ * Represents a function over parameters. It consits of a name and
+ * a list of parameters.
  * 
  * @author tristanbehrens
  */

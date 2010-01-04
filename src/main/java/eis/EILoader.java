@@ -13,13 +13,22 @@ import java.util.jar.Manifest;
 import eis.EnvironmentInterfaceStandard;
 
 /**
- * Loads an environment interface from a file and instantiates it.
+ * Loads an environment-interface from a file and instantiates it.
+ * Uses java-reflection to load the environment-interface from the respective
+ * jar-file. Also checks the required version for compatibility.
  * 
  * @author tristanbehrens
  *
  */
 public class EILoader {
 	
+	/**
+	 * Loads an environment-interface from a jar-file.
+	 * 
+	 * @param file the file to be loaded
+	 * @return an instance of the environment-interface contained in the jar-file
+	 * @throws IOException is thrown if loading was not successfull
+	 */
 	public static EnvironmentInterfaceStandard fromJarFile(File file) throws IOException {
 		
 		// 1. locate file, check for existence, check for being a jar
@@ -78,6 +87,12 @@ public class EILoader {
 	}
 	
 
+	/**
+	 * Loads an environment-interface.
+	 * 
+	 * @param args the first string has to be a path to a jar-file containing an environment-interface
+	 * @throws IOException thrown if the file could not be loaded
+	 */
 	public static void main(String[] args) throws IOException {
 		
 		if( args.length == 0) {

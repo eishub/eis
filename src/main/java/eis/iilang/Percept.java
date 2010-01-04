@@ -4,7 +4,6 @@ import java.util.LinkedList;
 
 /**
  * A percept.
- * <p/>
  * A percept consists of a name and some parameters.
  * 
  * @author tristanbehrens
@@ -61,12 +60,16 @@ public class Percept extends DataContainer {
 		ret+=name;
 
 		if( params.isEmpty() == false) {
-			ret+="(";
+			ret += "(";
 			
-			for( Parameter p : params ) 
+			ret += params.getFirst().toProlog();
+			
+			for( int a = 1 ; a < params.size(); a++ ) {
+				Parameter p = params.get(a);
 				ret += "," + p.toProlog();
+			} 
 			
-			ret+=")";
+			ret += ")";
 		}
 		
 		return ret;

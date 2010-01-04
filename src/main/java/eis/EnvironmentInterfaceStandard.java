@@ -36,7 +36,7 @@ import eis.iilang.Percept;
 public interface EnvironmentInterfaceStandard {
 
 	/**
-	 * 
+	 * Indicates the current version of EIS. Used to determine compatibility.
 	 */
 	static String version = "0.2";
 
@@ -45,7 +45,7 @@ public interface EnvironmentInterfaceStandard {
 	 * <p/> 
 	 * If the listener is already attached, nothing will happen.
 	 * 
-	 * @param listener
+	 * @param listener is the listener
 	 */
 	void attachEnvironmentListener(EnvironmentListener listener);
 
@@ -54,7 +54,7 @@ public interface EnvironmentInterfaceStandard {
 	 * <p/>
 	 * If the listener is not attached, nothing will happen.
 	 * 
-	 * @param listener
+	 * @param listener is the listener
 	 */
 	void detachEnvironmentListener(EnvironmentListener listener);
 
@@ -63,8 +63,8 @@ public interface EnvironmentInterfaceStandard {
 	 * <p/>
 	 * If the agent has not been registered nothing will happen.
 	 * 
-	 * @param agent
-	 * @param listener
+	 * @param agent is the agent
+	 * @param listener is the listener of the agent
 	 */
 	void attachAgentListener(String agent, AgentListener listener);
 
@@ -72,8 +72,8 @@ public interface EnvironmentInterfaceStandard {
 	 * Detaches an agent-listener.
 	 * <p/>
 	 * If the agent has not been registered and/or the listener does not exist nothing will happen.
-	 * @param agent
-	 * @param listener
+	 * @param agent is the agent
+	 * @param listener is the listener of the agent
 	 */
 	void detachAgentListener(String agent, AgentListener listener);
 
@@ -98,7 +98,6 @@ public interface EnvironmentInterfaceStandard {
 	 * 
 	 * @return a list of agent-ids.
 	 */
-	@SuppressWarnings("unchecked")
 	LinkedList<String> getAgents();
 
 	/**
@@ -118,7 +117,7 @@ public interface EnvironmentInterfaceStandard {
 	void associateEntity(String agent, String entity) throws RelationException;
 
 	/**
-	 * Frees an entity from its associated agent.
+	 * Frees an entity from its associated agent(s).
 	 * 
 	 * @param entity the id of the entity to be freed.
 	 * @throws PlatformException is thrown if the entity does not exist, or if it is not associated.
@@ -136,9 +135,9 @@ public interface EnvironmentInterfaceStandard {
 	/**
 	 * Removes a pair from the agents-entities-relation.
 	 * 
-	 * @param agent
-	 * @param entity
-	 * @throws RelationException
+	 * @param agent the agent to be freed
+	 * @param entity the entity to be freed 
+	 * @throws RelationException is thrown when the agent is not associated with the entity
 	 */
 	void freePair(String agent, String entity) throws RelationException;
 
@@ -232,6 +231,11 @@ public interface EnvironmentInterfaceStandard {
 	 */
 	String getType(String entity) throws EntityException;
 
+	/**
+	 * Denotes which version of EIS is required.
+	 * 
+	 * @return the required version
+	 */
 	String requiredVersion();
 	
 }

@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
- * Environments are sent by the environment-interface to notify about certain changes.
+ * Environments are sent by the environment-interface to notify about changes
+ * of the environment's state of execution.
  * 
  * @author tristanbehrens
  *
@@ -176,6 +177,10 @@ public class EnvironmentEvent extends DataContainer {
 		
 	}
 	
+	/**
+	 * Returns the type of the event.
+	 * @return the type
+	 */
 	public int getType() {
 		
 		return type;

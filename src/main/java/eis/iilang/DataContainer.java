@@ -1,10 +1,12 @@
 package eis.iilang;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
- * A superclass for actions, events, et cetera.
+ * A superclass for actions, events, et cetera. 
+ * Consists of a name and a sequence of parameters. 
+ * Additionally it stores a time-stamp that indicates the time of creation,
+ * and also a string that indicates the source.
  * 
  * @author tristanbehrens
  *

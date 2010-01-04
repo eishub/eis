@@ -4,11 +4,17 @@ import java.util.LinkedList;
 
 /**
  * An action that can be performed by an agent through its associated entity/ies.
+ * An action consists of a name and a sequence of parameters.
+ * 
  * @author tristanbehrens
- *
  */
 public class Action extends DataContainer {
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2483470223360080046L;
 
 	/**
 	 * Constructs an action.
@@ -51,7 +57,7 @@ public class Action extends DataContainer {
 	
 	}
 
-	@Override
+/*	@Override
 	public String toProlog() {
 		
 		String ret = "action";
@@ -67,7 +73,32 @@ public class Action extends DataContainer {
 		
 		return ret;
 	
+	}*/
+
+	@Override
+	public String toProlog() {
+		
+		String ret = "";
+		
+		ret+=name;
+
+		if( params.isEmpty() == false) {
+			ret += "(";
+			
+			ret += params.getFirst().toProlog();
+			
+			for( int a = 1 ; a < params.size(); a++ ) {
+				Parameter p = params.get(a);
+				ret += "," + p.toProlog();
+			} 
+			
+			ret += ")";
+		}
+		
+		return ret;
+	
 	}
+
 
 	@Override
 	public Object clone() {
