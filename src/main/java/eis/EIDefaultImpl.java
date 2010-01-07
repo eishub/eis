@@ -926,7 +926,9 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		// finally delete
 		entities.remove(entity);
 		freeEntities.remove(entity);
-
+		if(this.entitiesToTypes.containsKey(entity))
+			this.entitiesToTypes.remove(entity);
+		
 		// notify 
 		notifyDeletedEntity(entity);
 		
