@@ -1,5 +1,9 @@
 <project name="apleis">
   
+ <tstamp>
+    <format property="TODAY_MY" pattern="dMMMMyyyy" locale="en,UK"/>
+  </tstamp>
+
   <property name="releasedir" location="release"/>
   <property name="srcdir" location="src/main/java/"/>
   <property name="jardir" location="target"/>
@@ -12,10 +16,20 @@
     <delete dir="${releasedir}"/>
     
   	<mkdir dir="${releasedir}"/>
-    
+
     <copy todir="${releasedir}">
+      <fileset dir=".">
+      	<include name="changelog.txt"/>
+      </fileset>
+    </copy>	  
+    
+    <mkdir dir="${releasedir}/jar"/>
+    <copy todir="${releasedir}/jar">
       <fileset dir="${jardir}">
-      	<include name="*.jar"/>
+      	<include name="eis-0.2.jar"/>
+       	<include name="eis-0.2-lib.jar"/>
+      	<include name="eis-0.2-acconnector2009.jar"/>
+      	<include name="eis-0.2-carriage.jar"/>
       </fileset>
     </copy>	  
   	
@@ -38,6 +52,10 @@
     <copy todir="${releasedir}/doc">
       <fileset dir="${docdir}"/>
     </copy>	  
+
+  <zip destfile="eis-0.2_${TODAY_MY}.zip"
+       basedir="${releasedir}"
+  />
 
   </target>
 
