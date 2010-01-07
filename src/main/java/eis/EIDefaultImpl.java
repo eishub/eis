@@ -680,7 +680,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 				
 				Percept ret = (Percept) m.invoke(this, objParams );
 				
-				rets.add( ret );
+				if( ret != null)
+				  rets.add( ret );
 				
 			}
 

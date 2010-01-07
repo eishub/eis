@@ -14,25 +14,25 @@ package eis.exceptions;
 public class ActException extends EnvironmentInterfaceException {
 
 	/** No type. */
-	public static int NOTSPECIFIC = 0;
+	public static final int NOTSPECIFIC = 0;
 	
 	/** if the agent is not registered */
-	public static int NOTREGISTERED = 1;
+	public static final int NOTREGISTERED = 1;
 	
 	/** if the agent has no entities */
-	public static int NOENTITIES = 2;
+	public static final int NOENTITIES = 2;
 	
 	/** if there is a wrong entity */
-	public static int WRONGENTITY = 3;
+	public static final int WRONGENTITY = 3;
 	
 	/** if the action is not supported by the type */
-	public static int NOTSUPPORTEDBYTYPE = 4;
+	public static final int NOTSUPPORTEDBYTYPE = 4;
 	
 	/** if the syntax is wrong */
-	public static int WRONGSYNTAX = 5;
+	public static final int WRONGSYNTAX = 5;
 	
 	/** if the action cannot be executed */
-	public static int FAILURE = 6; 
+	public static final int FAILURE = 6; 
 	
 	/** the type */
 	private int type = NOTSPECIFIC;

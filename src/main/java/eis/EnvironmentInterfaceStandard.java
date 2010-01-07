@@ -184,9 +184,10 @@ public interface EnvironmentInterfaceStandard {
 	 * @param entities is an array of entities through which an agent is supposed to act. If the 
 	 * array is empty, all entities are used.
 	 * @return a list of action-results.
-	 * @throws PerceiveOrActFailureException is thrown if the agent has not been registered,
+	 * @throws ActException is thrown if the agent has not been registered,
 	 * if the agent has no associated entities, if at least one of the given entities is not 
 	 * associated, or if at least one one the actions fails.
+	 * @throws NoEnvironmentException if the interface is not connected to an environment.
 	 */
 	LinkedList<Percept> performAction(String agent, Action action,
 			String... entities) throws ActException, NoEnvironmentException;
