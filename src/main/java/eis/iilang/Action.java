@@ -111,4 +111,14 @@ public class Action extends DataContainer {
 		
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		
+		if( !(obj instanceof Action) )
+			return false;
+		
+		return super.equals(obj);
+
+	}
+
 }

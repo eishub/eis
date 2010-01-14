@@ -104,4 +104,14 @@ public class Percept extends DataContainer {
 	
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if( !(obj instanceof Percept) )
+			return false;
+		
+		return super.equals(obj);
+
+	}
+
 }

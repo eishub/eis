@@ -154,4 +154,29 @@ public class Function extends Parameter {
 		
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		
+		if( !(obj instanceof Function) )
+			return false;
+		
+		Function f = (Function) obj;
+
+		if( f.name.equals(name) == false )
+			return false;
+		
+		if( f.params.size() != params.size() )
+			return false;
+		
+		for( int a = 0; a < params.size() ; a++ ) {
+			
+			if( f.params.get(a).equals(params.get(a)) == false )
+				return false;
+			
+		}
+		
+		return true;
+
+	}
+
 }

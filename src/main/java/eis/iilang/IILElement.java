@@ -79,5 +79,10 @@ public abstract class IILElement implements Serializable {
 	 * Creates a clone of the iilang-element.
 	 */
 	public abstract Object clone();
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public abstract boolean equals(Object obj);
 
 }

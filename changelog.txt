@@ -3,6 +3,7 @@ VERSION 0.2-CURRENT
 - made static fields of ActException final
 - EIDefaultImpl if an action...-method returns null, null is not added to the collection that is returned
 - when an entity is deleted also its type is also removed
+- added equals-method to IILang
 
 VERSION 0.2-5January2010
 

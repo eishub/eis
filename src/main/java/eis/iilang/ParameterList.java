@@ -128,4 +128,25 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 		return ret;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		
+		if( !(obj instanceof ParameterList) )
+			return false;
+		
+		ParameterList pl = (ParameterList) obj;
+		
+		if( pl.list.size() != list.size() )
+			return false;
+		
+		for( int a = 0; a < pl.list.size() ; a++ ) {
+			
+			if( pl.list.get(a).equals(list.get(a)) == false )
+				return false;
+			
+		}
+		
+		return true;
+	}
+
 }

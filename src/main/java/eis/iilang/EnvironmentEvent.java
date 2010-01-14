@@ -13,22 +13,22 @@ import java.util.LinkedList;
 public class EnvironmentEvent extends DataContainer {
 
 	/** the environment has been started */
-	public static int STARTED = 1;
+	public static final int STARTED = 1;
 	
 	/** the environment has been killed */
-	public static int KILLED = 2;
+	public static final int KILLED = 2;
 	
 	/** the environment has been paused */
-	public static int PAUSED = 3;
+	public static final int PAUSED = 3;
 	
 	/** the environment has been reset */
-	public static int RESET = 4;
+	public static final int RESET = 4;
 	
 	/** the environment has been initialized */
-	public static int INITED = 5; 
+	public static final int INITED = 5; 
 	
 	/** an event that is not defined yet uses name and parameters. */
-	public static int MISC = 6;
+	public static final int MISC = 6;
 
 	/** the type of the event */
 	private int type = 0;
@@ -197,5 +197,16 @@ public class EnvironmentEvent extends DataContainer {
 		return ret;
 	
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if( !(obj instanceof EnvironmentEvent) )
+			return false;
+		
+		return super.equals(obj);
+
+	}
+
 
 }

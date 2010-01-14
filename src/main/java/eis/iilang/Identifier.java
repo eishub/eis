@@ -6,6 +6,10 @@ package eis.iilang;
  * @author tristanbehrens
  *
  */
+/**
+ * @author tristanbehrens
+ *
+ */
 public class Identifier extends Parameter {
 
 	/** The identifier itself. */
@@ -55,5 +59,17 @@ public class Identifier extends Parameter {
 		return new Identifier(this.value);
 	
 	}
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		if( !(obj instanceof Identifier) )
+			return false;
+		
+		Identifier id = (Identifier) obj;
+		
+		return id.value.equals(value); 
+		
+	}
+
 }

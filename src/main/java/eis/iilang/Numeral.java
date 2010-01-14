@@ -49,17 +49,17 @@ public class Numeral extends Parameter {
 	public Object clone() {
 		return new Numeral(value);
 	}
-	
-/*	public int toInt() {
+
+	@Override
+	public boolean equals(Object obj) {
 		
-		return (int)value.t;
+		if( !(obj instanceof Numeral) )
+			return false;
+		
+		Numeral num = (Numeral) obj;
+		
+		return num.value.equals(value); 
 		
 	}
 
-
-	public long toLong() {
-		
-		return (long)value;
-		
-	}*/
 }

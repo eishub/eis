@@ -169,5 +169,29 @@ public abstract class DataContainer extends IILElement {
 		return source;
 		
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		if( !(obj instanceof DataContainer) )
+			return false;
+		
+		DataContainer dc = (DataContainer) obj;
+		
+		if( dc.name.equals(name) == false )
+			return false;
+		
+		if( dc.params.size() != params.size() )
+			return false;
+		
+		for( int a = 0; a < params.size() ; a++ ) {
+			
+			if( dc.params.get(a).equals(params.get(a)) == false )
+				return false;
+			
+		}
+		
+		return true;
+	}
 		
 }

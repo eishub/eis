@@ -12,22 +12,22 @@ import java.util.LinkedList;
 public class EnvironmentCommand extends DataContainer {
 
 	/** start the environment */
-	public static int START = 1;
+	public static final int START = 1;
 	
 	/** stop the environment */
-	public static int KILL = 2;
+	public static final int KILL = 2;
 	
 	/** pause the environment */
-	public static int PAUSE = 3;
+	public static final int PAUSE = 3;
 	
 	/** reset the environment */
-	public static int RESET = 4;
+	public static final int RESET = 4;
 	
 	/** initialize the environment */
-	public static int INIT = 5; 
+	public static final int INIT = 5; 
 	
 	/** a command that is not defined yet uses name and parameters. */
-	public static int MISC = 6;
+	public static final int MISC = 6;
 
 	private int type = 0;
 
@@ -210,5 +210,16 @@ public class EnvironmentCommand extends DataContainer {
 		return ret;
 	
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if( !(obj instanceof EnvironmentCommand) )
+			return false;
+		
+		return super.equals(obj);
+
+	}
+
 
 }

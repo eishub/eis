@@ -42,15 +42,13 @@
     <copy todir="${releasedir}/javadoc">
       <fileset dir="${javadocdir}"/>
     </copy>	  
-
-    <mkdir dir="${releasedir}/javadoc"/>
-    <copy todir="${releasedir}/javadoc">
-      <fileset dir="${javadocdir}"/>
-    </copy>	  
     
     <mkdir dir="${releasedir}/doc"/>
     <copy todir="${releasedir}/doc">
-      <fileset dir="${docdir}"/>
+      <fileset dir="${docdir}">
+      	<include name="*.pdf"/>
+      	<include name="*.txt"/>
+      </fileset>
     </copy>	  
 
   <zip destfile="eis-0.2_${TODAY_MY}.zip"
