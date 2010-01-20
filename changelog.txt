@@ -5,6 +5,7 @@ VERSION 0.2-CURRENT
 - when an entity is deleted also its type is also removed
 - added equals-method to IILang
 - you can now instantiate actions and percepts with only a name (without parameters)
+- added a connector to the agent contest 2010 scenario
 
 VERSION 0.2-5January2010
 

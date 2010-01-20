@@ -101,6 +101,31 @@
           </execution>
 
           <execution>
+            <id>acconnector2010</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>acconnector2010</classifier>
+              <archive>
+                <!--index>true</index-->
+                <manifest>
+                  <mainClass>eis.examples.acconnector2010.EnvironmentInterface</mainClass>
+                  <packageName>eis.examples.acconnector2010</packageName>
+                </manifest>
+                <manifestEntries>
+                  <mode>development</mode>
+                  <url>${pom.url}</url>
+                </manifestEntries>
+              </archive>
+              <includes>
+                <include>eis/examples/acconnector2010/*</include>
+              </includes>
+            </configuration>
+          </execution>
+
+          <execution>
             <id>communication</id>
             <phase>package</phase>
             <goals>

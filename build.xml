@@ -29,6 +29,7 @@
       	<include name="eis-0.2.jar"/>
        	<include name="eis-0.2-lib.jar"/>
       	<include name="eis-0.2-acconnector2009.jar"/>
+      	<include name="eis-0.2-acconnector2010.jar"/>
       	<include name="eis-0.2-carriage.jar"/>
       </fileset>
     </copy>	  
