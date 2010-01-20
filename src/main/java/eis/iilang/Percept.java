@@ -11,6 +11,20 @@ import java.util.LinkedList;
  */
 public class Percept extends DataContainer {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5929676291607949546L;
+
+	/**
+	 * Constructs a percept from a name.
+	 * 
+	 * @param name
+	 */
+	public Percept(String name) {
+		super(name);
+	}
+	
 	/** 
 	 * Contructs a percept from a name and an array of parameters.
 	 * 

@@ -17,6 +17,15 @@ public class Action extends DataContainer {
 	private static final long serialVersionUID = 2483470223360080046L;
 
 	/**
+	 * Constructs an action from a name.
+	 * 
+	 * @param name
+	 */
+	public Action(String name) {
+		super(name);
+	}
+
+	/**
 	 * Constructs an action.
 	 * 
 	 * @param name

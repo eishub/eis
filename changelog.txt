@@ -4,6 +4,7 @@ VERSION 0.2-CURRENT
 - EIDefaultImpl if an action...-method returns null, null is not added to the collection that is returned
 - when an entity is deleted also its type is also removed
 - added equals-method to IILang
+- you can now instantiate actions and percepts with only a name (without parameters)
 
 VERSION 0.2-5January2010
 
