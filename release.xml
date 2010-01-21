@@ -1,4 +1,4 @@
-<project name="apleis">
+<project name="apleis" default="release">
   
  <tstamp>
     <format property="TODAY_MY" pattern="dMMMMyyyy" locale="en,UK"/>
