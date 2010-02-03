@@ -321,6 +321,76 @@ Note that we do not assume that all environment-interfaces notify about such eve
 
 Wherein we elaborate on environment-interfaces that are included in the \EIS-package.
 
+\subsection{Agent Contest Connector 2007}
+
+In order to run the contest environment you have to download the package including the MASSim-server from
+the Multi-Agent Contest homepage\footnote{\url{http://www.multiagentcontest.org}}. 
+
+\medskip\noindent{\textbf{Environment description:}} the environment is a grid-like, partially-accessible world. Goldminers. The goal is to collect as much gold as possible. More information is available at the 
+contest homepage.
+
+\medskip\noindent{\textbf{Jar-file:}} \texttt{eis-acconnector2007-0.2.jar} (included in the \EIS-package).
+
+\medskip\noindent{\textbf{Entities:}}
+\begin{description}
+\item[\texttt{connector1},$\ldots$,\texttt{connector6}] each one is a connector to a single goldminer in the environment.
+\end{description}
+
+\noindent{\textbf{Types of entities:}} this interface does not take into account different types of entities.
+
+\medskip\noindent{\textbf{Actions:}}
+\begin{description}
+\item[\texttt{connect(Identifier, Numeral , Identifier, Identifier)}] connects to the MASSim-server.
+The first identifier is the hostname of the server. The numeral is its port. The second identifier denotes the user-name,
+the final one denotes the password. This action has to be performed successfully in order to allow for other actions.
+Example: \texttt{connect("139.174.100.201",12300,"agentred1","dfkj39")}.
+\item[\texttt{skip}] has no effect.
+\item[\texttt{right}] moves the goldminer to the right.
+\item[\texttt{up}] moves the goldminer up.
+\item[\texttt{left}] moves the goldminer left.
+\item[\texttt{down}] moves the goldminer down.
+\item[\texttt{pick}] picks up gold.
+\item[\texttt{drop}] drops gold.
+\item[\texttt{mark(Identifier)}] marks the current cell with a string.
+\item[\texttt{unmark}] unmarks the current cell.
+
+\end{description}
+
+\noindent{\textbf{Percepts:}} all those percepts are both propagated as notifications and returned by the
+\texttt{getAllPercepts}-method. Note that the interface implements a queue of percepts that is filled every time
+a message from the MASSim-server is received and whose first entry is retrieved every time the \texttt{getAllPercepts}-method is called. The interface does not hold a world-model.
+\begin{description}
+\item[\texttt{connectionLost}] indicates that the connection to the server has been lost. 
+\item[\texttt{simStart}] indicates that the simulation has begun.
+\item[\texttt{corralPos(Numeral, Numeral, Numeral, Numeral)}] is the position of the corral the first two numbers indicate the upper-left- 
+the last two ones indicate the lower-right-corner. Example: \texttt{corralPos(1,1,10,10)}.
+\item[\texttt{gridSize(Numeral, Numeral)}] represents the size of the grid. The first value is the width, the second one is 
+the height. Example:\texttt{gridSize(100,100)}.
+\item[\texttt{simId(Identifier id)}] denotes the id of the simulation. Example: \texttt{simId("cowSkullMountain")}
+\item[\texttt{lineOfSight(Numeral num)}] indicates how far the respective entity can see. 
+Example: \texttt{lineOfSight(8)}
+\item[\texttt{opponent(Numeral name)}] denotes the opponent in the current match. 
+Example: \texttt{opponent("StampedeTeam")}
+\item[\texttt{steps(Numeral num)}] indicates how many steps the simulation lasts. Example: \texttt{steps(1000)}
+\item[\texttt{simEnd}] indicates that the current simulation is over.
+\item[\texttt{result(Identifier)}] represents the result of the simulation. Values could be either \texttt{win},  
+\texttt{lose}, or  \texttt{draw}. Example: \texttt{result(win)}
+\item[\texttt{finalScore(Numeral)}] represents the final-score of the simulation. Example: \texttt{finalScore(42)}
+\item[\texttt{bye}] indicates that the overall tournament is over.
+\item[\texttt{cell(Numeral, Numeral, Identifier)}] denote the content of a cell. The numerals represent the position 
+relative to the cowboy's current position. The identifier represents the object. 
+Possible values are \texttt{agentally}, \texttt{agentenemy}, \texttt{switch}, \texttt{fenceopen}, 
+\texttt{fenceclosed}, \texttt{cow}, \texttt{obstacle}, \texttt{empty}, and \texttt{unknown}. 
+Example: \texttt{cell(-1,-1,cow)}
+%\item[\texttt{id(Numeral num)}] indicates the identifier of the \texttt{id(70)}
+\item[\texttt{pos(Numeral x, Numeral y)}] denotes the current position of the cowboy. Example: \texttt{pos(10,15)}
+\item[\texttt{currentScore(Numeral)}] denotes the current score. Example: \texttt{currentScore(24)}
+\item[\texttt{currentStep(Numeral num)}] indicates the current step of the simulation.
+Example: \texttt{currentStep(123)}
+\end{description}
+
+\noindent{\textbf{Environment-management:}} not supported.
+
 \subsection{Agent Contest Connector 2009}
 
 In order to run the contest environment you have to download the package including the MASSim-server from
@@ -385,7 +455,6 @@ Example: \texttt{currentStep(123)}
 \end{description}
 
 \noindent{\textbf{Environment-management:}} not supported.
-
 \subsection{Carriage Example}
 
 \medskip\noindent{\textbf{Environment description:}} there is a carriage on a circular-track. That track has three 
