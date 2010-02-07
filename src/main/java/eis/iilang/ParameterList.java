@@ -102,12 +102,14 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 		String ret = "";
 		
 		ret+="[";
+		if( list.isEmpty() == false) {
+
+			ret+=list.getFirst().toProlog();
+			
+			for( int a = 1 ; a < list.size() ; a++ )
+				ret += "," + list.get(a).toProlog();
 		
-		ret+=list.getFirst().toProlog();
-		
-		for( int a = 1 ; a < list.size() ; a++ )
-			ret += "," + list.get(a).toProlog();
-		
+		}
 		ret+="]";
 		
 		return ret;

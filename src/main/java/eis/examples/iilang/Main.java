@@ -73,6 +73,16 @@ public class Main {
 		System.out.println(dc.toXML());
 		System.out.println("");
 
+		// perceiving an empty list
+		dc = new Percept(
+						"entities", 
+						new ParameterList(
+						)
+				);
+		
+		System.out.println(dc.toProlog() + "\n");
+		System.out.println(dc.toXML());
+		System.out.println("");
 		
 		// kills the environment 
 		dc = new EnvironmentCommand(

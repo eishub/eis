@@ -6,6 +6,8 @@ VERSION 0.2-21January2010
 - added equals-method to IILang
 - you can now instantiate actions and percepts with only a name (without parameters)
 - added a connector to the agent contest 2010 scenario
+- added a connector to the agent contest 2007 scenario
+- fixed the empty-parameter-list bug
 
 VERSION 0.2-5January2010
 

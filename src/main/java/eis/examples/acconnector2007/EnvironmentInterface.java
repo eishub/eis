@@ -39,6 +39,9 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	/** For checking connections. */
 	private boolean running = true;
 	
+	/** For plotting percepts. */
+	private Monitor monitor = null;
+	
 	/**
 	 * Contructs an environment.
 	 */
@@ -63,6 +66,9 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 			e.printStackTrace();
 		}
 	
+		// start monitor
+		monitor = new Monitor();
+		
 		// start connections checker
 		new Thread(this).start();
 	
@@ -444,6 +450,21 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	@Override
 	public String requiredVersion() {
 		return "0.2";
+	}
+
+	/* (non-Javadoc)
+	 * @see eis.EIDefaultImpl#notifyAgentsViaEntity(eis.iilang.Percept, java.lang.String[])
+	 */
+	@Override
+	protected void notifyAgentsViaEntity(Percept percept, String... pEntities)
+			throws EnvironmentInterfaceException {
+		
+		// update monitor
+		if( monitor != null ) 
+			monitor.processPercept(percept, pEntities[0]);
+		
+		// really send the percepts
+		super.notifyAgentsViaEntity(percept, pEntities);
 	}
 	
 }

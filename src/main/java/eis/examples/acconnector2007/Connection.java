@@ -565,6 +565,49 @@ public class Connection extends Socket implements Runnable {
 			
 			NamedNodeMap attributes = perceptNode.getAttributes();
 
+
+			actionId = attributes.getNamedItem("id").getNodeValue();
+			int step = new Integer(attributes.getNamedItem("step").getNodeValue());
+			
+			Percept percept = null;
+		
+			// currentStep
+			percept = new Percept(
+					"currentStep", 
+					new Numeral( step ) 
+			);
+			ret.add(percept);
+
+			
+			// id
+			/*percept = new Percept(
+					"id", 
+					new Numeral( new Integer(attributes.getNamedItem("id").getNodeValue()) ) 
+			);
+			ret.add(percept);*/
+
+			// pos
+			int posX = new Integer(attributes.getNamedItem("posx").getNodeValue());
+			int posY = new Integer(attributes.getNamedItem("posy").getNodeValue());
+			
+			System.out.println(posX + " " + posY);
+			
+			percept = new Percept(
+					"pos",
+					new Numeral( posX ),
+					new Numeral( posY ),
+					new Numeral( step )
+			);
+			ret.add(percept);
+
+			// current items
+			percept = new Percept(
+					"currentItems", 
+					new Numeral( new Integer(attributes.getNamedItem("items").getNodeValue()) ),
+					new Numeral( step )
+			);
+			ret.add(percept);
+
 			NodeList cellNodes = perceptNode.getChildNodes();
 
 //			Element <perception> contains a number of subelements <cell> with one
@@ -603,50 +646,61 @@ public class Connection extends Socket implements Runnable {
 					
 					String cellContent = nab.getNodeName();
 
-					Percept percept = new Percept(
+					int cellPosX = 0;
+					int cellPosY = 0;
+					
+					if( cellPos.equals("e") ) {
+						cellPosX = posX + 1;
+						cellPosY = posY;
+					}
+					else if( cellPos.equals("ne") ) {
+						cellPosX = posX + 1;
+						cellPosY = posY - 1;
+					}
+					else if( cellPos.equals("n") ) {
+						cellPosX = posX;
+						cellPosY = posY - 1;
+					}
+					else if( cellPos.equals("nw") ) {
+						cellPosX = posX - 1;
+						cellPosY = posY - 1;
+					}
+					else if( cellPos.equals("w") ) {
+						cellPosX = posX - 1;
+						cellPosY = posY;
+					}
+					else if( cellPos.equals("sw") ) {
+						cellPosX = posX - 1;
+						cellPosY = posY + 1;
+					}
+					else if( cellPos.equals("s") ) {
+						cellPosX = posX;
+						cellPosY = posY + 1;
+					}
+					else if( cellPos.equals("se") ) {
+						cellPosX = posX + 1;
+						cellPosY = posY + 1;
+					}
+					else if( cellPos.equals("cur") ) {
+						cellPosX = posX;
+						cellPosY = posY;
+					}
+					else assert false : "Unexpected direction " + cellPos;
+					
+					percept = new Percept(
 							"cell",
 							new Identifier(cellPos),
-							new Identifier(cellContent)
+							new Numeral( cellPosX ),
+							new Numeral( cellPosY ), 
+							new Identifier(cellContent),
+							new Numeral( step )
 					);
 					ret.add(percept);
 					
 				}
 
 			}
-
-			actionId = attributes.getNamedItem("id").getNodeValue();
 			
-			Percept percept = null;
-			
-			// id
-			percept = new Percept(
-					"id", 
-					new Numeral( new Integer(attributes.getNamedItem("id").getNodeValue()) ) 
-			);
-			ret.add(percept);
-
-			// pos
-			percept = new Percept(
-					"pos",
-					new Numeral( new Integer(attributes.getNamedItem("posx").getNodeValue()) ),
-					new Numeral( new Integer(attributes.getNamedItem("posy").getNodeValue()) )
-			);
-			ret.add(percept);
-
-			// current items
-			percept = new Percept(
-					"currentItems", 
-					new Numeral( new Integer(attributes.getNamedItem("items").getNodeValue()) ) 
-			);
-			ret.add(percept);
-
-			// currentStep
-			percept = new Percept(
-					"currentStep", 
-					new Numeral( new Integer(attributes.getNamedItem("step").getNodeValue()) ) 
-			);
-			ret.add(percept);
-
 			for( Percept p : ret ) {
 				
 				System.out.println(p.toProlog());
@@ -654,6 +708,7 @@ public class Connection extends Socket implements Runnable {
 			}
 			System.out.println("");
 			System.out.println("");
+
 			
 			return ret;
 		}

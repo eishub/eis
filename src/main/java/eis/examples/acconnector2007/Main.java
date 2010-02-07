@@ -1,6 +1,8 @@
 package eis.examples.acconnector2007;
 
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Vector;
 
 import eis.AgentListener;
 import eis.EnvironmentListener;
@@ -44,8 +46,10 @@ public class Main implements AgentListener,EnvironmentListener {
 		// registering and associating agents
 		try {
 
-			ei.registerAgent("agent1");
-			ei.associateEntity("agent1", "connector1");
+			for( int a = 1 ; a <= 6 ; a++ ) {
+				ei.registerAgent("agent" + a);
+				ei.associateEntity("agent" + a, "connector" + a);
+			}
 
 		} catch (AgentException e) {
 
@@ -62,29 +66,41 @@ public class Main implements AgentListener,EnvironmentListener {
 		LinkedList<Percept> ar = null;
 		try {
 
-			Action action = new Action(
-					"connect", 
-					new Identifier(server), 
-					new Numeral(port),
-					new Identifier("botagent1"),
-					new Identifier("1")
-			);
-			
-			//System.out.println("Action " + action);
-			
-			ar = (LinkedList) ei.performAction("agent1", action);
-			
-			//System.out.println("Action-result:\n" + ar.toString());
-		
+			// connect all agents
+			Action action = null;
+			for( int a = 1 ; a <= 6 ; a++ ) {
+				action = new Action(
+						"connect", 
+						new Identifier(server), 
+						new Numeral(port),
+						new Identifier("botagent" +a),
+						new Identifier("" + a)
+				);
+				ar = (LinkedList) ei.performAction("agent" + a, action);
+			}
+
 			while( true ) {
 
 				//System.out.println("Action " + action);
 
-				action = new Action(
-						"skip"
-						);
+				Vector<String> actions = new Vector<String>();
+				actions.add("up");
+				actions.add("down");
+				actions.add("left");
+				actions.add("right");
+				for( int a = 1 ; a <= 6 ; a++ ) { 
+					
+					Collections.shuffle(actions);
+
+					action = new Action(
+							actions.firstElement()
+							);
+					
+					ar = (LinkedList) ei.performAction("agent" + a, action);
+					
+				}
+			
 				
-				ar = (LinkedList) ei.performAction("agent1", action);
 
 				//System.out.println("Action-result:\n" + ar.toString());
 
