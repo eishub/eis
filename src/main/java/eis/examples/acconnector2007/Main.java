@@ -10,9 +10,11 @@ import eis.EnvironmentListener;
 import eis.EnvironmentInterfaceStandard;
 import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
+import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
+import eis.iilang.EnvironmentCommand;
 import eis.iilang.Percept;
 import eis.iilang.Identifier;
 import eis.iilang.Numeral;
@@ -38,6 +40,16 @@ public class Main implements AgentListener,EnvironmentListener {
 		EnvironmentInterfaceStandard ei = new EnvironmentInterface();
 
 		ei.attachEnvironmentListener(this);
+
+		try {
+			ei.manageEnvironment(new EnvironmentCommand(EnvironmentCommand.START));
+		} catch (ManagementException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (NoEnvironmentException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		// constants
 		String server = "localhost";

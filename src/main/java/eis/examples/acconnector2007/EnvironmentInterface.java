@@ -66,12 +66,6 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 			e.printStackTrace();
 		}
 	
-		// start monitor
-		monitor = new Monitor();
-		
-		// start connections checker
-		new Thread(this).start();
-	
 	}
 	
 	/**
@@ -118,9 +112,25 @@ public class EnvironmentInterface extends EIDefaultImpl implements ConnectionLis
 	@Override
 	public void manageEnvironment(EnvironmentCommand command)
 			throws ManagementException {
-
-		throw new ManagementException("No environment-commands supported.");
 		
+		if( command.getType() == EnvironmentCommand.START) {
+
+			if( monitor != null )
+				monitor.setVisible(false);
+			
+			// start monitor
+			monitor = new Monitor();
+			
+			// start connections checker
+			new Thread(this).start();
+
+		}
+		else if( command.getType() == EnvironmentCommand.KILL) {
+
+			if( monitor != null )
+				monitor.setVisible(false);
+		}
+
 	}
 
 	@Override

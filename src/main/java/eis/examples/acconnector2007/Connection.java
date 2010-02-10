@@ -468,16 +468,6 @@ public class Connection extends Socket implements Runnable {
 			percept = new Percept("simStart");
 			ret.add(percept);
 
-			//System.out.println(ret);
-			
-			for( Percept p : ret ) {
-				
-				System.out.println(p.toProlog());
-				
-			}
-			System.out.println("");
-			System.out.println("");
-
 			return ret;
 			
 		}
@@ -520,14 +510,6 @@ public class Connection extends Socket implements Runnable {
 //					new Numeral( new Integer( attributes.getNamedItem("score").getNodeValue() ))
 //			); 
 //			ret.add(percept);
-
-			for( Percept p : ret ) {
-				
-				System.out.println(p.toProlog());
-				
-			}
-			System.out.println("");
-			System.out.println("");
 
 			return ret;
 			
@@ -589,8 +571,6 @@ public class Connection extends Socket implements Runnable {
 			// pos
 			int posX = new Integer(attributes.getNamedItem("posx").getNodeValue());
 			int posY = new Integer(attributes.getNamedItem("posy").getNodeValue());
-			
-			System.out.println(posX + " " + posY);
 			
 			percept = new Percept(
 					"pos",
@@ -700,15 +680,6 @@ public class Connection extends Socket implements Runnable {
 				}
 
 			}
-			
-			for( Percept p : ret ) {
-				
-				System.out.println(p.toProlog());
-				
-			}
-			System.out.println("");
-			System.out.println("");
-
 			
 			return ret;
 		}
