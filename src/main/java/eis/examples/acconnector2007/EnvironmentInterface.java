@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import eis.EIDefaultImpl;
 import eis.exceptions.ActException;
@@ -31,10 +32,10 @@ import eis.iilang.Percept;
 public class EnvironmentInterface extends EIDefaultImpl implements ConnectionListener, Runnable {
 
 	/** Used to facilitate the EIS-to-environment connection. Each entity is a connection. */
-	private HashMap<String,Connection> entitiesToConnections = new HashMap<String,Connection>(); 
+	private ConcurrentHashMap<String,Connection> entitiesToConnections = new ConcurrentHashMap<String,Connection>(); 
 	
 	/** Stores the percept-queue. getAllPercepts returns the first element. */
-	private HashMap<String, LinkedList<LinkedList<Percept>>> entitiesToPercepts = new HashMap<String,LinkedList<LinkedList<Percept>>>();
+	private ConcurrentHashMap<String, LinkedList<LinkedList<Percept>>> entitiesToPercepts = new ConcurrentHashMap<String,LinkedList<LinkedList<Percept>>>();
 	
 	/** For checking connections. */
 	private boolean running = true;
