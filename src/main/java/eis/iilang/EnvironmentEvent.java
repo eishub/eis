@@ -207,6 +207,45 @@ public class EnvironmentEvent extends DataContainer {
 		return super.equals(obj);
 
 	}
+	
+	/**
+	 * Factory method.
+	 * @return
+	 */
+	public static EnvironmentEvent newStartedEvent() {
+		
+		return new EnvironmentEvent(STARTED);
+		
+	}
 
+	/**
+	 * Factory method.
+	 * @return
+	 */
+	public static EnvironmentEvent newKilledEvent() {
+		
+		return new EnvironmentEvent(KILLED);
+		
+	}
+
+	/**
+	 * Factory method.
+	 * @return
+	 */
+	public static EnvironmentEvent newResetEvent() {
+		
+		return new EnvironmentEvent(RESET);
+		
+	}
+
+	/**
+	 * Factory method.
+	 * @return
+	 */
+	public static EnvironmentEvent newInitedEvent() {
+		
+		return new EnvironmentEvent(INITED);
+		
+	}
 
 }

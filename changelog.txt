@@ -1,3 +1,7 @@
+VERSION
+- added static factory methods to EnvironmentCommand and EnvironmentEvent
+
+
 VERSION 0.2-21January2010
 
 - made static fields of ActException final

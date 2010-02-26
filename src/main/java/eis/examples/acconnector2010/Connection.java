@@ -533,8 +533,10 @@ public class Connection extends Socket implements Runnable {
 			
 			NamedNodeMap attributes = perceptNode.getAttributes();
 
-			NodeList cellNodes = perceptNode.getChildNodes();
+			actionId = attributes.getNamedItem("id").getNodeValue();
+			int step = new Integer(attributes.getNamedItem("step").getNodeValue());
 
+			NodeList cellNodes = perceptNode.getChildNodes();
 			for( int a = 0 ; a < cellNodes.getLength() ; a++ ) {
 				
 				if( cellNodes.item(a).getNodeName().equals("cell") ) {
@@ -606,7 +608,8 @@ public class Connection extends Socket implements Runnable {
 							"cell",
 							new Numeral( new Integer( attributesCell.getNamedItem("x").getNodeValue() ) ),
 							new Numeral( new Integer( attributesCell.getNamedItem("y").getNodeValue() ) ),
-							new Identifier( item )
+							new Identifier( item ),
+							new Numeral( step )
 					);
 				
 					ret.add(cell);
@@ -615,29 +618,29 @@ public class Connection extends Socket implements Runnable {
 
 			}
 
-			actionId = attributes.getNamedItem("id").getNodeValue();
-			
 			Percept percept = null;
 			
 			// id
-			percept = new Percept(
-					"id", 
-					new Numeral( new Integer(attributes.getNamedItem("id").getNodeValue()) ) 
-			);
-			ret.add(percept);
+//			percept = new Percept(
+//					"id", 
+//					new Numeral( new Integer(attributes.getNamedItem("id").getNodeValue()) ) 
+//			);
+//			ret.add(percept);
 
 			// pos
 			percept = new Percept(
 					"pos",
 					new Numeral( new Integer(attributes.getNamedItem("posx").getNodeValue()) ),
-					new Numeral( new Integer(attributes.getNamedItem("posy").getNodeValue()) )
+					new Numeral( new Integer(attributes.getNamedItem("posy").getNodeValue()) ),
+					new Numeral( step )
 			);
 			ret.add(percept);
 
 			// currentScore
 			percept = new Percept(
 					"cowsInCorral", 
-					new Numeral( new Integer(attributes.getNamedItem("cowsInCorral").getNodeValue()) ) 
+					new Numeral( new Integer(attributes.getNamedItem("cowsInCorral").getNodeValue()) ),
+					new Numeral( step )
 			);
 			ret.add(percept);
 

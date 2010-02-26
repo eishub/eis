@@ -1,0 +1,103 @@
+\documentclass[a4]{article}
+
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{theorem}
+\usepackage{url}
+\usepackage{xspace}
+\usepackage{amssymb}\usepackage{xtab}
+
+\newcommand{\todo}[1]{{\bf [TODO: }\textit{#1}{\bf ]}}
+\newcommand{\remark}[1]{{\bf [RemarkKVH: }\textit{#1}{\bf ]}}
+\newcommand{\remarktmb}[1]{{\bf [RemarkTMB: }\textit{#1}{\bf ]}}
+
+\newcommand{\EIS}{\textsf{EIS}\xspace}
+
+\newcommand{\Goal}{\textsc{GOAL}\xspace}
+\newcommand{\Jason}{\textsc{Jason}\xspace}
+\newcommand{\twoAPL}{\textsc{2APL}\xspace}
+\newcommand{\Jadex}{\textsc{Jadex}\xspace}
+
+\newtheorem{example}{Example}
+
+
+
+
+
+\begin{document}
+
+\title{Environment Interface Standard for Agent-Oriented Programming \\
+\textit{Multi-Agent Programming Competition 2007\\ Interface Description}
+}
+
+\author{Tristan Behrens}
+
+\maketitle
+
+In order to run the contest environment you have to download the package including the MASSim-server from
+the Multi-Agent Contest homepage\footnote{\url{http://www.multiagentcontest.org}}. 
+First start the server and then connect your agents.
+
+\medskip\noindent{\textbf{Environment description:}} the environment is a grid-like, partially-accessible world. Miners are steered
+by agents. The goal is to collect pieces of gold. More information is available at the 
+contest homepage.
+
+\medskip\noindent{\textbf{Jar-file:}} \texttt{eis-acconnector2007-0.2.jar} (included in the \EIS-package).
+
+\medskip\noindent{\textbf{Entities:}}
+\begin{description}
+\item[\texttt{connector1},$\ldots$,\texttt{connector6}] each one is a connector to a single miner in the environment.
+\end{description}
+
+\noindent{\textbf{Types of entities:}} this interface does not take into account different types of entities.
+
+\medskip\noindent{\textbf{Actions:}}
+\begin{description}
+\item[\texttt{connect(Identifier, Numeral , Identifier, Identifier)}] connects to the MASSim-server.
+The first identifier is the hostname of the server. The numeral is its port. The second identifier denotes the user-name,
+the final one denotes the password. This action has to be performed successfully in order to allow for other actions.
+Example: \texttt{connect("139.174.100.201",12300,"agentred1","dfkj39")}.
+\item[\texttt{right}, \texttt{up}, \texttt{left}, \texttt{down}] move the miner. 
+\item[\texttt{pick} or \texttt{drop}] picks gold up or drops it.
+\item[\texttt{mark(Identifier)} or \texttt{unmark}] mark a cell with an identifier or
+remove a mark from a cell.
+\item[\texttt{skip}] has no effect.
+\end{description}
+
+\noindent{\textbf{Percepts:}} all those percepts are both propagated as notifications and returned by the
+\texttt{getAllPercepts}-method. Note that the interface implements a queue of percepts that is filled every time
+a message from the MASSim-server is received and whose first entry is retrieved every time the \texttt{getAllPercepts}-method is called. The interface does not hold a world-model.
+\begin{description}
+\item[\texttt{connectionLost}] indicates that the connection to the server has been lost. 
+\item[\texttt{simStart}] indicates that the simulation has begun.
+\item[\texttt{depotPos(Numeral, Numeral)}] is the position of the depot. Example: \texttt{corralPos(10,10)}.
+\item[\texttt{gridSize(Numeral, Numeral)}] represents the size of the grid. The first value is the width, the second one is 
+the height. Example:\texttt{gridSize(100,100)}.
+\item[\texttt{simId(Identifier)}] denotes the id of the simulation. Example: \texttt{simId("eldorado")}
+\item[\texttt{opponent(Identifier)}] denotes the opponent in the current match. 
+Example: \texttt{opponent("hillbillies")}
+\item[\texttt{steps(Numeral)}] indicates how many steps the simulation lasts. Example: \texttt{steps(1000)}
+\item[\texttt{simEnd}] indicates that the current simulation is over.
+\item[\texttt{result(Identifier)}] represents the result of the simulation. Values could be either \texttt{win},  
+\texttt{lose}, or  \texttt{draw}. Example: \texttt{result(win)}
+%\item[\texttt{finalScore(Numeral)}] represents the final-score of the simulation. Example: \texttt{finalScore(42)}
+\item[\texttt{bye}] indicates that the overall tournament is over.
+\item[\texttt{cell(Identifier,Numeral,Numeral,Identifier,Numeral)}] denotes the content of a cell. 
+The first identifier denotes the relative position (\texttt{e},\texttt{ne},\texttt{n},\texttt{nw},\texttt{w},\texttt{sw},\texttt{s},\texttt{se}). 
+The first two numerals represent the absolute position of the cell. 
+The second identifier represents the object. The final numeral represents the step of the simulation.
+Possible values for the object-identifier are \texttt{agent}, \texttt{obstacle}, \texttt{gold}, \texttt{mark}, 
+\texttt{depot}, \texttt{unknown}, and \texttt{empty}.
+Example: \texttt{cell(nw,10,10,depot,123)}
+%\item[\texttt{id(Numeral num)}] indicates the identifier of the \texttt{id(70)}
+\item[\texttt{pos(Numeral,Numeral,Numeral)}] denotes the current position of the miner at a specific step. Example: \texttt{pos(10,15,123)}
+\item[\texttt{currentItems(Numeral,Numeral)}] denotes the current number carried items at a specific step. Example: \texttt{currentItems(24,123)}
+\item[\texttt{currentStep(Numeral num)}] indicates the current step of the simulation.
+Example: \texttt{currentStep(123)}
+\end{description}
+
+\noindent{\textbf{Environment-management:}} not supported.
+
+\end{document}

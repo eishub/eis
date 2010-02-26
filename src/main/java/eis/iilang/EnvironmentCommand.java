@@ -221,5 +221,54 @@ public class EnvironmentCommand extends DataContainer {
 
 	}
 
+	/**
+	 * Factory method.
+	 * @return
+	 */
+	public static EnvironmentCommand newStartCommand() {
+		
+		return new EnvironmentCommand(EnvironmentCommand.START);
+		
+	}
+
+	/**
+	 * Factory method.
+	 * @return
+	 */
+	public static EnvironmentCommand newKillCommand() {
+		
+		return new EnvironmentCommand(EnvironmentCommand.KILL);
+		
+	}
+
+	/**
+	 * Factory method.
+	 * @return
+	 */
+	public static EnvironmentCommand newPauseCommand() {
+		
+		return new EnvironmentCommand(EnvironmentCommand.PAUSE);
+		
+	}
+
+	/**
+	 * Factory method.
+	 * @return
+	 */
+	public static EnvironmentCommand newResetCommand() {
+		
+		return new EnvironmentCommand(EnvironmentCommand.RESET);
+		
+	}
+
+	/**
+	 * Factory method.
+	 * @return
+	 */
+	public static EnvironmentCommand newInitCommand(LinkedList<Parameter> params) {
+		
+		return new EnvironmentCommand(EnvironmentCommand.INIT, params);
+		
+	}
 
 }
