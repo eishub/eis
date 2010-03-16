@@ -14,4 +14,8 @@ public class EnvironmentInterfaceException extends Exception {
 		super(string);
 	}
 
+	public EnvironmentInterfaceException(String string, Exception cause) {
+		super(string,cause);
+	}
+	
 }

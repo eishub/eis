@@ -75,7 +75,7 @@ public class EILoader {
 			ei = (EnvironmentInterfaceStandard)(c.newInstance());
 		} catch (Exception e) {
 			System.out.println(e);
-			throw new IOException("Class \"" + mainClass + "\" could not be loaded from \"" + file + "\"");
+			throw new IOException("Class \"" + mainClass + "\" could not be loaded from \"" + file + "\"", e);
 		} 
 
 		// check version

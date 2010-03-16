@@ -1,5 +1,6 @@
 VERSION
 - added static factory methods to EnvironmentCommand and EnvironmentEvent
+- EILoader.fromJarFile throws an IOException that might contain a deeper exception
 
 
 VERSION 0.2-21January2010
