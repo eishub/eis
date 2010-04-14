@@ -26,13 +26,19 @@ public class ActException extends EnvironmentInterfaceException {
 	public static final int WRONGENTITY = 3;
 	
 	/** if the action is not supported by the type */
-	public static final int NOTSUPPORTEDBYTYPE = 4;
+	public static final int NOTSUPPORTEDBYENVIRONMENT = 4;
+
+	/** if the action is not supported by the type */
+	public static final int NOTSUPPORTEDBYTYPE = 5;
+
+	/** if the action is not supported by the type */
+	public static final int NOTSUPPORTEDBYENTITY = 6;
 	
 	/** if the syntax is wrong */
-	public static final int WRONGSYNTAX = 5;
+	public static final int WRONGSYNTAX = 7;
 	
 	/** if the action cannot be executed */
-	public static final int FAILURE = 6; 
+	public static final int FAILURE = 8; 
 	
 	/** the type */
 	private int type = NOTSPECIFIC;

@@ -1,6 +1,6 @@
 package eis;
 
-import eis.iilang.EnvironmentEvent;
+import eis.iilang.EnvironmentState;
 
 /**
  * This interface has to be implemented in order to notify 
@@ -14,11 +14,10 @@ import eis.iilang.EnvironmentEvent;
 public interface EnvironmentListener {
 
 	/**
-	 * Handles an environment-event.
-	 * 
-	 * @param event is the specific event
+	 * Handles a new state.
+	 * @param newState
 	 */
-	void handleEnvironmentEvent(EnvironmentEvent event);
+	void handleStateChange(EnvironmentState newState);
 
 	/**
 	 * Handles the event that an entity has been freed.

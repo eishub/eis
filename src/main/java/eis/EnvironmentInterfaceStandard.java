@@ -1,7 +1,8 @@
 package eis;
 
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
@@ -12,7 +13,7 @@ import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
-import eis.iilang.EnvironmentCommand;
+import eis.iilang.EnvironmentState;
 import eis.iilang.Percept;
 
 /**
@@ -38,7 +39,7 @@ public interface EnvironmentInterfaceStandard {
 	/**
 	 * Indicates the current version of EIS. Used to determine compatibility.
 	 */
-	static String version = "0.2";
+	static String version = "0.3";
 
 	/**
 	 * Attaches an environment-listener.
@@ -98,14 +99,14 @@ public interface EnvironmentInterfaceStandard {
 	 * 
 	 * @return a list of agent-ids.
 	 */
-	LinkedList<String> getAgents();
+	Collection<String> getAgents();
 
 	/**
 	 * Retrieves the list of entities.
 	 * 
 	 * @return a list of entity-ids.
 	 */
-	LinkedList<String> getEntities();
+	Collection<String> getEntities();
 
 	/**
 	 * Associates an entity with an agent.
@@ -148,7 +149,7 @@ public interface EnvironmentInterfaceStandard {
 	 * @return a set of entities.
 	 * @throws AgentException 
 	 */
-	HashSet<String> getAssociatedEntities(String agent) throws AgentException;
+	Collection<String> getAssociatedEntities(String agent) throws AgentException;
 
 	/**
 	 * Returns the agents associated to a given entity.
@@ -157,15 +158,21 @@ public interface EnvironmentInterfaceStandard {
 	 * @return a set of agents.
 	 * @throws AgentException 
 	 */
-	HashSet<String> getAssociatedAgents(String entity) throws EntityException;
+	Collection<String> getAssociatedAgents(String entity) throws EntityException;
 
 	/**
 	 * Retrieves the list of free entities.
 	 * 
 	 * @return a list of entity-ids.
 	 */
-	LinkedList<String> getFreeEntities();
+	Collection<String> getFreeEntities();
 
+	/**
+	 * Retrieves the agents-entities-relationship.
+	 * @return
+	 */
+	Map<String,String> getRelationship();
+	
 	/**
 	 * Lets an agent perform an action.
 	 * <p/>
@@ -189,9 +196,44 @@ public interface EnvironmentInterfaceStandard {
 	 * associated, or if at least one one the actions fails.
 	 * @throws NoEnvironmentException if the interface is not connected to an environment.
 	 */
-	LinkedList<Percept> performAction(String agent, Action action,
-			String... entities) throws ActException, NoEnvironmentException;
+	Map<String,Percept> performAction(String agent, Action action,
+			String... entities) throws ActException;
 
+	/**
+	 * Returns true if the action is supported by the environment.
+	 * @param action
+	 * @return
+	 */
+	boolean isSupportedByEnvironment(Action action);
+
+	/**
+	 * Returns true if the action is supported by the environment.
+	 * @param action
+	 * @return
+	 */
+	boolean isSupportedByType(Action action, String type);
+
+	/**
+	 * Returns true if the action is supported by the environment.
+	 * @param action
+	 * @return
+	 */
+	boolean isSupportedByEntity(Action action, String entity);
+
+	/**
+	 * @param action
+	 * @return
+	 */
+	boolean areParametersCorrect(Action action);
+
+	/**
+	 * @param entity
+	 * @param action
+	 * @return
+	 * @throws ActException
+	 */
+	Percept performAction(String entity, Action action) throws ActException;
+	
 	/** 
 	 * Gets all percepts.
 	 * <p/>
@@ -201,28 +243,64 @@ public interface EnvironmentInterfaceStandard {
 	 * @return a list of percepts
 	 * @throws PerceiveException if the agent is not registered or if the agents requests percepts from an entity that is not associated.
 	 */
-	LinkedList<Percept> getAllPercepts(String agent, String... entities)
+	Map<String,Collection<Percept>> getAllPercepts(String agent, String... entities)
 			throws PerceiveException, NoEnvironmentException;
 
 	/**
-	 * Invoked to manage the environment and/or its execution.
-	 * 
-	 * @param command is the command that is to be executed.
+	 * Initializes the environment(-interface) with a set of key-value-pairs.
+	 * @param parameters
+	 * @throws ManagementException is thrown either when the initializing is not supported or the parameters are wrong.
 	 */
-	void manageEnvironment(EnvironmentCommand command)
-			throws ManagementException, NoEnvironmentException;
+	void init(Map<String,String> parameters) throws ManagementException;
+	
+	/**
+	 * Starts the environment(-interface).
+	 * @throws ManagementException when starting is not supported
+	 */
+	void start() throws ManagementException;
+	
+	/**
+	 * Pauses the environment(-interface).
+	 * @throws ManagementException when pausing is not supported
+	 */
+	void pause() throws ManagementException;
+	
+	/**
+	 * Kills the environment.
+	 * @throws ManagementException when killing is not supported.
+	 */
+	void kill() throws ManagementException;
 
 	/**
-	 * Releases the environment interface.
+	 * Retrieves the state of the environment-interface.
+	 * @return
 	 */
-	void release();
+	EnvironmentState getState();
 
 	/**
-	 * Returns true if the interface is connected to the environment
-	 * @return true or false
+	 * Returns true when the init-command is supported.
+	 * @return
 	 */
-	boolean isConnected();
-
+	boolean isInitSupported();
+	
+	/**
+	 * Returns true when the start-command is supported.
+	 * @return
+	 */
+	boolean isStartSupported();
+	
+	/**
+	 * Returns true when the pause-command is supported.
+	 * @return
+	 */
+	boolean isEndSupported();	
+	
+	/**
+	 * Returns true when the kill-command is supported.
+	 * @return
+	 */
+	boolean isKillSupported();
+	
 	/**
 	 * Returns the type of an entity.
 	 * 

@@ -1,16 +1,13 @@
 package eis;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,13 +16,11 @@ import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
 import eis.exceptions.EntityException;
 import eis.exceptions.EnvironmentInterfaceException;
-import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
-import eis.iilang.EnvironmentCommand;
-import eis.iilang.EnvironmentEvent;
+import eis.iilang.EnvironmentState;
 import eis.iilang.Parameter;
 import eis.iilang.Percept;
 
@@ -334,11 +329,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * 
 	 * @param event
 	 */
-	protected void notifyEnvironmentEvent(EnvironmentEvent event) {
+	protected void notifyStateChange(EnvironmentState newState) {
 		
 		for( EnvironmentListener listener : environmentListeners ) {
 			
-			listener.handleEnvironmentEvent(event);
+			listener.handleStateChange(newState);
 			
 		}
 		
@@ -592,14 +587,100 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	/*
 	 * Acting/perceiving functionality.
 	 */
+	public final Map<String,Percept> performAction(String agent, Action action, String...entities)
+	throws ActException {
 
+		// 1. unregistered agents cannot act
+		if( registeredAgents.contains(agent) == false )
+			throw new ActException( ActException.NOTREGISTERED );
+		
+		// get the associated entities
+		HashSet<String> associatedEntities = agentsToEntities.get(agent);
+		
+		// 2. no associated entity/ies -> trivial reject
+		if( associatedEntities == null || associatedEntities.size() == 0 )
+			throw new ActException( ActException.NOENTITIES );
+				
+		// entities that should perform the action
+		HashSet<String> targetEntities = null;
+		if( entities.length == 0 ) {
+			
+			targetEntities = associatedEntities;
+		
+		}
+		else {
+			
+			targetEntities = new HashSet<String>();
+			
+			for( String entity : entities ) {
+				
+				// 3. provided wrong entity
+				if( associatedEntities.contains(entity) == false)
+					throw new ActException( ActException.WRONGENTITY );
+			
+				targetEntities.add(entity);
+				
+			} 
+			
+		}
+	
+		// 4. action could be not supported by the environment
+		if( isSupportedByEnvironment(action) == false )
+			throw new ActException( ActException.NOTSUPPORTEDBYENVIRONMENT) ;
+	
+		// 5. action could be not supported by the type of the entities
+		for( String entity : entities ) {
+			
+			String type;
+			try {
+				type = getType(entity);
+			} catch (EntityException e) {
+				e.printStackTrace();
+				continue;
+			}
+			
+			if( isSupportedByType(action,type) == false )
+				throw new ActException( ActException.NOTSUPPORTEDBYTYPE );
+			
+		}
+		
+		// 5. action could be not supported by the entities themselves
+		for( String entity : entities ) {
+			
+			String type;
+			try {
+				type = getType(entity);
+			} catch (EntityException e) {
+				e.printStackTrace();
+				continue;
+			}
+			
+			if( isSupportedByEntity(action,type) == false )
+				throw new ActException( ActException.NOTSUPPORTEDBYENTITY );
+			
+		}
+
+		Map<String,Percept> ret = new HashMap<String,Percept>();
+
+		// 6. action could be not supported by the entities themselves
+		for( String entity : entities ) {
+			
+			//TODO catch and rethrow exceptions //differentiate between actexceptions and others
+			Percept p = this.performAction(entity, action);
+			ret.put(entity, p);
+			
+		}
+
+		return ret;
+		
+	}
 	
 	// TODO use freeAgent here
 	// TODO maybe use isConnencted here
 	/* (non-Javadoc)
 	 * @see eis.EnvironmentInterfaceStandard#performAction(java.lang.String, eis.iilang.Action, java.lang.String[])
 	 */
-	public LinkedList<Percept> performAction(String agent, Action action, String...entities)
+	public LinkedList<Percept> performActionOld(String agent, Action action, String...entities)
 	throws ActException, NoEnvironmentException {
 
 		// unregistered agents cannot act
@@ -726,7 +807,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	/* (non-Javadoc)
 	 * @see eis.EnvironmentInterfaceStandard#getAllPercepts(java.lang.String, java.lang.String[])
 	 */
-	public LinkedList<Percept> getAllPercepts(String agent, String...entities) 
+	public Map<String,Collection<Percept>> getAllPercepts(String agent, String...entities) 
 	throws PerceiveException, NoEnvironmentException {
 		
 		// fail if no connection
@@ -745,7 +826,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			throw new PerceiveException("Agent \"" + agent + "\" has no associated entities.");
 
 		// return value
-		LinkedList<Percept> ret = new LinkedList<Percept>();
+		Map<String,Collection<Percept>> ret = new HashMap();
 
 		// gather all percepts
 		if( entities.length == 0 ) {
@@ -760,7 +841,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 					p.setSource(entity);
 				
 				// done
-				ret.addAll( all );
+				ret.put( entity, all );
 
 			}
 
@@ -781,7 +862,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 					p.setSource(entity);
 				
 				// done
-				ret.addAll( all );
+				ret.put( entity, all );
 				
 			}
 			
@@ -807,12 +888,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * Management functionality.
 	 */
 	
-	/* (non-Javadoc)
-	 * @see eis.EnvironmentInterfaceStandard#manageEnvironment(eis.iilang.EnvironmentCommand, java.lang.String[])
-	 */
-	public abstract void manageEnvironment(EnvironmentCommand command) 
-	throws ManagementException,NoEnvironmentException;
-
 	/*
 	 * Misc functionality.
 	 */
