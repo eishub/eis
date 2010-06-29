@@ -2,14 +2,11 @@ package eis;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
 import eis.exceptions.EntityException;
-import eis.exceptions.EnvironmentInterfaceException;
 import eis.exceptions.ManagementException;
-import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
@@ -35,11 +32,6 @@ import eis.iilang.Percept;
  *
  */
 public interface EnvironmentInterfaceStandard {
-
-	/**
-	 * Indicates the current version of EIS. Used to determine compatibility.
-	 */
-	static String version = "0.3";
 
 	/**
 	 * Attaches an environment-listener.
@@ -168,29 +160,22 @@ public interface EnvironmentInterfaceStandard {
 	Collection<String> getFreeEntities();
 
 	/**
-	 * Retrieves the agents-entities-relationship.
-	 * @return
+	 * Returns the type of an entity.
+	 * 
+	 * @param entity is the entity
+	 * @return either the type of the entity
+	 * @throws EntityException is thrown if the entity does not exist.
 	 */
-	Map<String,String> getRelationship();
-	
+	String getType(String entity) throws EntityException;
+
 	/**
 	 * Lets an agent perform an action.
-	 * <p/>
-	 * This method firstly determines the entities through which the agent should act.
-	 * Secondly Java-reflection is used to determine the methods that belong to the
-	 * given action. Finally, those methods are invoked and the return-values are gathered.
-	 * <p/>
-	 * An action could fail if the action is not
-     * supported by the environment (e.g. you try to move an entity to the north, but the environment
-     * is a database), if it has wrong parameters (i.e, the number and/or the type of parameters is wrong),
-     * or if it cannot be executed because of the state of the environment (e.g. moving to the north 
-     * would fail if there is a wall).
      * 
 	 * @param agent is the agent whose associated entities are supposed to act.
 	 * @param action is the action. The action's name determines the name of the method that is called.
 	 * @param entities is an array of entities through which an agent is supposed to act. If the 
 	 * array is empty, all entities are used.
-	 * @return a list of action-results.
+	 * @return a map of action-results.
 	 * @throws ActException is thrown if the agent has not been registered,
 	 * if the agent has no associated entities, if at least one of the given entities is not 
 	 * associated, or if at least one one the actions fails.
@@ -244,8 +229,17 @@ public interface EnvironmentInterfaceStandard {
 	 * @throws PerceiveException if the agent is not registered or if the agents requests percepts from an entity that is not associated.
 	 */
 	Map<String,Collection<Percept>> getAllPercepts(String agent, String... entities)
-			throws PerceiveException, NoEnvironmentException;
+			throws PerceiveException;
 
+	/**
+	 * Checks whether a state transition between two states is possible or not.
+	 * 
+	 * @param oldState is the old state.
+	 * @param newState is the new state.
+	 * @return
+	 */
+	boolean isStateTransitionValid(EnvironmentState oldState, EnvironmentState newState);
+	
 	/**
 	 * Initializes the environment(-interface) with a set of key-value-pairs.
 	 * @param parameters
@@ -293,28 +287,12 @@ public interface EnvironmentInterfaceStandard {
 	 * Returns true when the pause-command is supported.
 	 * @return
 	 */
-	boolean isEndSupported();	
+	boolean isPauseSupported();	
 	
 	/**
 	 * Returns true when the kill-command is supported.
 	 * @return
 	 */
 	boolean isKillSupported();
-	
-	/**
-	 * Returns the type of an entity.
-	 * 
-	 * @param entity is the entity
-	 * @return either the type of the entity
-	 * @throws EntityException is thrown if the entity does not exist.
-	 */
-	String getType(String entity) throws EntityException;
-
-	/**
-	 * Denotes which version of EIS is required.
-	 * 
-	 * @return the required version
-	 */
-	String requiredVersion();
 	
 }

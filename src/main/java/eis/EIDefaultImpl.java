@@ -1,8 +1,6 @@
 package eis;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,12 +14,11 @@ import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
 import eis.exceptions.EntityException;
 import eis.exceptions.EnvironmentInterfaceException;
-import eis.exceptions.NoEnvironmentException;
+import eis.exceptions.ManagementException;
 import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
 import eis.iilang.EnvironmentState;
-import eis.iilang.Parameter;
 import eis.iilang.Percept;
 
 
@@ -86,6 +83,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 */
 	private HashMap<String,String> entitiesToTypes = null;
 
+	/**
+	 * The state of the environment-interface
+	 */
+	private EnvironmentState state = null;
+	
 	
 	/**
 	 * Instantiates the class.
@@ -100,6 +102,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		freeEntities 		= new LinkedList<String>();
 		agentsToEntities 	= new ConcurrentHashMap<String,HashSet<String>>();
 		entitiesToTypes		= new HashMap<String,String>();
+		
+		state = EnvironmentState.INITIALIZED;
 		
 	}
 
@@ -320,26 +324,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		}
 		
 	}
-
-	
-	
-	
-	/**
-	 * Notifies the listeners about an environment-event.
-	 * 
-	 * @param event
-	 */
-	protected void notifyStateChange(EnvironmentState newState) {
-		
-		for( EnvironmentListener listener : environmentListeners ) {
-			
-			listener.handleStateChange(newState);
-			
-		}
-		
-	}
-
-	
 
 	/*
 	 * Registering functionality. Registering and unregistering agents.
@@ -675,144 +659,16 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		
 	}
 	
-	// TODO use freeAgent here
-	// TODO maybe use isConnencted here
-	/* (non-Javadoc)
-	 * @see eis.EnvironmentInterfaceStandard#performAction(java.lang.String, eis.iilang.Action, java.lang.String[])
-	 */
-	public LinkedList<Percept> performActionOld(String agent, Action action, String...entities)
-	throws ActException, NoEnvironmentException {
-
-		// unregistered agents cannot act
-		if( registeredAgents.contains(agent) == false )
-			throw new ActException( ActException.NOTREGISTERED );
-		
-		// get the associated entities
-		HashSet<String> associatedEntities = agentsToEntities.get(agent);
-		
-		// no associated entity/ies -> trivial reject
-		if( associatedEntities == null || associatedEntities.size() == 0 )
-			throw new ActException( ActException.NOENTITIES );
-
-		// entities that should perform the action
-		HashSet<String> targetEntities = null;
-		if( entities.length == 0 ) {
-			
-			targetEntities = associatedEntities;
-		
-		}
-		else {
-			
-			targetEntities = new HashSet<String>();
-			
-			for( String entity : entities ) {
-				
-				if( associatedEntities.contains(entity) == false)
-					throw new ActException( ActException.WRONGENTITY );
-			
-				targetEntities.add(entity);
-				
-			} 
-			
-		}
-		
-		// get the parameters
-		LinkedList<Parameter> params = action.getParameters();
-		
-		// targetEntities contains all entities that should perform the action
-		// params contains all parameters
-
-		// determine class parameters for finding the method
-		// and store the parameters as objects
-		Class<?>[] classParams = new Class[params.size()+1];
-		classParams[0] = String.class; // entity name
-		for( int a = 0 ; a < params.size() ; a++ )
-			classParams[a+1] = params.get(a).getClass();
-
-		//for( Class<?> p : classParams )
-		  //System.out.println(p);
-		
-		// return value
-		LinkedList<Percept> rets = new LinkedList<Percept>();
-		
-		try {
-
-			// lookup the method
-			String methodName = "action" + action.getName();
-			//System.out.println(methodName);
-			
-			Method m = this.getClass().getMethod(methodName,classParams);
-
-			if( Class.forName("eis.iilang.Percept").isAssignableFrom(m.getReturnType()) == false)
-				throw new ActException( ActException.WRONGSYNTAX, "The return-type is wrong" );
-
-			//System.out.println("Method: " + m);
-			
-			// make accessible; hope this is not a bug
-			m.setAccessible(true);
-			
-			// invoke
-			for( String entity : targetEntities ) {
-
-				Object[] objParams = new Object[params.size()+1];
-				objParams[0] = entity; // entity name
-				for( int a = 0 ; a < params.size() ; a++ )
-					objParams[a+1] = params.get(a);
-				
-				Percept ret = (Percept) m.invoke(this, objParams );
-				
-				if( ret != null)
-				  rets.add( ret );
-				
-			}
-
-		} catch (ClassNotFoundException e) {
-
-			throw new ActException( ActException.WRONGSYNTAX, "Class not found", e);
-			
-		} catch (SecurityException e) {
-
-			throw new ActException(ActException.WRONGSYNTAX, "Security exception", e);
-
-		} catch (NoSuchMethodException e) {
-
-			throw new ActException(ActException.WRONGSYNTAX, "No such method", e);
-			
-		} catch (IllegalArgumentException e) {
-
-			throw new ActException(ActException.WRONGSYNTAX, "Illegal argument", e);
-		
-		} catch (IllegalAccessException e) {
-			System.out.println(e.getMessage());
-
-			throw new ActException(ActException.WRONGSYNTAX, "Illegal access", e);
-
-		} catch (InvocationTargetException e) {
-
-			// action has failed -> let fail
-			if(e.getCause() instanceof ActException )
-				throw (ActException) e.getCause(); // rethrow
-			else if(e.getCause() instanceof NoEnvironmentException)
-				throw (NoEnvironmentException) e.getCause(); // rethrow
-	
-			throw new ActException(ActException.WRONGSYNTAX, "Invocation target exception", e);
-		
-		}
-		
-		return rets;
-
-	}
-	
 	// TODO maybe use isConnencted here
 	/* (non-Javadoc)
 	 * @see eis.EnvironmentInterfaceStandard#getAllPercepts(java.lang.String, java.lang.String[])
 	 */
 	public Map<String,Collection<Percept>> getAllPercepts(String agent, String...entities) 
-	throws PerceiveException, NoEnvironmentException {
-		
-		// fail if no connection
-		if( isConnected() == false ) 
-			throw new NoEnvironmentException("environment not available");
+	throws PerceiveException {
+
+		// fail if the environment does not run
+		if( state != EnvironmentState.STARTED )
+			throw new PerceiveException("Environment does not run");
 		
 		// fail if ther agent is not registered
 		if( registeredAgents.contains(agent) == false)
@@ -880,28 +736,12 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * @param entity is the entity whose percepts should be retrieved.
 	 * @return a list of percepts.
 	 */
-	protected abstract LinkedList<Percept> getAllPerceptsFromEntity(String entity) throws PerceiveException, NoEnvironmentException;
+	protected abstract LinkedList<Percept> getAllPerceptsFromEntity(String entity) throws PerceiveException;
 
-	
-	
-	/*
-	 * Management functionality.
-	 */
-	
+		
 	/*
 	 * Misc functionality.
 	 */
-	
-
-	/* (non-Javadoc)
-	 * @see eis.EnvironmentInterfaceStandard#release()
-	 */
-	public abstract void release();
-	
-	/* (non-Javadoc)
-	 * @see eis.EnvironmentInterfaceStandard#isConnected()
-	 */
-	public abstract boolean isConnected();
 	
 	/* (non-Javadoc)
 	 * @see eis.EnvironmentInterfaceStandard#getType(java.lang.String)
@@ -1026,6 +866,150 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	
 		entitiesToTypes.put(entity, type);
 
+	}
+	
+	/*
+	 * Management functionality.
+	 */
+
+	/**
+	 * Sets the state of the environment-interface. Firstly the state-transition is tested if it is valid.
+	 * If so, the state will be changed and all environment-listeners will be notified.
+	 * 
+	 * @param state the new state
+	 * @throws ManagementException if thrown if the state transition is not valid
+	 */
+	private void setState(EnvironmentState state) throws ManagementException {
+	
+		// TODO is state transition valid?
+		if( isStateTransitionValid(this.state,state) == false )
+			throw new ManagementException("Invalid state transition");
+	
+		// set the state
+		this.state = state;
+	
+		// notify listeners
+		for( EnvironmentListener listener : environmentListeners )
+			listener.handleStateChange(state);
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#isStateTransitionValid(eis.iilang.EnvironmentState, eis.iilang.EnvironmentState)
+	 */
+	@Override
+	public boolean isStateTransitionValid(EnvironmentState oldState, EnvironmentState newState) {
+
+		if( oldState == EnvironmentState.INITIALIZED && newState == EnvironmentState.INITIALIZED )
+			return true;
+		if( oldState == EnvironmentState.INITIALIZED && newState == EnvironmentState.PAUSED )
+			return true;
+		if( oldState == EnvironmentState.PAUSED && newState == EnvironmentState.STARTED )
+			return true;
+		if( oldState == EnvironmentState.STARTED && newState == EnvironmentState.PAUSED )
+			return true;
+		if( oldState == EnvironmentState.PAUSED && newState == EnvironmentState.KILLED )
+			return true;
+		if( oldState == EnvironmentState.STARTED && newState == EnvironmentState.KILLED )
+			return true;
+		
+		return false;
+		
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#getState()
+	 */
+	@Override
+	public EnvironmentState getState() {
+		return state;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#isInitSupported()
+	 */
+	@Override
+	public boolean isInitSupported() {
+		return true;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#isKillSupported()
+	 */
+	@Override
+	public boolean isKillSupported() {
+		return true;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#isPauseSupported()
+	 */
+	@Override
+	public boolean isPauseSupported() {
+		return true;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#isStartSupported()
+	 */
+	@Override
+	public boolean isStartSupported() {
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#init(java.util.Map)
+	 */
+	@Override
+	public void init(Map<String, String> parameters) throws ManagementException {
+		if( isInitSupported() == false)
+			throw new ManagementException("init is not supported");
+		setState( EnvironmentState.PAUSED);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#kill()
+	 */
+	@Override
+	public void kill() throws ManagementException {
+		if( isKillSupported() == false)
+			throw new ManagementException("kill is not supported");
+		setState( EnvironmentState.KILLED );
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#pause()
+	 */
+	@Override
+	public void pause() throws ManagementException {
+		if( isPauseSupported() == false)
+			throw new ManagementException("pause is not supported");
+		setState( EnvironmentState.PAUSED );
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#start()
+	 */
+	@Override
+	public void start() throws ManagementException {
+		if( isStartSupported() == false)
+			throw new ManagementException("start is not supported");
+		setState( EnvironmentState.STARTED );
 	}
 	
 }
