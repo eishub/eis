@@ -15,6 +15,7 @@ import eis.exceptions.AgentException;
 import eis.exceptions.EntityException;
 import eis.exceptions.EnvironmentInterfaceException;
 import eis.exceptions.ManagementException;
+import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
@@ -735,8 +736,9 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * 
 	 * @param entity is the entity whose percepts should be retrieved.
 	 * @return a list of percepts.
+	 * @throws NoEnvironmentException 
 	 */
-	protected abstract LinkedList<Percept> getAllPerceptsFromEntity(String entity) throws PerceiveException;
+	protected abstract LinkedList<Percept> getAllPerceptsFromEntity(String entity) throws PerceiveException, NoEnvironmentException;
 
 		
 	/*

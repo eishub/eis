@@ -12,7 +12,6 @@ import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.iilang.Action;
-import eis.iilang.EnvironmentCommand;
 import eis.iilang.Identifier;
 import eis.iilang.Numeral;
 import eis.iilang.Parameter;
@@ -39,20 +38,6 @@ class EnvironmentInterface extends EIDefaultImpl {
 	}
 
 	@Override
-	public boolean isConnected() {
-		return false;
-	}
-
-	@Override
-	public void manageEnvironment(EnvironmentCommand command)
-			throws ManagementException, NoEnvironmentException {
-	}
-
-	@Override
-	public void release() {
-	}
-
-	@Override
 	public String requiredVersion() {
 		return null;
 	}
@@ -68,6 +53,49 @@ class EnvironmentInterface extends EIDefaultImpl {
 
 		return new Percept("done");
 
+	}
+
+	@Override
+	public boolean areParametersCorrect(Action action) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isSupportedByEntity(Action action, String entity) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isSupportedByEnvironment(Action action) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isSupportedByType(Action action, String type) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Percept performAction(String entity, Action action)
+			throws ActException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String queryEntityProperty(String entity, String property) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String queryProperty(String property) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

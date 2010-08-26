@@ -12,7 +12,6 @@ import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.iilang.Action;
-import eis.iilang.EnvironmentCommand;
 import eis.iilang.Function;
 import eis.iilang.Identifier;
 import eis.iilang.Numeral;
