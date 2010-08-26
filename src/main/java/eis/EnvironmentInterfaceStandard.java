@@ -295,4 +295,23 @@ public interface EnvironmentInterfaceStandard {
 	 */
 	boolean isKillSupported();
 	
+	/**
+	 * Returns the EIS-runtime-version that is compatible.
+	 */
+	String requiredVersion();
+	
+	/**
+	 * Queries the interface of a certain property.
+	 * @param property
+	 * @return
+	 */
+	String queryProperty(String property);
+
+	/**
+	 * Queries an intity of a certain property.
+	 * @param property
+	 * @return
+	 */
+	String queryEntityProperty(String entity, String property);
+	
 }

@@ -83,7 +83,7 @@ public class Main {
 		System.out.println(dc.toProlog() + "\n");
 		System.out.println(dc.toXML());
 		System.out.println("");
-		
+/*		
 		// kills the environment 
 		dc = new EnvironmentCommand(
 				EnvironmentCommand.PAUSE
@@ -131,7 +131,7 @@ public class Main {
 		System.out.println(dc.toProlog() + "\n");
 		System.out.println(dc.toXML());
 		System.out.println("");
-
+*/
 	}
 
 }

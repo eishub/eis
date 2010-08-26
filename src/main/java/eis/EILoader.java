@@ -22,6 +22,8 @@ import eis.EnvironmentInterfaceStandard;
  */
 public class EILoader {
 	
+	private static String version = "0.3beta";
+	
 	/**
 	 * Loads an environment-interface from a jar-file.
 	 * 
@@ -79,8 +81,8 @@ public class EILoader {
 		} 
 
 		// check version
-		if( EnvironmentInterfaceStandard.version.equals(ei.requiredVersion()) == false )
-			throw new IOException("Loaded environment interface version does not match the required one \"" + EnvironmentInterfaceStandard.version + "\" vs. \"" + ei.requiredVersion() + "\"");
+		if( version.equals(ei.requiredVersion()) == false )
+			throw new IOException("Loaded environment interface version does not match the required one \"" + version + "\" vs. \"" + ei.requiredVersion() + "\"");
 		
 		return ei;
 
