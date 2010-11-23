@@ -1,14 +1,14 @@
-package eis.examples.carriage;
+package eis.carriage;
 
 import java.util.LinkedList;
 
 import eis.*;
+import eis.exceptions.ActException;
 import eis.exceptions.EntityException;
 import eis.exceptions.EnvironmentInterfaceException;
-import eis.exceptions.ManagementException;
+import eis.iilang.Action;
 import eis.iilang.Percept;
 import eis.iilang.Numeral;
-import eis.iilang.EnvironmentCommand;
 
 public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 	
@@ -20,8 +20,8 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 		
 		try {
 
-			this.addEntity("robot1");
-			this.addEntity("robot2");
+			this.addEntity("robot1","robot");
+			this.addEntity("robot2","robot");
 
 		} catch (EntityException e) {
 			e.printStackTrace();
@@ -33,14 +33,6 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 		
 	}
 	
-	@Override
-	public void manageEnvironment(EnvironmentCommand command)
-			throws ManagementException {
-
-		throw new ManagementException("No environment-commands supported.");
-		
-	}
-
 	public void run() {
 
 		while(true) {
@@ -121,24 +113,83 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 	}
 
 	@Override
-	public void release() {
-
-		env.release();
-		
-		env = null;
-		
-	}
-
-	@Override
-	public boolean isConnected() {
-
-		return true;
-	
-	}
-
-	@Override
 	public String requiredVersion() {
-		return "0.2";
+		return "0.3";
+	}
+
+	@Override
+	public boolean areParametersCorrect(Action action) {
+
+		if ( action.getName().equals("wait") && action.getParameters().size() == 0 )
+			return true;
+		if ( action.getName().equals("push") && action.getParameters().size() == 0 )
+			return true;
+		
+		return false;
+	}
+
+	@Override
+	public boolean isSupportedByEntity(Action action, String entity) {
+		
+		if ( action.getName().equals("push") && getEntities().contains(entity) )
+			return true;
+		
+		if ( action.getName().equals("wait") && getEntities().contains(entity) )
+			return true;
+
+		return false;
+	}
+
+	@Override
+	public boolean isSupportedByEnvironment(Action action) {
+
+		if ( action.getName().equals("push") )
+			return true;
+		
+		if ( action.getName().equals("wait") )
+			return true;
+
+		return false;
+	}
+
+	@Override
+	public boolean isSupportedByType(Action action, String type) {
+
+		if ( type.equals("robot") && action.getName().equals("push") )
+			return true;
+		if ( type.equals("robot") && action.getName().equals("wait") )
+			return true;		
+		
+		return false;
+
+	}
+
+	@Override
+	public Percept performAction(String entity, Action action)
+			throws ActException {
+
+		if ( action.getName().equals("wait") ) {
+			return actionwait(entity);
+		}
+		else if ( action.getName().equals("push") ) {
+			return actionpush(entity);
+		}
+		else {
+			throw new AssertionError("action " + action.getName() + "not recognized");			
+		}
+
+	}
+
+	@Override
+	public String queryEntityProperty(String entity, String property) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String queryProperty(String property) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

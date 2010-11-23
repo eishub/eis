@@ -1,4 +1,4 @@
-package eis.examples.carriage;
+package eis.carriage;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

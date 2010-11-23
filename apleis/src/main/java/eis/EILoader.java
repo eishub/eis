@@ -22,7 +22,7 @@ import eis.EnvironmentInterfaceStandard;
  */
 public class EILoader {
 	
-	private static String version = "0.3beta";
+	private static String version = "0.3";
 	
 	/**
 	 * Loads an environment-interface from a jar-file.
@@ -45,6 +45,8 @@ public class EILoader {
 		Manifest manifest = jarFile.getManifest();
 
 		String mainClass = manifest.getMainAttributes().getValue("Main-Class");
+		if ( mainClass == null || mainClass.equals("") )
+			throw new IOException(file + "does not specify a main-class");
 
 		// 3. add the jar file to the classpath
 		URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();

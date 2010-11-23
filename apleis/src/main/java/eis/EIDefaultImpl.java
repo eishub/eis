@@ -651,6 +651,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		for( String entity : entities ) {
 			
 			//TODO catch and rethrow exceptions //differentiate between actexceptions and others
+			//TODO how is ensured that this method is called? ambiguity?
 			Percept p = this.performAction(entity, action);
 			ret.put(entity, p);
 			
@@ -665,7 +666,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * @see eis.EnvironmentInterfaceStandard#getAllPercepts(java.lang.String, java.lang.String[])
 	 */
 	public Map<String,Collection<Percept>> getAllPercepts(String agent, String...entities) 
-	throws PerceiveException {
+	throws PerceiveException,NoEnvironmentException {
 
 		// fail if the environment does not run
 		if( state != EnvironmentState.STARTED )

@@ -1,4 +1,4 @@
-package eis.examples.carriage;
+package eis.carriage;
 
 enum RobotAction { PUSH,WAIT };
 

@@ -7,6 +7,7 @@ import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
 import eis.exceptions.EntityException;
 import eis.exceptions.ManagementException;
+import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
@@ -227,9 +228,10 @@ public interface EnvironmentInterfaceStandard {
 	 * @param agent the agent that requests the percepts.
 	 * @return a list of percepts
 	 * @throws PerceiveException if the agent is not registered or if the agents requests percepts from an entity that is not associated.
+	 * @throws NoEnvironmentException 
 	 */
 	Map<String,Collection<Percept>> getAllPercepts(String agent, String... entities)
-			throws PerceiveException;
+			throws PerceiveException, NoEnvironmentException;
 
 	/**
 	 * Checks whether a state transition between two states is possible or not.

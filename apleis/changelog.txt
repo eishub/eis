@@ -1,7 +1,10 @@
 VERSION
 - added static factory methods to EnvironmentCommand and EnvironmentEvent
 - EILoader.fromJarFile throws an IOException that might contain a deeper exception
-
+- replaced specific classes for collections with the generic one
+- implemented the EMS
+- moved examples to different artifacts
+- added a class for truth-values to the IIL
 
 VERSION 0.2-21January2010
 
