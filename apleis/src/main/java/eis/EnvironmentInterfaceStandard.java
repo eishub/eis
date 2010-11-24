@@ -218,7 +218,7 @@ public interface EnvironmentInterfaceStandard {
 	 * @return
 	 * @throws ActException
 	 */
-	Percept performAction(String entity, Action action) throws ActException;
+	Percept performEntityAction(String entity, Action action) throws ActException;
 	
 	/** 
 	 * Gets all percepts.

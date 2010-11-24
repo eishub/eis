@@ -165,7 +165,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 	}
 
 	@Override
-	public Percept performAction(String entity, Action action)
+	public Percept performEntityAction(String entity, Action action)
 			throws ActException {
 
 		if ( action.getName().equals("wait") ) {

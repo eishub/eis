@@ -652,7 +652,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			
 			//TODO catch and rethrow exceptions //differentiate between actexceptions and others
 			//TODO how is ensured that this method is called? ambiguity?
-			Percept p = this.performAction(entity, action);
+			Percept p = this.performEntityAction(entity, action);
 			ret.put(entity, p);
 			
 		}
