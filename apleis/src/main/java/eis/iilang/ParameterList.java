@@ -131,23 +131,25 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((list == null) ? 0 : list.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		
-		if( !(obj instanceof ParameterList) )
+		if (this == obj)
+			return true;
+		if (!(obj instanceof ParameterList))
 			return false;
-		
-		ParameterList pl = (ParameterList) obj;
-		
-		if( pl.list.size() != list.size() )
-			return false;
-		
-		for( int a = 0; a < pl.list.size() ; a++ ) {
-			
-			if( pl.list.get(a).equals(list.get(a)) == false )
+		ParameterList other = (ParameterList) obj;
+		if (list == null) {
+			if (other.list != null)
 				return false;
-			
-		}
-		
+		} else if (!list.equals(other.list))
+			return false;
 		return true;
 	}
 

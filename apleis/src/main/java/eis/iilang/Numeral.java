@@ -51,15 +51,26 @@ public class Numeral extends Parameter {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		
-		if( !(obj instanceof Numeral) )
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Numeral))
 			return false;
-		
-		Numeral num = (Numeral) obj;
-		
-		return num.value.equals(value); 
-		
+		Numeral other = (Numeral) obj;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
 	}
 
 }

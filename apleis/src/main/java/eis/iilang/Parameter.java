@@ -9,4 +9,8 @@ package eis.iilang;
  */
 public abstract class Parameter extends IILElement {
 
+	abstract public boolean equals(Object obj);
+	abstract public int hashCode();
+	abstract public Object clone();
+	
 }

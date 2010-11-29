@@ -121,6 +121,11 @@ public class Percept extends DataContainer {
 	@Override
 	public boolean equals(Object obj) {
 		
+		if ( obj == null )
+			return false;
+		if ( obj == this )
+			return true;
+		
 		if( !(obj instanceof Percept) )
 			return false;
 		

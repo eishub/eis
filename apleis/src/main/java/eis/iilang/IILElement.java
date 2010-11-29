@@ -85,4 +85,7 @@ public abstract class IILElement implements Serializable {
 	 */
 	public abstract boolean equals(Object obj);
 
+	public abstract int hashCode();
+
+	
 }
