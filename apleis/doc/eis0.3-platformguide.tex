@@ -1,0 +1,501 @@
+\documentclass[a4]{article}
+
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{theorem}
+\usepackage{url}
+\usepackage{xspace}
+\usepackage{amssymb}\usepackage{xtab}
+
+\newcommand{\todo}[1]{{\bf [TODO: }\textit{#1}{\bf ]}}
+\newcommand{\remark}[1]{{\bf [RemarkKVH: }\textit{#1}{\bf ]}}
+\newcommand{\remarktmb}[1]{{\bf [RemarkTMB: }\textit{#1}{\bf ]}}
+
+\newcommand{\EIS}{\textsf{EIS}\xspace}
+
+\newcommand{\Goal}{\textsc{GOAL}\xspace}
+\newcommand{\Jason}{\textsc{Jason}\xspace}
+\newcommand{\twoAPL}{\textsc{2APL}\xspace}
+\newcommand{\Jadex}{\textsc{Jadex}\xspace}
+
+\newtheorem{example}{Example}
+
+
+
+
+
+\begin{document}
+
+\title{Environment Interface Standard for Agent-Oriented Programming \\
+\textit{Platform Integration Guide for EIS v0.2}
+}
+
+\author{Tristan Behrens}
+
+\maketitle
+
+\section{Introduction}
+
+This document's intent is to give an overview on how to integrate \EIS with your platform. This is supposed to be a document complemental to the \EIS-javadoc. Things that you will not find
+in this document, you will find in the javadoc. For the general motivation behind \EIS please refer
+to our technical report\footnote{\url{http://www.in.tu-clausthal.de/fileadmin/homes/techreports/ifi0909behrens.pdf}}.
+
+
+\section{Integration}
+
+In this section we will provide an tutorial about how to integrate \EIS into your (agent programming) platform. 
+We suppose that you have already downloaded the complete package. 
+
+The first thing that you have to do is adding \EIS to the class-path of your project.
+The package contains the file \texttt{eis-0.2-lib.jar}, which includes all the Java-interfaces and -classes that are necessary for using environment-interfaces. Add this file to the class-path. Alternatively, if your project supports  
+Maven\footnote{http://maven.apache.org/} you can add \EIS as a dependency to your \texttt{pom.xml}:
+\begin{verbatim}
+<dependencies>
+  <dependency>
+    <groupId>apleis</groupId> 
+    <artifactId>eis</artifactId> 
+    <version>0.2</version> 
+    <scope>compile</scope>
+  </dependency>
+  ...
+</dependencies>
+\end{verbatim}
+
+The next thing that you have to do is to employ the jar-loading-mechanism that comes with \EIS. 
+Specific environment-interfaces are distributed as jar-files. 
+%The package contains some exemplary environment-interfaces (described below).
+The class \texttt{eis.EILoader} should be used to load an environment-interface from a jar-file and instantiate it.
+Use the method \texttt{fromJarFile}:
+\begin{verbatim}
+EnvironmentInterfaceStandard ei = null;
+try {
+    ei = EILoader.fromJarFile(new File(jarFileName));
+} catch (IOException e) {
+    // TODO handle the exception
+}
+\end{verbatim}
+Note that you have to handle exceptions that are potentially thrown by the invocation of the method. 
+Possible causes for failure could be that the file does not exist or that the version (\EIS has a versioning-system) does not match the required one.
+
+Now that you have successfully instantiated an environment-interface you have to register your agents.
+Since \EIS is very agnostic when it comes to the type/structure/architecture of your agents you only have to
+register your agents by providing their names. The reason for this is the desired generality. 
+So let us assume that you have some agent, which is represented by its name.
+You can register the agent like this:
+\begin{verbatim}
+String agentName = ... ; // the name of your agent
+try {
+    ei.registerAgent(agentName);
+} catch (AgentException e) {
+  // TODO handle the exception
+}
+\end{verbatim}
+Again, you have to handle possible exceptions. 
+The invocation fails if an agent with the same name has already registered.
+You can also unregister an agent if you want to cut it off from the environment-interface:
+\begin{verbatim}
+try {
+    ei.unregisterAgent(agentName);
+} catch (AgentException e) {
+  // TODO handle the exception
+}
+\end{verbatim}
+Here the invocation fails if the agent has not been registered to the interface.
+
+But why do you have to register your agents to the environment-interface? 
+You have to do so because the next thing we are going to do is associating agents with entities.
+We differentiate between agents, which we only assume to be software-agents, and controllable entities,
+which provide agents with sensory and effectoric capabilities. 
+Due to the fact that we do not assume anything about the nature of an environment-interface, we have to
+make this distinction. 
+Agents act and perceive through entities, entities facilitate the situatedness of agents.
+A nice example for an entity is a simulated elevator. 
+An agent that controls that elevator-entity can make it move
+to a specific floor and perceive its current floor. In order to have an agent control an entity both have to be associated.
+Similar to agents, entities are only represented by their name (again a String). 
+So assuming that you know that there is an entity with the name \texttt{"car1"}, you can make your agent control it like this:
+\begin{verbatim}
+try {
+    ei.associateEntity(agentName, "car1");
+} catch (RelationException e) {
+  // TODO handle the exception
+}
+\end{verbatim}
+The invocation could fail, so you have to handle the exception. Note that this a very naive way to associate your agent
+with an entity, because it assumes that you know the name of the entity beforehand. 
+You can however query the interface for all free entities and associate your agent with the first one:
+\begin{verbatim}
+LinkedList<String> ens = ei.getFreeEntities();
+try {
+    ei.associateEntity(agentName, ens.removeFirst());
+} catch (RelationException e) {
+  // TODO handle the exception
+}
+\end{verbatim}
+Which policy you apply here is your decision. There are more methods for manipulating the agents-entities-relationship
+(see the javadoc). Note that you can also query the type of an entity with the method \texttt{getType}. This could be useful
+for example if you want to instantiate different types of agents for different types of entities.
+
+Now that you have your agent registered and associated with an entity, or you have already iterated the process and associated
+several agents with several entities, you want to make them act and perceive. Acting is quite simple. You have to invoke
+the method \texttt{performAction} like this:
+\begin{verbatim}
+Action action = ... // this has to be an EIS-action
+try {
+    Vector<Percept> ps = eis.performAction(agentName, action);
+} catch (ActException e) {
+  // TODO handle the exception
+} catch (NoEnvironmentException e) {
+  // TODO handle the exception
+}
+\end{verbatim}
+The action must be an instance of \texttt{eis.iilang.Action}. You could for example instantiate an action like this:
+\begin{verbatim}
+Action action = new Action("goto", new Ident("up"));
+\end{verbatim}
+It might be necessary to implement a mapping from your definition of what an action is to \EIS-actions.
+Note that performing an action could return a percept. This is necessary for active sensing. 
+Make sure that such return-values are handled properly.
+
+Note that you can sometimes (depending on the environment-interface) associate a single agent with several entities.
+This can be reflected by \texttt{performAction} that accepts an optional array of strings 
+(vararg language feature\footnote{\url{http://java.sun.com/developer/JDCTechTips/2005/tt0104.html}}) as the third parameter. 
+The array should contain a subset of the set of entities that are associated with the agent: 
+\begin{verbatim}
+try {
+  Vector<Percept> ps = eis.performAction(agentName, action,"entity1","entity2");
+} catch (ActException e) {
+  // TODO handle the exception
+} catch (NoEnvironmentException e) {
+  // TODO handle the exception
+}
+\end{verbatim}
+If the array is empty, all
+entities will be taken into account. Note that you can determine the source (e.g. the entity) of each percept via the
+\texttt{getSource}-method.
+
+You definitely are advised to handle the exceptions. \texttt{NoEnvironmentException} is thrown if the environment-interface
+is not properly connected to an environment. \texttt{ActException} is thrown if the action could not be executed. Possible
+reasons for that are reflected by the type of the exception:
+\begin{verbatim}
+try {
+  ei.performAction(agentName, action,entities);
+} catch (ActException e) {
+  if( e.type == NOTYPE ) {
+    // TODO handle the exception
+  } else if( e.type == NOTREGISTERED ) {
+    // TODO handle the exception
+  } else if( e.type == NOENTITIES ) {
+    // TODO handle the exception
+  } else if( e.type == WRONGENTITY ) {
+    // TODO handle the exception
+  } else if( e.type == WRONGSYNTAX ) {
+    // TODO handle the exception
+  } else if( e.type == FAILURE ) {
+    // TODO handle the exception
+  }
+} catch(NoEnvironmentException e) {
+  // TODO handle the exception
+}
+\end{verbatim}
+
+The type \texttt{NOTSPECIFIC} denotes that the type of the exception has not been indicated specifically. 
+Although we expect  more detailed information about why the method has failed, we do not enforce this.
+\texttt{NOTREGISTERED} indicates that the agent has not registered to the environment-interface.
+\texttt{NOENTITIES} on the other hand communicates that the agent has no associated entities.
+\texttt{WRONGENTITY} denotes that at least one of the provided entities is not associated with the agent.
+\texttt{NOTSUPPORTEDBYTYPE} indicates that the type of the entity does not support the execution of the action.
+\texttt{WRONGSYNTAX} indicates that the syntax of the action is wrong. 
+That is the case when the name of the action is not available and when the parameters do not match (number of parameters or their types and structure).
+And \texttt{FAILURE} indicates that the action has failed although it matched all mentioned requirements. 
+For example \texttt{goto(up)} could fail if the path is blocked in the respective direction.
+ 
+Now let us talk percepts. There is a method to retrieve all percepts. This has been shown to be very useful for some APL platforms.
+You can do this:
+\begin{verbatim}
+try {
+  LinkedList<Percept> percepts = ei.getAllPercepts(agentName);
+  // TODO process the percepts
+} catch (PerceiveException e) {
+  // TODO handle the exception
+} catch (NoEnvironmentException e) {
+  // TODO handle the exception
+}
+\end{verbatim}
+After the invocation you have to make sure that the percepts are processed in a proper manner. 
+Also a \texttt{PerceiveException} is thrown if perception fails, that is if the agent is not registered or has no associated
+entities. An instance of \texttt{NoEnvironmentException} is thrown if there is no environment. Similar
+to \texttt{performAction} the method \texttt{getAllPercepts} supports a vararg for restricting the call to a subset of the
+associated entities.
+
+Now let's talk about the third and final way to get percepts from the environment-interface: percepts-as-notifications.
+\EIS supports sending percepts to the agents on special occasions without a request to do so. That is, environments
+sending percepts. 
+In order to allow your agents to receive such percepts, your platform has to implement the interface \texttt{eis.AgentListener} and its method \texttt{handlePercept(String agent, Percept percept)}. 
+Furthermore you have to register the listener to the environment-interface.
+The string \texttt{agent} of the \texttt{handlePercept}-method indicates the recipient of the percept \texttt{percept}.
+Note that it is your responsibility to make sure that the percept is passed to the respective agent.
+
+You can establish percepts-as-notifications like this:
+\begin{verbatim}
+class YourPlatform implements AgentListener {
+
+  EnvironmentInterface Standard ei;
+  
+  ...
+
+  public void init() {
+    eis.attachAgentListener(agentName, this);
+  }
+
+  public void handlePercept(String agent, Percept percept) {
+    // TODO pass the percept to the agent
+  }
+
+}
+\end{verbatim}
+
+Now we will discuss \emph{environment-events}. Such events are generated if 1. the set of entities changes or is modified, an 2. if the executional-state of the environment changes. Again you have to implement the interface 
+\texttt{eis.EnvironmentListener} and its
+methods: 
+\begin{verbatim}
+class YourPlatform implements EnvironmentListener {
+
+  EnvironmentInterface Standard ei;
+  
+  ...
+
+  public void init() {
+    eis.attachEnvironmentListener(this);
+  }
+
+  public void handleFreeEntity(String entity) {
+    // TODO handle event
+  }
+  
+  public void handleNewEntity(String entity) {
+    // TODO handle event
+  }
+  
+  public void handleDeletedEntity(String entity) {
+    // TODO handle event
+  }
+  
+  public void handleEnvironmentEvent(EnvironmenEvent event) {
+    // TODO handle event
+  }
+
+}
+\end{verbatim}
+
+The method \texttt{handleNewEntity} is called when there is a new entity, wheras \texttt{handleFreeEntity} is called
+when an entity is freed, and \texttt{handleDeletedEntity} is called when an entity is deleted. 
+%Do not forget to register the listener to the environment-interface via \texttt{attachEnvironmentListener}.
+Again, you have to come up with your own platform-specific policy for new/free/deleted entities. 
+We will come back to \texttt{handleEnvironmentEvent} in a minute.
+
+Finally we will discuss methods of environment-management. For managing the environment you can use
+the method \texttt{manageEnvironment}:
+\begin{verbatim}
+EnvironmentCommand command = ...; 
+try {
+    ei.manageEnvironment(command);
+} catch (ManagementException e) {
+    // TODO Auto-generated catch block
+} catch (NoEnvironmentException e) {
+    // TODO Auto-generated catch block
+}
+\end{verbatim}
+An environment-command can either be: starting the environment, killing it, pausing its execution, resetting it, and
+initializing it with parameters. A \texttt{ManagementException} is thrown when the command passed as a parameter
+is not supported. We do not assume that all environments support all environment-commands (if any at all). 
+A \texttt{NoEnvironmentException} is thrown when the environment-interface is not connected to an environment.
+
+The environment-interface can also notify about the change of the state of the execution of the environment.
+Such an event can either be that the environment has been started, killed, paused, reset, or initialized.
+Note that we do not assume that all environment-interfaces notify about such events.
+
+\section{Included environment-interfaces}
+
+Wherein we elaborate on environment-interfaces that are included in the \EIS-package.
+
+\subsection{Agent Contest Connector 2007}
+
+In order to run the contest environment you have to download the package including the MASSim-server from
+the Multi-Agent Contest homepage\footnote{\url{http://www.multiagentcontest.org}}. 
+
+\medskip\noindent{\textbf{Environment description:}} the environment is a grid-like, partially-accessible world. Goldminers. The goal is to collect as much gold as possible. More information is available at the 
+contest homepage.
+
+\medskip\noindent{\textbf{Jar-file:}} \texttt{eis-acconnector2007-0.2.jar} (included in the \EIS-package).
+
+\medskip\noindent{\textbf{Entities:}}
+\begin{description}
+\item[\texttt{connector1},$\ldots$,\texttt{connector6}] each one is a connector to a single goldminer in the environment.
+\end{description}
+
+\noindent{\textbf{Types of entities:}} this interface does not take into account different types of entities.
+
+\medskip\noindent{\textbf{Actions:}}
+\begin{description}
+\item[\texttt{connect(Identifier, Numeral , Identifier, Identifier)}] connects to the MASSim-server.
+The first identifier is the hostname of the server. The numeral is its port. The second identifier denotes the user-name,
+the final one denotes the password. This action has to be performed successfully in order to allow for other actions.
+Example: \texttt{connect("139.174.100.201",12300,"agentred1","dfkj39")}.
+\item[\texttt{skip}] has no effect.
+\item[\texttt{right}] moves the goldminer to the right.
+\item[\texttt{up}] moves the goldminer up.
+\item[\texttt{left}] moves the goldminer left.
+\item[\texttt{down}] moves the goldminer down.
+\item[\texttt{pick}] picks up gold.
+\item[\texttt{drop}] drops gold.
+\item[\texttt{mark(Identifier)}] marks the current cell with a string.
+\item[\texttt{unmark}] unmarks the current cell.
+
+\end{description}
+
+\noindent{\textbf{Percepts:}} all those percepts are both propagated as notifications and returned by the
+\texttt{getAllPercepts}-method. Note that the interface implements a queue of percepts that is filled every time
+a message from the MASSim-server is received and whose first entry is retrieved every time the \texttt{getAllPercepts}-method is called. The interface does not hold a world-model.
+\begin{description}
+\item[\texttt{connectionLost}] indicates that the connection to the server has been lost. 
+\item[\texttt{simStart}] indicates that the simulation has begun.
+\item[\texttt{corralPos(Numeral, Numeral, Numeral, Numeral)}] is the position of the corral the first two numbers indicate the upper-left- 
+the last two ones indicate the lower-right-corner. Example: \texttt{corralPos(1,1,10,10)}.
+\item[\texttt{gridSize(Numeral, Numeral)}] represents the size of the grid. The first value is the width, the second one is 
+the height. Example:\texttt{gridSize(100,100)}.
+\item[\texttt{simId(Identifier id)}] denotes the id of the simulation. Example: \texttt{simId("cowSkullMountain")}
+\item[\texttt{lineOfSight(Numeral num)}] indicates how far the respective entity can see. 
+Example: \texttt{lineOfSight(8)}
+\item[\texttt{opponent(Numeral name)}] denotes the opponent in the current match. 
+Example: \texttt{opponent("StampedeTeam")}
+\item[\texttt{steps(Numeral num)}] indicates how many steps the simulation lasts. Example: \texttt{steps(1000)}
+\item[\texttt{simEnd}] indicates that the current simulation is over.
+\item[\texttt{result(Identifier)}] represents the result of the simulation. Values could be either \texttt{win},  
+\texttt{lose}, or  \texttt{draw}. Example: \texttt{result(win)}
+\item[\texttt{finalScore(Numeral)}] represents the final-score of the simulation. Example: \texttt{finalScore(42)}
+\item[\texttt{bye}] indicates that the overall tournament is over.
+\item[\texttt{cell(Numeral, Numeral, Identifier)}] denote the content of a cell. The numerals represent the position 
+relative to the cowboy's current position. The identifier represents the object. 
+Possible values are \texttt{agentally}, \texttt{agentenemy}, \texttt{switch}, \texttt{fenceopen}, 
+\texttt{fenceclosed}, \texttt{cow}, \texttt{obstacle}, \texttt{empty}, and \texttt{unknown}. 
+Example: \texttt{cell(-1,-1,cow)}
+%\item[\texttt{id(Numeral num)}] indicates the identifier of the \texttt{id(70)}
+\item[\texttt{pos(Numeral x, Numeral y)}] denotes the current position of the cowboy. Example: \texttt{pos(10,15)}
+\item[\texttt{currentScore(Numeral)}] denotes the current score. Example: \texttt{currentScore(24)}
+\item[\texttt{currentStep(Numeral num)}] indicates the current step of the simulation.
+Example: \texttt{currentStep(123)}
+\end{description}
+
+\noindent{\textbf{Environment-management:}} not supported.
+
+\subsection{Agent Contest Connector 2009}
+
+In order to run the contest environment you have to download the package including the MASSim-server from
+the Multi-Agent Contest homepage\footnote{\url{http://www.multiagentcontest.org}}. 
+
+\medskip\noindent{\textbf{Environment description:}} the environment is a grid-like, partially-accessible world. Cowboys are steered
+by agents. The goal is to push cows into a corral by frightening them. More information is available at the 
+contest homepage.
+
+\medskip\noindent{\textbf{Jar-file:}} \texttt{eis-acconnector2009-0.2.jar} (included in the \EIS-package).
+
+\medskip\noindent{\textbf{Entities:}}
+\begin{description}
+\item[\texttt{connector1},$\ldots$,\texttt{connector10}] each one is a connector to a single cowboy in the environment.
+\end{description}
+
+\noindent{\textbf{Types of entities:}} this interface does not take into account different types of entities.
+
+\medskip\noindent{\textbf{Actions:}}
+\begin{description}
+\item[\texttt{connect(Identifier, Numeral , Identifier, Identifier)}] connects to the MASSim-server.
+The first identifier is the hostname of the server. The numeral is its port. The second identifier denotes the user-name,
+the final one denotes the password. This action has to be performed successfully in order to allow for other actions.
+Example: \texttt{connect("139.174.100.201",12300,"agentred1","dfkj39")}.
+\item[\texttt{move(Identifier direction)}] moves the cowboy to a specified direction. 
+Possible actions are \texttt{north}, \texttt{northeast}, \texttt{east}, \texttt{southeast}, \texttt{south}, \texttt{southwest},
+\texttt{west}, and \texttt{northwest}. Example \texttt{move(east)}
+\item[\texttt{skip}] has no effect.
+\end{description}
+
+\noindent{\textbf{Percepts:}} all those percepts are both propagated as notifications and returned by the
+\texttt{getAllPercepts}-method. Note that the interface implements a queue of percepts that is filled every time
+a message from the MASSim-server is received and whose first entry is retrieved every time the \texttt{getAllPercepts}-method is called. The interface does not hold a world-model.
+\begin{description}
+\item[\texttt{connectionLost}] indicates that the connection to the server has been lost. 
+\item[\texttt{simStart}] indicates that the simulation has begun.
+\item[\texttt{corralPos(Numeral, Numeral, Numeral, Numeral)}] is the position of the corral the first two numbers indicate the upper-left- 
+the last two ones indicate the lower-right-corner. Example: \texttt{corralPos(1,1,10,10)}.
+\item[\texttt{gridSize(Numeral, Numeral)}] represents the size of the grid. The first value is the width, the second one is 
+the height. Example:\texttt{gridSize(100,100)}.
+\item[\texttt{simId(Identifier id)}] denotes the id of the simulation. Example: \texttt{simId("cowSkullMountain")}
+\item[\texttt{lineOfSight(Numeral num)}] indicates how far the respective entity can see. 
+Example: \texttt{lineOfSight(8)}
+\item[\texttt{opponent(Numeral name)}] denotes the opponent in the current match. 
+Example: \texttt{opponent("StampedeTeam")}
+\item[\texttt{steps(Numeral num)}] indicates how many steps the simulation lasts. Example: \texttt{steps(1000)}
+\item[\texttt{simEnd}] indicates that the current simulation is over.
+\item[\texttt{result(Identifier)}] represents the result of the simulation. Values could be either \texttt{win},  
+\texttt{lose}, or  \texttt{draw}. Example: \texttt{result(win)}
+\item[\texttt{finalScore(Numeral)}] represents the final-score of the simulation. Example: \texttt{finalScore(42)}
+\item[\texttt{bye}] indicates that the overall tournament is over.
+\item[\texttt{cell(Numeral, Numeral, Identifier)}] denote the content of a cell. The numerals represent the position 
+relative to the cowboy's current position. The identifier represents the object. 
+Possible values are \texttt{agentally}, \texttt{agentenemy}, \texttt{switch}, \texttt{fenceopen}, 
+\texttt{fenceclosed}, \texttt{cow}, \texttt{obstacle}, \texttt{empty}, and \texttt{unknown}. 
+Example: \texttt{cell(-1,-1,cow)}
+%\item[\texttt{id(Numeral num)}] indicates the identifier of the \texttt{id(70)}
+\item[\texttt{pos(Numeral x, Numeral y)}] denotes the current position of the cowboy. Example: \texttt{pos(10,15)}
+\item[\texttt{currentScore(Numeral)}] denotes the current score. Example: \texttt{currentScore(24)}
+\item[\texttt{currentStep(Numeral num)}] indicates the current step of the simulation.
+Example: \texttt{currentStep(123)}
+\end{description}
+
+\noindent{\textbf{Environment-management:}} not supported.
+\subsection{Carriage Example}
+
+\medskip\noindent{\textbf{Environment description:}} there is a carriage on a circular-track. That track has three 
+distinct locations for the carriage two be on. On each side of the carriage is a robot. Both robots can push the carriage.
+The environment evolves in a step-wise manner.
+
+\medskip\noindent{\textbf{Jar-file:}} \texttt{eis-carriage-0.2.jar} (included in the \EIS-package).
+
+\medskip\noindent{\textbf{Entities:}}
+\begin{description}
+\item[\texttt{robot1},\texttt{robot2}] are the two robots in the environment.
+\end{description}
+
+\noindent{\textbf{Types of entities:}} this interface does not take into account different types of entities.
+
+\medskip\noindent{\textbf{Actions:}}
+\begin{description}
+\item[\texttt{push}] pushes the carriage. If both robots push at the same time, the carriage will not move. If only
+one robot pushes the carriage will.
+\item[\texttt{wait}] has no effect.
+\end{description}
+
+\noindent{\textbf{Percepts:}}
+\begin{description}
+\item[\texttt{step}] indicates that current step of the environment. Propagates via notifications 
+\item[\texttt{currentPos(Number)}] denotes the current position of the carriage, either \texttt{0}, \texttt{1}, or \texttt{2}.
+Returned by \texttt{getAllEntities}.
+\end{description}
+
+\noindent{\textbf{Environment-management:}} not supported.
+
+%\appendix
+%\section{EIS-Platform-Integration Checklist}
+%\begin{itemize}
+%\item[$\square$] add EIS to the class-path of your project
+%\item[$\square$] retrieve an environment-interface-jar-file
+%\item[$\square$] load environment-interface with \texttt{EILoader}
+%\item[$\square$] register your agents
+%\item[$\square$] associate your agents with entities provided by the interface
+%\item[$\square$] act ant perceive
+%\item[$\square$] environment-listening
+%\end{itemize}
+
+\end{document}
