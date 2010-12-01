@@ -38,7 +38,7 @@ public class ActException extends EnvironmentInterfaceException {
 	//public static final int WRONGSYNTAX = 7;
 	
 	/** if the action cannot be executed */
-	//public static final int FAILURE = 8; 
+	public static final int FAILURE = 8; 
 	
 	/** the type */
 	private int type = NOTSPECIFIC;
