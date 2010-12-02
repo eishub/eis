@@ -103,13 +103,15 @@ TODO both ways
 
 \subsection{General Issues}
 
+listeners!
+
 \subsection{Agents and Entities}
 
 managing the agents-entities-relation
 
 \subsection{Environment Management System}
 
-The environment management system (EMS) is the component of \EIS that facilitates managing the
+The environment management system (EMS, as shown in Fig.~\ref{FIG:EMS}) is the component of \EIS that facilitates managing the
 state of execution of the environment(-interface). Basically this is a finite state machine that encodes the different
 states of the environment(-inferface) and the possible state transitions.
 
@@ -132,33 +134,21 @@ be a default-initialization for all specific environment-interfaces.
 \item \texttt{INITIALIZED} to \texttt{PAUSED} via \texttt{*}: we assume that there will be a process of connecting
 to an environment right after initializing the specific environment interface. As soon as that connection is established
 the state is supposed to be \texttt{PAUSED}. We denote that process of connecting with \texttt{*}.
-\item \texttt{INITIALIZED} to \texttt{STARTED} via \texttt{start()}:
-\item \texttt{INITIALIZED} to \texttt{KILLED} via \texttt{kill()}:
-\item \texttt{STARTED} to \texttt{PAUSED} via \texttt{pause()}:
+\item \texttt{INITIALIZED} to \texttt{KILLED} via \texttt{kill()}: this kills the environment interface, before even the
+connection to the environment was established.
+\item \texttt{PAUSED} to \texttt{STARTED} via \texttt{start()}: this starts the execution.
+\item \texttt{PAUSED} to \texttt{KILLED} via \texttt{kill()}: this kills the environment interface.
+\item \texttt{STARTED} to \texttt{PAUSED} via \texttt{pause()}: this pauses the execution.
+\item \texttt{STARTED} to \texttt{KILLED} via \texttt{kill()}: this kills the environment interface.
 \end{itemize}
 
-querying
-notifications
+Every time such a state transition occurs the connected listeners are supposed to be notified about that event. To that end, when the
+state is changed the method  \texttt{handleStateChange(...)} must be called for all registered environment-listeners.
+The default implementation already handles the state-transitions, it throws an exception if an invalid state-transition
+is tried, and automatically notifies all listeners about the state-change if it was successful.
 
-Note that not all environment-interfaces are supposed to implement the above-states and transitions. If not supported the transitions should be ignored.
-Also note that the state \texttt{Initialized} represents a \emph{class} of states that differ in the instantiation-parameters.
-
-Assumptions:
-\begin{itemize}
-\item As soon as an interface has been instantiated it is assumed to be in the \texttt{Initialized}-state.
-\item As soon as the interface has established its connection to the environment
-it is in the \texttt{Paused}-state.
-\item Only when the interface is in the \texttt{Killed}-state it and its resources can be released.
-\end{itemize}
-
-Finally, we have to assume two things:
-\begin{itemize}
-\item every time a state-transition occurs, the environment-interface should notify the registered environment-listeners, and
-\item in general clients should be able to query the state at any time.
-\end{itemize}
-
-
-transitions:
+On top of that the current state can be queried via the \texttt{getState()}-method, which should return an instance of
+\texttt{eis.iilang.EnvironmentState}. Again the default implementation already handles this.
 
 \begin{figure}[h]\centering
 \begin{tikzpicture}[>=triangle 45]\footnotesize
@@ -170,6 +160,7 @@ transitions:
 \draw[->,loop below] (IN) to node[below] {\texttt{init(...)}} (IN);
 \draw[->,line width=2pt] (-1.125,0) to (IN);
 \draw[->,bend left=20] (IN) to node[above left] {\texttt{*}} (PA);
+\draw[->,bend right=20] (IN) to node[above right] {\texttt{kill()}} (KI);
 %\draw[->,bend left=20] (PA) to node[below right] {\texttt{RESET}} (IN);
 \draw[->,bend left=20] (PA) to node[above right] {\texttt{start()}} (ST);
 \draw[->,bend left=20] (ST) to node[below left] {\texttt{pause()}} (PA);
@@ -179,6 +170,7 @@ transitions:
 
 \end{tikzpicture}
 \caption{Different states of the environment interface and state transitions.}
+\caption{FIG:EMS}
 \end{figure}
 
 \subsection{Acting and Perceiving}

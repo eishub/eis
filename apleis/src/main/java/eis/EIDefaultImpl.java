@@ -941,6 +941,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			return true;
 		if( oldState == EnvironmentState.INITIALIZED && newState == EnvironmentState.PAUSED )
 			return true;
+		if( oldState == EnvironmentState.INITIALIZED && newState == EnvironmentState.KILLED )
+			return true;
 		if( oldState == EnvironmentState.PAUSED && newState == EnvironmentState.STARTED )
 			return true;
 		if( oldState == EnvironmentState.STARTED && newState == EnvironmentState.PAUSED )
