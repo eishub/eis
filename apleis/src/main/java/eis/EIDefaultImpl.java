@@ -649,7 +649,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		Map<String,Percept> ret = new HashMap<String,Percept>();
 
 		// 6. action could be not supported by the entities themselves
-		for( String entity : entities ) {
+		for( String entity : targetEntities ) {
 			
 			//TODO catch and rethrow exceptions //differentiate between actexceptions and others
 			//TODO how is ensured that this method is called? ambiguity?
