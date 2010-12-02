@@ -1049,4 +1049,24 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		setState( EnvironmentState.STARTED );
 	}
 	
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#queryProperty()
+	 */
+	@Override
+	public String queryProperty(String property) {
+		
+		return null;
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see eis.EnvironmentInterfaceStandard#queryEntityProperty()
+	 */
+	@Override
+	public String queryEntityProperty(String entity, String property) {
+		
+		return null;
+		
+	}
+	
 }
