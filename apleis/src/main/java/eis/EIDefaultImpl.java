@@ -630,7 +630,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			
 		}
 		
-		// 5. action could be not supported by the entities themselves
+		// 6. action could be not supported by the entities themselves
 		for( String entity : entities ) {
 			
 			String type;
@@ -767,7 +767,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * @param action
 	 * @return
 	 */
-	protected abstract boolean areParametersCorrect(Action action);
+	//protected abstract boolean areParametersCorrect(Action action);
 
 	/**
 	 * @param entity
