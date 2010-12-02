@@ -184,41 +184,6 @@ public interface EnvironmentInterfaceStandard {
 	 */
 	Map<String,Percept> performAction(String agent, Action action,
 			String... entities) throws ActException;
-
-	/**
-	 * Returns true if the action is supported by the environment.
-	 * @param action
-	 * @return
-	 */
-	boolean isSupportedByEnvironment(Action action);
-
-	/**
-	 * Returns true if the action is supported by the environment.
-	 * @param action
-	 * @return
-	 */
-	boolean isSupportedByType(Action action, String type);
-
-	/**
-	 * Returns true if the action is supported by the environment.
-	 * @param action
-	 * @return
-	 */
-	boolean isSupportedByEntity(Action action, String entity);
-
-	/**
-	 * @param action
-	 * @return
-	 */
-	boolean areParametersCorrect(Action action);
-
-	/**
-	 * @param entity
-	 * @param action
-	 * @return
-	 * @throws ActException
-	 */
-	Percept performEntityAction(String entity, Action action) throws ActException;
 	
 	/** 
 	 * Gets all percepts.

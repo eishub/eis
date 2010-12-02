@@ -741,6 +741,40 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 */
 	protected abstract LinkedList<Percept> getAllPerceptsFromEntity(String entity) throws PerceiveException, NoEnvironmentException;
 
+	/**
+	 * Returns true if the action is supported by the environment.
+	 * @param action
+	 * @return
+	 */
+	abstract boolean isSupportedByEnvironment(Action action);
+
+	/**
+	 * Returns true if the action is supported by the environment.
+	 * @param action
+	 * @return
+	 */
+	abstract boolean isSupportedByType(Action action, String type);
+
+	/**
+	 * Returns true if the action is supported by the environment.
+	 * @param action
+	 * @return
+	 */
+	abstract boolean isSupportedByEntity(Action action, String entity);
+
+	/**
+	 * @param action
+	 * @return
+	 */
+	abstract boolean areParametersCorrect(Action action);
+
+	/**
+	 * @param entity
+	 * @param action
+	 * @return
+	 * @throws ActException
+	 */
+	abstract Percept performEntityAction(String entity, Action action) throws ActException;
 		
 	/*
 	 * Misc functionality.
@@ -882,7 +916,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * @param state the new state
 	 * @throws ManagementException if thrown if the state transition is not valid
 	 */
-	private void setState(EnvironmentState state) throws ManagementException {
+	protected void setState(EnvironmentState state) throws ManagementException {
 	
 		// TODO is state transition valid?
 		if( isStateTransitionValid(this.state,state) == false )
