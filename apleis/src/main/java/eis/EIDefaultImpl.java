@@ -746,27 +746,27 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * @param action
 	 * @return
 	 */
-	abstract boolean isSupportedByEnvironment(Action action);
+	protected abstract boolean isSupportedByEnvironment(Action action);
 
 	/**
 	 * Returns true if the action is supported by the environment.
 	 * @param action
 	 * @return
 	 */
-	abstract boolean isSupportedByType(Action action, String type);
+	protected abstract boolean isSupportedByType(Action action, String type);
 
 	/**
 	 * Returns true if the action is supported by the environment.
 	 * @param action
 	 * @return
 	 */
-	abstract boolean isSupportedByEntity(Action action, String entity);
+	protected abstract boolean isSupportedByEntity(Action action, String entity);
 
 	/**
 	 * @param action
 	 * @return
 	 */
-	abstract boolean areParametersCorrect(Action action);
+	protected abstract boolean areParametersCorrect(Action action);
 
 	/**
 	 * @param entity
@@ -774,7 +774,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * @return
 	 * @throws ActException
 	 */
-	abstract Percept performEntityAction(String entity, Action action) throws ActException;
+	protected abstract Percept performEntityAction(String entity, Action action) throws ActException;
 		
 	/*
 	 * Misc functionality.

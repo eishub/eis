@@ -129,7 +129,9 @@ The state transitions on the other hand are these:
 \begin{itemize}
 \item \texttt{INITIALIZED} to \texttt{INITIALIZED} via \texttt{init(...)}: you can further set up the environment-interface by providing initialization parameters, which is facilitated by calling the \texttt{init(...)}-method with the respective parameters. Note that we assume what calling that method is not obligatory, which in turn implies that there needs to
 be a default-initialization for all specific environment-interfaces.
-\item \texttt{INITIALIZED} to \texttt{PAUSED} via \texttt{*}:
+\item \texttt{INITIALIZED} to \texttt{PAUSED} via \texttt{*}: we assume that there will be a process of connecting
+to an environment right after initializing the specific environment interface. As soon as that connection is established
+the state is supposed to be \texttt{PAUSED}. We denote that process of connecting with \texttt{*}.
 \item \texttt{INITIALIZED} to \texttt{STARTED} via \texttt{start()}:
 \item \texttt{INITIALIZED} to \texttt{KILLED} via \texttt{kill()}:
 \item \texttt{STARTED} to \texttt{PAUSED} via \texttt{pause()}:
