@@ -20,6 +20,7 @@ import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
 import eis.iilang.EnvironmentState;
+import eis.iilang.Parameter;
 import eis.iilang.Percept;
 
 
@@ -920,7 +921,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	
 		// TODO is state transition valid?
 		if( isStateTransitionValid(this.state,state) == false )
-			throw new ManagementException("Invalid state transition");
+			throw new ManagementException("Invalid state transition from " + this.state.toString() + " to  " + state.toString());
 	
 		// set the state
 		this.state = state;
@@ -1010,7 +1011,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * @see eis.EnvironmentInterfaceStandard#init(java.util.Map)
 	 */
 	@Override
-	public void init(Map<String, String> parameters) throws ManagementException {
+	public void init(Map<String, Parameter> parameters) throws ManagementException {
 		if( isInitSupported() == false)
 			throw new ManagementException("init is not supported");
 		setState( EnvironmentState.PAUSED);

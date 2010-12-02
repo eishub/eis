@@ -12,6 +12,7 @@ import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
 import eis.iilang.EnvironmentState;
+import eis.iilang.Parameter;
 import eis.iilang.Percept;
 
 /**
@@ -212,7 +213,7 @@ public interface EnvironmentInterfaceStandard {
 	 * @param parameters
 	 * @throws ManagementException is thrown either when the initializing is not supported or the parameters are wrong.
 	 */
-	void init(Map<String,String> parameters) throws ManagementException;
+	void init(Map<String,Parameter> parameters) throws ManagementException;
 	
 	/**
 	 * Starts the environment(-interface).

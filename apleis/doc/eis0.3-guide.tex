@@ -73,6 +73,8 @@ intend of EIS?
 
 \todo{Later.}
 
+\subsection{Interface Intermediate Language}
+
 \section{EIS PLATFORM GUIDE}
 
 \todo{Later.}
@@ -175,6 +177,43 @@ On top of that the current state can be queried via the \texttt{getState()}-meth
 
 \subsection{Acting and Perceiving}
 
+\begin{quote}
+\texttt{Map<String,Percept> performAction(String agent, Action action,
+			String... entities) throws ActException;}
+\end{quote}
+
+This method yields an exception if the execution of the provided action fails. 
+This exception is an instance of \texttt{eis.exceptions.ActException} and its 
+\texttt{type}-field denotes the reason for the failure. Values are:
+\begin{itemize}
+\texttt{NOTSPECIFIC}: if there is no specific reason for the failure (should be avoided).
+	
+	/** if the agent is not registered */
+\texttt{NOTREGISTERED}:
+	
+	/** if the agent has no entities */
+\texttt{NOENTITIES}:
+	
+	/** if there is a wrong entity */
+\texttt{WRONGENTITY}:
+	
+	/** if the action is not supported by the type */
+\texttt{NOTSUPPORTEDBYENVIRONMENT}:
+
+	/** if the action is not supported by the type */
+\texttt{NOTSUPPORTEDBYTYPE}:
+
+	/** if the action is not supported by the type */
+\texttt{NOTSUPPORTEDBYENTITY}:
+	
+	/** if the syntax is wrong */
+\texttt{WRONGSYNTAX}:
+	
+	/** if the action cannot be executed */
+\texttt{public static final int FAILURE}:
+\end{itemize}
+
+	
 \subsection{Querying Mechanism}
 
 \begin{verbatim}
@@ -196,6 +235,7 @@ querying-mechanism
 footnotes: what is new/different in EIS 0.3
 checklists?
 \end{verbatim}
+
 
 \end{document}
 
