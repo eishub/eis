@@ -42,74 +42,87 @@
 
 \section{INTRODUCTION}
 
-\section{Introduction}
-
-This document's intent is to give an overview on how to integrate \EIS with your platform. This is supposed to be a document complemental to the \EIS-javadoc. Things that you will not find
+This document's intent is 1. to give an overview on how to integrate \EIS with your platform and 2. how to \emph{EISify} your own or third-party environments, that is making it EIS-compatible. This paper is supposed to be a document complemental to the \EIS-javadoc. Things that you will not find
 in this document, you will find in the javadoc. For the general motivation behind \EIS please refer
 to our technical report\footnote{\url{http://www.in.tu-clausthal.de/fileadmin/homes/techreports/ifi0909behrens.pdf}}.
 
-
 This document consists of
 \begin{enumerate}
-\item a general introduction to \EIS,
 \item a \emph{platform guide} that explains how to connect your APL platform to \EIS, and
 \item a \emph{interface guide} that explains how to make your environments \EIS-compatible.
 \end{enumerate}
 
-\subsection{Downloading, Building, Installing and Linking}
+\subsection{Building, Installing and Linking}
 
-download: sf
-building: maven package -> jar (artifacts)
-installing and linking: either copy jar by hand or include it in your pow.xml
+We can assume that you have already successfully downloaded \EIS from sourceforge. 
+To build \EIS you need to have Maven\footnote{\url{http://maven.apache.org/}} installed. Navigate to
+the folder that contains the file \texttt{pom.xml} and run this command:
+\begin{quote}
+\texttt{mvn install}
+\end{quote}
+This will compile \EIS, run some JUnit tests, bundle the compiled classes into a single jar-file and install it to 
+your local Maven-repository. After that you will find the file \texttt{eis-0.3.jar} in the \texttt{target/}-folder.
 
-\section{GENERAL INTRODUCTION}
-
-interface vs Java-interface
-general environment interface vs specific environment interface
-
+You can then add this file to the class-path of you project in the traditional way, that is copying and linking by hand. Alternatively, if your project already supports  
+Maven you can add \EIS as a dependency to your \texttt{pom.xml}:
 \begin{verbatim}
-intend of EIS?
+<dependencies>
+  <dependency>
+    <groupId>apleis</groupId> 
+    <artifactId>eis</artifactId> 
+    <version>0.3</version> 
+    <scope>compile</scope>
+  </dependency>
+  ...
+</dependencies>
 \end{verbatim}
-
-\todo{Later.}
 
 \subsection{Interface Intermediate Language}
 
-\section{EIS PLATFORM GUIDE}
+\todo{Motivation}
 
-\todo{Later.}
+The language consists of 1. \emph{data containers} (e.g. actions and percepts), 2. \emph{parameters}
+to those containers, and 3. \emph{environment states}.
 
-\section{EIS INTERFACE GUIDE}
-
-The purpose of this section is to explain how you can make an environment \EIS-compatible. 
-Essentially there are two solutions to that problem:
-\begin{enumerate}
-\item implementing the Java-interface \texttt{apleis.EnvironmentInterfaceStandard}, or
-\item extending the abstract class \texttt{apleis.EIDefaultImpl}.
-\end{enumerate}
-
-We usually suggest that extending the abstract-class is way-to-go, because the default-implementation
-already provides a lot of the functionality that is required from each specific environment interface.
-Most of the functionality, which comes as a couple of methods, can be overridden and thus changed
-according to the needs of the developer.
-
-In the following we will explain the basic mechanisms of \EIS, that is
+Parameters are: identifiers, numbers, truth-values, functions over parameters, and lists of parameters.
+These are the Java-classes representing parameters:
 \begin{itemize}
-\item associating agents and entities,
-\item acting and perceiving,
-\item environment state management, and
-\item querying functionality.
+\item\texttt{eis.iilang.Identifier} represents an identifier,
+\item\texttt{eis.iilang.Numeral} represents a number,
+\item\texttt{eis.iilang.TruthValue} represents a truth-value,
+\item\texttt{eis.iilang.Function} represents a function over parameters, and
+\item\texttt{eis.iilang.ParameterList} represents a list of parameters.
 \end{itemize}
 
-TODO both ways
+\todo{Examples!}
 
-\subsection{General Issues}
+Data containers are: actions that are performed by agents,
+results of such actions,
+percepts that are received by agents, and
+events that are sent to agents by the interface.
+Furthermore they are:
+environment commands that are for example issued to control the execution of the environment, and
+events that are sent to notify about changes of the state of execution.
 
-listeners!
+Each of these data containers consist of (1) a name, and (2) a set of parameters.
+Here are the respective classes:
+\begin{itemize}
+\item\texttt{eis.iilang.Action} represents an action.
+\item\texttt{eis.iilang.Percept} is a percept.
+environment.
+\end{itemize}
 
-\subsection{Agents and Entities}
+\todo{Examples}
 
-managing the agents-entities-relation
+The states of environments/environment-interfaces are represented using the enum \texttt{EnvironmentState}. Values are
+\begin{itemize}
+\item \texttt{EnvironmentState.INITIALIZING} denotes that the environment(-interface) is currently initializing.
+\item \texttt{EnvironmentState.PAUSED}  denotes that the environment(-interface) is paused.
+\item \texttt{EnvironmentState.STARTED}  denotes that the environment(-interface) is running.
+\item \texttt{EnvironmentState.KILLED}  denotes that the environment(-interface) is killed.
+\end{itemize}
+
+\todo{Write something}
 
 \subsection{Environment Management System}
 
@@ -131,12 +144,12 @@ percepts are provided.
 
 The state transitions on the other hand are these:
 \begin{itemize}
-\item \texttt{INITIALIZED} to \texttt{INITIALIZED} via \texttt{init(...)}: you can further set up the environment-interface by providing initialization parameters, which is facilitated by calling the \texttt{init(...)}-method with the respective parameters. Note that we assume what calling that method is not obligatory, which in turn implies that there needs to
+\item \texttt{INITIALIZING} to \texttt{INITIALIZING} via \texttt{init(...)}: you can further set up the environment-interface by providing initialization parameters, which is facilitated by calling the \texttt{init(...)}-method with the respective parameters. Note that we assume what calling that method is not obligatory, which in turn implies that there needs to
 be a default-initialization for all specific environment-interfaces.
-\item \texttt{INITIALIZED} to \texttt{PAUSED} via \texttt{*}: we assume that there will be a process of connecting
+\item \texttt{INITIALIZING} to \texttt{PAUSED} via \texttt{*}: we assume that there will be a process of connecting
 to an environment right after initializing the specific environment interface. As soon as that connection is established
 the state is supposed to be \texttt{PAUSED}. We denote that process of connecting with \texttt{*}.
-\item \texttt{INITIALIZED} to \texttt{KILLED} via \texttt{kill()}: this kills the environment interface, before even the
+\item \texttt{INITIALIZING} to \texttt{KILLED} via \texttt{kill()}: this kills the environment interface, before even the
 connection to the environment was established.
 \item \texttt{PAUSED} to \texttt{STARTED} via \texttt{start()}: this starts the execution.
 \item \texttt{PAUSED} to \texttt{KILLED} via \texttt{kill()}: this kills the environment interface.
@@ -155,7 +168,7 @@ On top of that the current state can be queried via the \texttt{getState()}-meth
 \begin{figure}[h]\centering
 \begin{tikzpicture}[>=triangle 45]\footnotesize
 \tikzstyle{state}=[draw=black,circle,line width=2pt,minimum width=2cm]
-\node[state] (IN) {\texttt{INITIALIZED}};
+\node[state] (IN) {\texttt{INITIALIZING}};
 \node[state] (PA) at (3,3) {\texttt{PAUSED}};
 \node[state] (ST) at (6,0) {\texttt{STARTED}};
 \node[state] (KI) at (3,-3) {\texttt{KILLED}};
@@ -175,103 +188,19 @@ On top of that the current state can be queried via the \texttt{getState()}-meth
 \caption{FIG:EMS}
 \end{figure}
 
-\subsection{Acting and Perceiving}
 
-\begin{quote}
-\texttt{Map<String,Percept> performAction(String agent, Action action,
-			String... entities) throws ActException;}
-\end{quote}
+\todo{Write something}
 
-This method yields an exception if the execution of the provided action fails. 
-This exception is an instance of \texttt{eis.exceptions.ActException} and its 
-\texttt{type}-field denotes the reason for the failure. Values are:
-\begin{itemize}
-\texttt{NOTSPECIFIC}: if there is no specific reason for the failure (should be avoided).
-	
-	/** if the agent is not registered */
-\texttt{NOTREGISTERED}:
-	
-	/** if the agent has no entities */
-\texttt{NOENTITIES}:
-	
-	/** if there is a wrong entity */
-\texttt{WRONGENTITY}:
-	
-	/** if the action is not supported by the type */
-\texttt{NOTSUPPORTEDBYENVIRONMENT}:
-
-	/** if the action is not supported by the type */
-\texttt{NOTSUPPORTEDBYTYPE}:
-
-	/** if the action is not supported by the type */
-\texttt{NOTSUPPORTEDBYENTITY}:
-	
-	/** if the syntax is wrong */
-\texttt{WRONGSYNTAX}:
-	
-	/** if the action cannot be executed */
-\texttt{public static final int FAILURE}:
-\end{itemize}
-
-	
-\subsection{Querying Mechanism}
-
-\begin{verbatim}
-default implementation versus interface-definition
-  interface comes without any functionality
-versioning
-associating agents with entities
-environment management support
-  TODO copy EMS-stuff here
-acting and perceiving
-action validation mechanism
-  explain act exception
-  using interface: make sure that the exceptions are instantiated the right way
-  using default impl... implement the isSupported etc methods
-  act-exception: interface vs defaultimpl
-querying-mechanism
-  query the interface in general
-  query entities in specific
-footnotes: what is new/different in EIS 0.3
-checklists?
-\end{verbatim}
-
-
-\end{document}
-
-
-
-
-\section{Introduction}
-
-This document's intent is to give an overview on how to integrate \EIS with your platform. This is supposed to be a document complemental to the \EIS-javadoc. Things that you will not find
-in this document, you will find in the javadoc. For the general motivation behind \EIS please refer
-to our technical report\footnote{\url{http://www.in.tu-clausthal.de/fileadmin/homes/techreports/ifi0909behrens.pdf}}.
-
-
-\section{Integration}
+\section{EIS PLATFORM GUIDE}
 
 In this section we will provide an tutorial about how to integrate \EIS into your (agent programming) platform. 
-We suppose that you have already downloaded the complete package. 
+We suppose that you have already downloaded the complete package as described earlier. 
 
-The first thing that you have to do is adding \EIS to the class-path of your project.
-The package contains the file \texttt{eis-0.2-lib.jar}, which includes all the Java-interfaces and -classes that are necessary for using environment-interfaces. Add this file to the class-path. Alternatively, if your project supports  
-Maven\footnote{http://maven.apache.org/} you can add \EIS as a dependency to your \texttt{pom.xml}:
-\begin{verbatim}
-<dependencies>
-  <dependency>
-    <groupId>apleis</groupId> 
-    <artifactId>eis</artifactId> 
-    <version>0.2</version> 
-    <scope>compile</scope>
-  </dependency>
-  ...
-</dependencies>
-\end{verbatim}
+\subsection{Linking and Loading}
 
+The first thing that you have to do is adding \EIS to the class-path of your project. We have already described this earlier.
 The next thing that you have to do is to employ the jar-loading-mechanism that comes with \EIS. 
 Specific environment-interfaces are distributed as jar-files. 
-%The package contains some exemplary environment-interfaces (described below).
 The class \texttt{eis.EILoader} should be used to load an environment-interface from a jar-file and instantiate it.
 Use the method \texttt{fromJarFile}:
 \begin{verbatim}
@@ -284,6 +213,10 @@ try {
 \end{verbatim}
 Note that you have to handle exceptions that are potentially thrown by the invocation of the method. 
 Possible causes for failure could be that the file does not exist or that the version (\EIS has a versioning-system) does not match the required one.
+
+\subsection{Managing the Environment State}
+
+\subsection{Registering Agents}
 
 Now that you have successfully instantiated an environment-interface you have to register your agents.
 Since \EIS is very agnostic when it comes to the type/structure/architecture of your agents you only have to
@@ -522,6 +455,132 @@ A \texttt{NoEnvironmentException} is thrown when the environment-interface is no
 The environment-interface can also notify about the change of the state of the execution of the environment.
 Such an event can either be that the environment has been started, killed, paused, reset, or initialized.
 Note that we do not assume that all environment-interfaces notify about such events.
+
+
+\section{EIS INTERFACE GUIDE}
+
+The purpose of this section is to explain how you can make an environment \EIS-compatible. 
+Essentially there are two solutions to that problem:
+\begin{enumerate}
+\item implementing the Java-interface \texttt{apleis.EnvironmentInterfaceStandard}, or
+\item extending the abstract class \texttt{apleis.EIDefaultImpl}.
+\end{enumerate}
+
+We usually suggest that extending the abstract-class is way-to-go, because the default-implementation
+already provides a lot of the functionality that is required from each specific environment interface.
+Most of the functionality, which comes as a couple of methods, can be overridden and thus changed
+according to the needs of the developer.
+
+In the following we will explain the basic mechanisms of \EIS, that is
+\begin{itemize}
+\item associating agents and entities,
+\item acting and perceiving,
+\item environment state management, and
+\item querying functionality.
+\end{itemize}
+
+TODO both ways
+
+\subsection{General Issues}
+
+listeners!
+
+\subsection{Agents and Entities}
+
+managing the agents-entities-relation
+
+
+\subsection{Acting and Perceiving}
+
+\begin{quote}
+\texttt{Map<String,Percept> performAction(String agent, Action action,
+			String... entities) throws ActException;}
+\end{quote}
+
+This method yields an exception if the execution of the provided action fails. 
+This exception is an instance of \texttt{eis.exceptions.ActException} and its 
+\texttt{type}-field denotes the reason for the failure. Values are:
+\begin{itemize}
+\item\texttt{NOTSPECIFIC}: if there is no specific reason for the failure (this type should be avoided).
+\item\texttt{NOTREGISTERED}: if the agent is not registered.
+\item\texttt{NOENTITIES}: if the agent as no associated entities and thus cannot act.
+\item\texttt{WRONGENTITY}: if the array \texttt{entities} contains at least one entity that is not associated with the agent.
+\item\texttt{NOTSUPPORTEDBYENVIRONMENT}: if the action is not supported by the environment.
+\item\texttt{NOTSUPPORTEDBYTYPE}: if the action is not supported by the type of an entity.
+\item\texttt{NOTSUPPORTEDBYENTITY}: if the action is not supported by the entity itself.
+\texttt{FAILURE}: if the action is supported by the execution fails. 
+\end{itemize}
+\todo{maybe examples for failures}
+
+When implementing the \texttt{EnvironmentInterfaceStandard} interface you have to make sure that your
+implementation of \texttt{performAction} fits the specification above when it comes to the exception-types.
+
+The \texttt{EIDefaultImpl} on the other hand already enforces the specification and requires you to implement a set of helper methods:
+\begin{itemize}
+\item\texttt{boolean isSupportedByEnvironment(Action action)}: is supposed to return \texttt{true} iff the action
+is supported by the environment.
+\item\texttt{boolean isSupportedByType(Action action, String type)}: is supposed to return \texttt{true} iff the action
+is supported by the entity-type.
+\item\texttt{boolean isSupportedByEntity(Action action, String entity)}: is supposed to return \texttt{true} iff the action
+is supported by the entity.
+\item\texttt{Percept performEntityAction(String entity, Action action) throws ActException}: is supposed to execute the
+action or trigger its execution in the environment. On top of that it is expected that an \texttt{ActException} with type
+\texttt{FAILURE} is thrown if the action fails to execute.
+\end{itemize}
+
+The implementation of \texttt{performAction} in \texttt{EIDefaultImpl} works as follows:
+\begin{enumerate}
+\item if \texttt{agent} is not registered throw an \texttt{ActException} with type \texttt{NOTREGISTERED},
+\item if \texttt{agent} has no associated entities throw an \texttt{ActException} with type \texttt{NOENTITIES},
+\item if \texttt{entities} contains at least one entity that is not associated with \texttt{agent} throw an \texttt{ActException} with type \texttt{WRONGENTITY},
+\item if \texttt{isSupportedByEnvironment(...)} returns \texttt{false} 
+throw an \texttt{ActException} with type \texttt{NOSUPPORTEDBYENVIRONMENTs},
+\item \texttt{isSupportedByType(...)} returns \texttt{false} for at least one type of the entities
+throw an \texttt{ActException} with type \texttt{NOSUPPORTEDBYTYPE},
+\item if \texttt{isSupportedByEntity(...)} returns \texttt{false} for at least one entity in \texttt{entities} 
+throw an \texttt{ActException} with type \texttt{NOSUPPORTEDBYENTITY},
+\item call \texttt{performEntityAction(...)} which can yield an \texttt{ActException} with type \texttt{FAILED}, which is then rethrown.
+\end{enumerate}
+
+
+
+	
+\subsection{Querying Mechanism}
+
+\begin{verbatim}
+default implementation versus interface-definition
+  interface comes without any functionality
+versioning
+associating agents with entities
+environment management support
+  TODO copy EMS-stuff here
+acting and perceiving
+action validation mechanism
+  explain act exception
+  using interface: make sure that the exceptions are instantiated the right way
+  using default impl... implement the isSupported etc methods
+  act-exception: interface vs defaultimpl
+querying-mechanism
+  query the interface in general
+  query entities in specific
+footnotes: what is new/different in EIS 0.3
+checklists?
+\end{verbatim}
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+\section{Integration}
+
+
 
 \section{Included environment-interfaces}
 

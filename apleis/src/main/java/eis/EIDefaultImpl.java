@@ -653,8 +653,22 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			
 			//TODO catch and rethrow exceptions //differentiate between actexceptions and others
 			//TODO how is ensured that this method is called? ambiguity?
-			Percept p = this.performEntityAction(entity, action);
-			ret.put(entity, p);
+			
+			try {
+				Percept p = this.performEntityAction(entity, action);
+				ret.put(entity, p);				
+			}
+			catch(Exception e) {
+				
+				if ( !(e instanceof ActException) )
+					throw new AssertionError("must be an instance of ActException");
+				if( ((ActException)e).getType() != ActException.FAILURE )
+					throw new AssertionError("must have type FAILURE");
+				
+				// rethrow
+				throw (ActException)e;
+				
+			}
 			
 		}
 
