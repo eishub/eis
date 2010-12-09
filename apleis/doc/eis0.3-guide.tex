@@ -77,6 +77,55 @@ Maven you can add \EIS as a dependency to your \texttt{pom.xml}:
 </dependencies>
 \end{verbatim}
 
+\subsection{Interface Meta-Model}
+
+Fig.~\ref{FIGENVMODEL} shows the \EIS interface meta-model. We assume that the overall system consists
+of these components:
+\begin{itemize}
+\item \emph{agents}, 
+\item the \emph{platform} that manages and executes agents,
+\item the  \emph{environment management system} that facilitates managing the environment,
+\item the \emph{agents-entities system} that connects agents to controllable entities,
+\item the \emph{environment querying system} that allows for querying the environment-interface for statistics, and
+\item the \emph{environment model} that represents the environment itself.
+\end{itemize}
+
+\begin{figure}[h]
+\begin{center}
+\begin{tikzpicture}[line width=2pt,scale=1]\large
+%\draw[-,dashed,line width=1pt] (4,5) to (4,-2.75);
+\node(text1) at(0,4.75){\Large APL Side};
+\node(text1) at(8.5,4.75){\Large Environment Side};
+\node(text1) at(4,4.7){\Large Interface Layer};
+\draw[-,dashed,line width=1pt] (2,5) to (2,-4.25);
+\draw[-,dashed,line width=1pt] (6,5) to (6,-4.25);
+
+\node[rectangle, draw=black,fill=white,rounded corners, minimum width=3cm, minimum height = 2cm] (envman) at (4,3){\bf \begin{tabular}{ccc}Environment\\Management\\System\end{tabular}};
+\node[rectangle, draw=black,fill=white,rounded corners, minimum width=3cm, minimum height = 1.75cm, dashed] (platform) at (0,1.125){\bf Platform};
+\node[rectangle, draw=black,fill=white,rounded corners, minimum width=3cm, minimum height = 1.75cm, dashed] (agents) at (0,-1.125){\bf Agents};
+\node[rectangle, draw=black,fill=white,rounded corners, minimum width=3cm, minimum height = 3cm] (eis)  at (4,0) {\bf \begin{tabular}{ccc}Agents-Entities\\System\end{tabular}};
+\node[rectangle, draw=black,fill=white,rounded corners, minimum width=4cm, minimum height = 4cm, dashed] (env) at (8.5,0){\bf \begin{tabular}{ccc}Environment\\Model\end{tabular}};
+\node[rectangle, draw=black,fill=white,rounded corners, minimum width=3cm, minimum height = 2cm] (envquer) at (4,-3){\bf \begin{tabular}{ccc}Environment\\Querying\\Interface\end{tabular}};
+
+\draw[-,line width=3pt] (envman) to (eis);
+\draw[-,line width=3pt] (eis) to (agents);
+\draw[-,line width=3pt] (platform) to (agents);
+\draw[-,line width=3pt] (platform) to (eis);
+\draw[-,line width=3pt] (eis) to (env);
+\draw[-,line width=3pt,bend right=5,color=gray] (envman) to (platform);
+\draw[-,line width=3pt,bend right=5,color=gray] (env) to (envman);
+\draw[-,line width=3pt] (eis) to (envquer);
+\draw[-,line width=3pt,bend right=5,color=gray] (envquer) to (env);
+
+\end{tikzpicture}
+\end{center}
+\caption{The interface meta-model. We have three different layers. The platform and its agents live on the APL side. The environment management system, that facilitates the
+manipulation of the environments executional state, the
+agents-entities system, that connects agents to controllable entities, and the environment-querying system, that allows
+for querying the environment and the environment interface for data, all live on the interface layer. And the environment model lives on the environment side.}
+\label{FIGENVMODEL}
+\end{figure}
+
 \subsection{Interface Intermediate Language}
 
 \todo{Motivation}
@@ -191,6 +240,72 @@ On top of that the current state can be queried via the \texttt{getState()}-meth
 
 \todo{Write something}
 
+\subsection{Agents and Controllable Entities}
+
+An important concept of \EIS is the separation of concerns, that is the distinction between
+1. agents that are software structures that act as percept-processors and action-generators on the platform side,
+and 2. controllable entities that are software structures that act as percept-generators and action-processors on the environment side. The connections between agents and controllable entities is made possible by the 
+\emph{agents-entities-relation}, that in its essence a subset of the crossproduct of the set of agents and the set of entities. 
+
+The environment-interface in general is very agnostic about the internal structure of both agents and entities, and thus stores them internally only represented as strings (see Fig.~\ref{AGENREL}). These strings are then associated in the agents-entities-relation. How, we will show later. Acting an perceiving is then to be mapped respectively.
+
+\begin{figure}[h]
+\begin{center}
+\begin{tikzpicture}[line width=2pt,scale=1]\large
+\tikzstyle{aeid}=[draw=black,circle, minimum size = 0.75cm, line width=1pt, inner sep=0]
+\tikzstyle{object}=[draw=black,circle, minimum size = 1cm, line width=1.5pt, inner sep=0]
+\tikzstyle{conn}=[draw=black,line width=1.5pt]
+\tikzstyle{connthin}=[draw=black,line width=1pt]
+
+%\draw[-,dashed,line width=1pt] (4,5) to (4,-2.75);
+\node(text1) at(0,3.75){\Large APL Side};
+\node(text1) at(8.5,3.75){\Large Environment Side};
+\node(text1) at(4,3.7){\Large Interface Layer};
+\draw[-,dashed,line width=1pt] (2,4) to (2,-2.75);
+\draw[-,dashed,line width=1pt] (6,4) to (6,-2.75);
+
+\node[] (ag1) at (0,2) {\bf Agent};
+\node[] (ag2) at (0,0) {\bf Agent};
+\node[] (ag3) at (0,-2) {\bf Agent};
+
+\node[aeid] (aid1) at (3,1.25) {Id};
+\node[aeid] (aid2) at (3,0) {Id};
+\node[aeid] (aid3) at (3,-1.25) {Id};
+
+\node[aeid] (eid1) at (5,1.5) {Id};
+\node[aeid] (eid2) at (5,0.5) {Id};
+\node[aeid] (eid3) at (5,-0.5) {Id};
+\node[aeid] (eid4) at (5,-1.5) {Id};
+
+\node[] (en1) at (8,2) {\includegraphics[width=0.75cm]{robot}};
+\node[] (en2) at (8,0.75) {\includegraphics[width=0.75cm]{robot}};
+\node[] (en3) at (8,-0.75) {\includegraphics[width=0.75cm]{robot}};
+\node[] (en4) at (8,-2) {\includegraphics[width=0.75cm]{robot}};
+
+\draw[conn, bend left=10] (ag1) to (aid1);
+\draw[conn] (ag2) to (aid2);
+\draw[conn, bend right=10] (ag3) to (aid3);
+
+\draw[conn, bend right=10] (en1) to (eid1);
+\draw[conn, bend right=5] (en2) to (eid2);
+\draw[conn, bend left=5] (en3) to (eid3);
+\draw[conn, bend left=10] (en4) to (eid4);
+
+\draw[connthin] (aid1) to (eid1);
+\draw[connthin] (aid2) to (eid2);
+\draw[connthin] (aid2) to (eid3);
+\draw[connthin] (aid3) to (eid4);
+
+\end{tikzpicture}
+
+\end{center}
+\caption{The agent entities-relation. Agents are percept processors and action generators that live on the APL side. Controllable entities are percept generators and action processors and live on the environment side. Both agents and controllable entities are represented via identifiers on the interface layer.}
+\label{AGENREL}
+\end{figure}
+
+
+
+\newpage
 \section{EIS PLATFORM GUIDE}
 
 In this section we will provide an tutorial about how to integrate \EIS into your (agent programming) platform. 
@@ -214,9 +329,67 @@ try {
 Note that you have to handle exceptions that are potentially thrown by the invocation of the method. 
 Possible causes for failure could be that the file does not exist or that the version (\EIS has a versioning-system) does not match the required one.
 
+\subsection{Attaching Listeners for Interface-Platform Communication}
+
+Communication with \EIS-interfaces is facilitated 1. by calling specific methods, and 2. by handling callbacks
+that the respective interfaces raise. \EIS provides two listener-interfaces: 
+\begin{itemize}
+\item \texttt{eis.EnvironmentListener} for handling state changes of the interface, and
+\item \texttt{eis.AgentListener} for handling percepts-as-notifications.
+\end{itemize}
+
+On the platform side you should provide classes that implement these interfaces.
+When you run the system you are supposed to register instances of these classes to the instantiated environment-interface, using these methods of \texttt{eis.EnvironmentInterfaceStandard}:
+\begin{itemize}
+\item \texttt{attachEnvironmentListener(EnvironmentListener listener)} for attaching an environment-listener, and
+\item \texttt{attachAgentListener(AgentListener listener)} for attaching an agent-listener.
+\end{itemize}
+
+You can attach as many listeners as you like. Note also, that you can unregister any listener during runtime using these methods:
+\begin{itemize}
+\item \texttt{detachEnvironmentListener(EnvironmentListener listener)} for detaching an environment-listener, and
+\item \texttt{detachAgentListener(AgentListener listener)} for detaching an agent-listener.
+\end{itemize}
+
 \subsection{Managing the Environment State}
 
-\subsection{Registering Agents}
+In order to receive notifications about environment-state changes you have to implement the \texttt{eis.EnvironmentListener} interface and register at least one instance of a respective class via
+\texttt{attachEnvironmentListener}. Every time the state changes, the environment-interface will
+invoke this method, which you have to implement in order to react to these changes:
+\begin{quote}
+\texttt{void handleStateChange(EnvironmentState newState);}
+\end{quote}
+Note that you can query the state at any time by invoking this method of \texttt{eis.EnvironmentInterfaceStandard}:
+\begin{quote}
+\texttt{EnvironmentState getState();}
+\end{quote}
+
+To manipulate the state you have access to this set of methods:
+\begin{itemize}
+\item\texttt{void init(Map<String,Parameter> parameters) throws ManagementException;}
+\item\texttt{void start() throws ManagementException;}
+\item\texttt{void pause() throws ManagementException;}
+\item\texttt{void kill() throws ManagementException;}
+\end{itemize}
+
+You can initialize an environment-interface by calling \texttt{init} with a set of key-value pairs.
+Note that all these methods raise a \texttt{ManagementException} in the case that the respective
+state transition is not supported. To query whether a state-transition is supported at all you can 
+employ this set of methods:
+\begin{itemize}
+\item\texttt{boolean isInitSupported();} returns \texttt{true} if \texttt{init(...)} is supported,
+\item\texttt{boolean isStartSupported();}  returns \texttt{true} if \texttt{start()} is supported,
+\item\texttt{boolean isPauseSupported();}  returns \texttt{true} if \texttt{pause()} is supported, and
+\item\texttt{boolean isKillSupported();}  returns \texttt{true} if \texttt{kill()} is supported.
+\end{itemize}
+		
+	
+\subsection{Setting up Agents, Acting and Perceiving}
+
+register/unregister
+acting
+allpercepts
+notifications
 
 Now that you have successfully instantiated an environment-interface you have to register your agents.
 Since \EIS is very agnostic when it comes to the type/structure/architecture of your agents you only have to
@@ -457,6 +630,8 @@ Such an event can either be that the environment has been started, killed, pause
 Note that we do not assume that all environment-interfaces notify about such events.
 
 
+
+\newpage
 \section{EIS INTERFACE GUIDE}
 
 The purpose of this section is to explain how you can make an environment \EIS-compatible. 
