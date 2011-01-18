@@ -38,7 +38,7 @@ public class ActException extends EnvironmentInterfaceException {
 	//public static final int WRONGSYNTAX = 7;
 	
 	/** if the action cannot be executed */
-	public static final int FAILURE = 8; 
+	public static final int FAILURE = 7; 
 	
 	/** the type */
 	private int type = NOTSPECIFIC;
@@ -122,7 +122,7 @@ public class ActException extends EnvironmentInterfaceException {
 	 */
 	public void setType(int type) {
 
-		if( type < 0 || type > 6) {
+		if( type < 0 || type > 7 ) {
 			
 			assert false: "Type \"" + type + "\" not supported.";
 			type = 0;
@@ -130,6 +130,48 @@ public class ActException extends EnvironmentInterfaceException {
 		}
 		
 		this.type = type;
+		
+	}
+	
+	public String toString() {
+		
+		String ret = "";
+		
+		String strType = "";
+		if ( type == NOTSPECIFIC ) {
+			strType = "not specific";
+		}
+		else if ( type == NOTREGISTERED ) {
+			strType = "not registered";			
+		}
+		else if ( type == NOENTITIES) {
+			strType = "no entities";	
+		}
+		else if ( type == WRONGENTITY) {
+			strType = "wrong entity";
+		}
+		else if ( type == NOTSUPPORTEDBYENVIRONMENT) {
+			strType = "not supported by environment";
+		}
+		else if ( type == NOTSUPPORTEDBYTYPE) {
+			strType = "not supported by type";
+		}
+		else if ( type == NOTSUPPORTEDBYENTITY) {
+			strType = "not supported by entity";
+		}
+		else if ( type == FAILURE) {
+			strType = "failure";
+		}
+		
+		ret += "ActException type=\"" + strType + "\"";
+
+		if ( getMessage() != null)
+			ret += " message=\"" + getMessage() + "\"";
+		
+		if ( getCause() != null)
+			ret += " cause=\"" + getCause() + "\"";
+
+		return ret;
 		
 	}
 	

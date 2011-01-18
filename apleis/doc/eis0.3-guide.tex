@@ -17,6 +17,7 @@
 \newcommand{\remarktmb}[1]{{\bf [RemarkTMB: }\textit{#1}{\bf ]}}
 
 \newcommand{\EIS}{\textsf{EIS}\xspace}
+\newcommand{\IILang}{\textsf{IILang}\xspace}
 
 \newcommand{\Goal}{\textsc{GOAL}\xspace}
 \newcommand{\Jason}{\textsc{Jason}\xspace}
@@ -130,8 +131,11 @@ for querying the environment and the environment interface for data, all live on
 
 \todo{Motivation}
 
-The language consists of 1. \emph{data containers} (e.g. actions and percepts), 2. \emph{parameters}
-to those containers, and 3. \emph{environment states}.
+
+The  Interface Intermediate Language (\IILang) consists of 1. \emph{data containers} (e.g. actions and percepts), 2. \emph{parameters}
+to those containers, and 3. \emph{environment states} (see Fig.~\ref{FIG:IILANG}). 
+Members of the \IILang are stored as abstract syntax trees formed by Java-objects, which can be printed
+either in an XML- or in an logic-programming style for the sake of readability.
 
 Parameters are: identifiers, numbers, truth-values, functions over parameters, and lists of parameters.
 These are the Java-classes representing parameters:
@@ -142,6 +146,33 @@ These are the Java-classes representing parameters:
 \item\texttt{eis.iilang.Function} represents a function over parameters, and
 \item\texttt{eis.iilang.ParameterList} represents a list of parameters.
 \end{itemize}
+
+\begin{figure}[h]\centering
+\tikzstyle{node}=[rectangle,draw=black,minimum width =2.5cm,minimum height = 0.75cm]
+\begin{tikzpicture}
+\node[node] (NA) at (0,-0.75) {\texttt{IILElement}};% at (0,0);
+\node[node] (NB1) at (4,1) {\texttt{DataContainer}};
+\node[node] (NB2) at (4,-2.5) {\texttt{Parameter}}; 
+\node[node] (NC1) at (8,1.5) {\texttt{Action}};
+\node[node] (NC2) at (8,0.5) {\texttt{Percept}};
+\node[node] (NC3) at (8,-0.5) {\texttt{Identifier}};
+\node[node] (NC4) at (8,-1.5) {\texttt{Numeral}};
+\node[node] (NC5) at (8,-2.5) {\texttt{TruthValue}};
+\node[node] (NC6) at (8,-3.5) {\texttt{ParameterList}};
+\node[node] (NC7) at (8,-4.5) {\texttt{Function}};
+\draw[-] (NA) to (NB1);
+\draw[-] (NA) to (NB2);
+\draw[-] (NB1) to (NC1);
+\draw[-] (NB1) to (NC2);
+\draw[-] (NB2) to (NC3);
+\draw[-] (NB2) to (NC4);
+\draw[-] (NB2) to (NC5);
+\draw[-] (NB2) to (NC6);
+\draw[-] (NB2) to (NC7);
+\end{tikzpicture}
+\caption{The inheritance relation of the IIL-elements. Actions and percepts are data-containers. Each data-container consists of a name and an ordered collection of parameters. Each parameter is either an identifier, a numeral, a list of parameters or a function of parameters.}
+\label{FIG:IILANG}
+\end{figure}
 
 \todo{Examples!}
 

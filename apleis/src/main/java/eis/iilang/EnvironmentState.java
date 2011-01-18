@@ -2,8 +2,8 @@ package eis.iilang;
 
 public enum EnvironmentState {
 
-	INITIALIZED,
-	STARTED,
+	INITIALIZING,
+	RUNNING,
 	PAUSED,
 	KILLED
 	

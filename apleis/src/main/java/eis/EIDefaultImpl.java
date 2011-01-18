@@ -105,7 +105,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		agentsToEntities 	= new ConcurrentHashMap<String,HashSet<String>>();
 		entitiesToTypes		= new HashMap<String,String>();
 		
-		state = EnvironmentState.INITIALIZED;
+		state = EnvironmentState.INITIALIZING;
 		
 	}
 
@@ -684,7 +684,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	throws PerceiveException,NoEnvironmentException {
 
 		// fail if the environment does not run
-		if( state != EnvironmentState.STARTED )
+		if( state != EnvironmentState.RUNNING )
 			throw new PerceiveException("Environment does not run");
 		
 		// fail if ther agent is not registered
@@ -952,19 +952,19 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	@Override
 	public boolean isStateTransitionValid(EnvironmentState oldState, EnvironmentState newState) {
 
-		if( oldState == EnvironmentState.INITIALIZED && newState == EnvironmentState.INITIALIZED )
+		if( oldState == EnvironmentState.INITIALIZING && newState == EnvironmentState.INITIALIZING )
 			return true;
-		if( oldState == EnvironmentState.INITIALIZED && newState == EnvironmentState.PAUSED )
+		if( oldState == EnvironmentState.INITIALIZING && newState == EnvironmentState.PAUSED )
 			return true;
-		if( oldState == EnvironmentState.INITIALIZED && newState == EnvironmentState.KILLED )
+		if( oldState == EnvironmentState.INITIALIZING && newState == EnvironmentState.KILLED )
 			return true;
-		if( oldState == EnvironmentState.PAUSED && newState == EnvironmentState.STARTED )
+		if( oldState == EnvironmentState.PAUSED && newState == EnvironmentState.RUNNING )
 			return true;
-		if( oldState == EnvironmentState.STARTED && newState == EnvironmentState.PAUSED )
+		if( oldState == EnvironmentState.RUNNING && newState == EnvironmentState.PAUSED )
 			return true;
 		if( oldState == EnvironmentState.PAUSED && newState == EnvironmentState.KILLED )
 			return true;
-		if( oldState == EnvironmentState.STARTED && newState == EnvironmentState.KILLED )
+		if( oldState == EnvironmentState.RUNNING && newState == EnvironmentState.KILLED )
 			return true;
 		
 		return false;
@@ -1028,7 +1028,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	public void init(Map<String, Parameter> parameters) throws ManagementException {
 		if( isInitSupported() == false)
 			throw new ManagementException("init is not supported");
-		setState( EnvironmentState.PAUSED);
+		setState( EnvironmentState.INITIALIZING);
 	}
 
 
@@ -1063,7 +1063,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	public void start() throws ManagementException {
 		if( isStartSupported() == false)
 			throw new ManagementException("start is not supported");
-		setState( EnvironmentState.STARTED );
+		setState( EnvironmentState.RUNNING );
 	}
 	
 	/* (non-Javadoc)

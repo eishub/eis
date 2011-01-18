@@ -206,6 +206,7 @@ public interface EnvironmentInterfaceStandard {
 	 * @param newState is the new state.
 	 * @return
 	 */
+	// TODO needs to go to the default implementation
 	boolean isStateTransitionValid(EnvironmentState oldState, EnvironmentState newState);
 	
 	/**
@@ -276,7 +277,7 @@ public interface EnvironmentInterfaceStandard {
 	String queryProperty(String property);
 
 	/**
-	 * Queries an intity of a certain property.
+	 * Queries an entity of a certain property.
 	 * @param property
 	 * @return
 	 */
