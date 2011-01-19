@@ -10,11 +10,16 @@ import java.io.Serializable;
  */
 public abstract class IILElement implements Serializable {
 
+	public static boolean toProlog = false;
+	
 	/** 
 	 * Returns a string-representation.
 	 */
 	public final String toString() { 
 	
+		if ( toProlog )
+			return toProlog();
+		
 		return toXML(); 
 	
 	}
