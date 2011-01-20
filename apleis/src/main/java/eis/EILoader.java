@@ -26,6 +26,9 @@ public class EILoader {
 	
 	/**
 	 * Loads an environment-interface from a jar-file.
+	 * Firstly, the jar-file is added to the classpath.
+	 * Secondly, the main-class is determined by inspecting the manifest.
+	 * And finally, an instance of that very main-class is created and returned.
 	 * 
 	 * @param file the file to be loaded
 	 * @return an instance of the environment-interface contained in the jar-file
@@ -90,6 +93,45 @@ public class EILoader {
 
 	}
 	
+	
+	/**
+	 * Instantiates an environment-interface from a given class-name.
+	 * Assumes that all required classes are already in the classpath.
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public static EnvironmentInterfaceStandard fromClassName(String className) throws IOException {
+		
+		// 4. load the class
+		ClassLoader loader = EnvironmentInterfaceStandard.class.getClassLoader();
+		Class<?> envInterfaceClass = null;
+		try {
+			envInterfaceClass = loader.loadClass(className);
+		} catch (ClassNotFoundException e) {
+			throw new IOException("Class \"" + className + "\" could not be loaded");
+		}
+		
+		// 5.  get an instance of the class
+		Constructor<?> c = null;
+		EnvironmentInterfaceStandard ei = null;
+		try {
+			c = envInterfaceClass.getConstructor();
+			ei = (EnvironmentInterfaceStandard)(c.newInstance());
+		} catch (Exception e) {
+			System.out.println(e);
+			throw new IOException("Class \"" + className + "\" could not be loaded", e);
+		} 
+
+		// check version
+		if( version.equals(ei.requiredVersion()) == false )
+			throw new IOException("Loaded environment interface version does not match the required one \"" + version + "\" vs. \"" + ei.requiredVersion() + "\"");
+		
+		return ei;
+
+	}
+
 
 	/**
 	 * Loads an environment-interface.
