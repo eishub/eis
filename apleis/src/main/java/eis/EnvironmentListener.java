@@ -1,5 +1,7 @@
 package eis;
 
+import java.util.Collection;
+
 import eis.iilang.EnvironmentState;
 
 /**
@@ -22,8 +24,9 @@ public interface EnvironmentListener {
 	/**
 	 * Handles the event that an entity has been freed.
 	 * @param entity is the entity that has been freed
+	 * @param agents is the list of entities that were associated
 	 */
-	void handleFreeEntity(String entity);
+	void handleFreeEntity(String entity,Collection<String>agents);
 	
 	/**
 	 * Handles the event that an entity has been deleted.

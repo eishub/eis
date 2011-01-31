@@ -21,7 +21,28 @@
       </plugin>
             
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-ssh-external</artifactId>
+         <version>1.0-beta-6</version>
+      </extension>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-ftp</artifactId>
+         <version>1.0-beta-6</version>
+      </extension>
+    </extensions>
   </build>
+
+  <distributionManagement>
+    <repository>
+      <id>multiagentcontest.org</id>
+      <url>scpexe://vz102.in.tu-clausthal.de:222/var/www/html/joomla/maven</url>
+    </repository>
+  </distributionManagement>
+
+
 
   <reporting>
     <plugins>
