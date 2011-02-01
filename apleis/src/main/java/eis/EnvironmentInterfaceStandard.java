@@ -115,9 +115,10 @@ public interface EnvironmentInterfaceStandard {
 	 * Frees an entity from its associated agent(s).
 	 * 
 	 * @param entity the id of the entity to be freed.
+	 * @throws EntityException 
 	 * @throws PlatformException is thrown if the entity does not exist, or if it is not associated.
 	 */
-	void freeEntity(String entity) throws RelationException;
+	void freeEntity(String entity) throws RelationException, EntityException;
 
 	/**
 	 * Frees an agent from the agents-entities-relation.

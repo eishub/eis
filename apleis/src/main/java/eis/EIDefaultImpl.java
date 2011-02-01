@@ -318,11 +318,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * 
 	 * @param entity is the deleted entity.
 	 */
-	protected void notifyDeletedEntity(String entity) {
+	protected void notifyDeletedEntity(String entity,Collection<String>agents) {
 		
 		for( EnvironmentListener listener : environmentListeners ) {
 			
-			listener.handleDeletedEntity(entity);
+			listener.handleDeletedEntity(entity,agents);
 			
 		}
 		
@@ -431,11 +431,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	/* (non-Javadoc)
 	 * @see eis.EnvironmentInterfaceStandard#freeEntity(java.lang.String)
 	 */
-	public void freeEntity(String entity) throws RelationException {
+	public void freeEntity(String entity) throws RelationException,EntityException {
 
 		// check if exists
 		if( !entities.contains(entity) )
-			throw new RelationException("Entity \"" + entity + "\" does not exist!");
+			throw new EntityException("Entity \"" + entity + "\" does not exist!");
 
 		LinkedList<String> agents = new LinkedList<String>();
 		
@@ -878,15 +878,17 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * @param entity the id of the entity that is to be removed.
 	 * @throws PlatformException if the agent does not exist.
 	 */
-	// TODO use freeEntity here
-	protected void deleteEntity(String entity) throws EntityException {
+	protected void deleteEntity(String entity) throws EntityException,RelationException {
 	
-		// fail if entity does not exist
+		// check if exists
 		if( !entities.contains(entity) )
-			throw new EntityException("Entity \"" + entity + "\" does not exist");
+			throw new EntityException("Entity \"" + entity + "\" does not exist!");
 
+		LinkedList<String> agents = new LinkedList<String>();
+		
 		// find the association and remove
-		/*for( Entry<String,HashSet<String>> entry : agentsToEntities.entrySet()) {
+		boolean associated = false;
+		for( Entry<String,HashSet<String>> entry : agentsToEntities.entrySet()) {
 			
 			String agent = entry.getKey();
 			HashSet<String> ens = entry.getValue();
@@ -897,17 +899,27 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 				
 				agentsToEntities.put(agent, ens);
 				
+				associated = true;
+				
+				if ( agents.contains(agent) == false )
+					agents.add(agent);
+				
 				break;
 			}
 			
-		}*/
-
-		try {
-			freeEntity(entity);
-		} catch (RelationException e) {
-			EntityException e2 = new EntityException("could not free the entity that is supposed to be deleted");
-			throw e2;
 		}
+		
+		// fail if entity has not been associated
+		if( associated == false)
+			try {
+				throw new RelationException("Entity \"" + entity + "\" has not been associated!");
+			} catch (RelationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+		// add to free entites
+		freeEntities.add(entity);
 		
 		// finally delete
 		entities.remove(entity);
@@ -916,7 +928,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			this.entitiesToTypes.remove(entity);
 		
 		// notify 
-		notifyDeletedEntity(entity);
+		notifyDeletedEntity(entity,agents);
 		
 	}
 

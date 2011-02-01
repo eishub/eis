@@ -31,8 +31,9 @@ public interface EnvironmentListener {
 	/**
 	 * Handles the event that an entity has been deleted.
 	 * @param entity is the entity that has been deleted
+	 * @param agents are the entities that were associated
 	 */
-	void handleDeletedEntity(String entity);
+	void handleDeletedEntity(String entity,Collection<String>agents);
 
 	/**
 	 * Handles the event that an entity has been newly created.
