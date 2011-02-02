@@ -6,7 +6,7 @@
   <version>0.3</version> 
   <url>http://sourceforge.net/projects/apleis/</url>
   <build>
-    <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
+    <!--finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName-->
     <plugins>
   
        <plugin>
@@ -38,22 +38,21 @@
           <fork>true</fork> 
         </configuration>
       </plugin>
-    
- 
 
-<!--plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-jar-plugin</artifactId>
-  <configuration>
-    <archive>
-      <manifestEntries>
-        <SCM-Revision>${buildNumber}</SCM-Revision>
-      </manifestEntries>
-    </archive>
-  </configuration>
-</plugin--> 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <SCM-Revision>${buildNumber}</SCM-Revision>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
             
     </plugins>
+
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
@@ -94,5 +93,11 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://apleis.svn.sourceforge.net/svnroot/apleis/trunk/apleis</connection>
+    <developerConnection>scm:svn:https://apleis.svn.sourceforge.net/svnroot/apleis/trunk/apleis</developerConnection>
+    <!--url>http://svn.apache.org/viewcvs.cgi/maven/sandbox/trunk/site/cookbook/generate-svn-revision/</url-->
+  </scm>
 
 </project> 
