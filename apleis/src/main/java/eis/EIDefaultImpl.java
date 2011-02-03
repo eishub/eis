@@ -910,13 +910,13 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		}
 		
 		// fail if entity has not been associated
-		if( associated == false)
+		/*if( associated == false)
 			try {
 				throw new RelationException("Entity \"" + entity + "\" has not been associated!");
 			} catch (RelationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 	
 		// add to free entites
 		freeEntities.add(entity);
