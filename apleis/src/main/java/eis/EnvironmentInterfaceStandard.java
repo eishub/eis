@@ -9,6 +9,7 @@ import eis.exceptions.EntityException;
 import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
+import eis.exceptions.QueryException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
 import eis.iilang.EnvironmentState;
@@ -275,13 +276,13 @@ public interface EnvironmentInterfaceStandard {
 	 * @param property
 	 * @return
 	 */
-	String queryProperty(String property);
+	String queryProperty(String property) throws QueryException;
 
 	/**
 	 * Queries an entity of a certain property.
 	 * @param property
 	 * @return
 	 */
-	String queryEntityProperty(String entity, String property);
+	String queryEntityProperty(String entity, String property) throws QueryException;
 	
 }

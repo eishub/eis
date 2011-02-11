@@ -11,6 +11,7 @@
 \usepackage{amssymb}
 \usepackage{xtab}
 \usepackage{todonotes}
+\usepackage{fancyvrb}
 
 %\newcommand{\todo}[1]{{\bf [TODO: }\textit{#1}{\bf ]}}
 \newcommand{\remark}[1]{{\bf [RemarkKVH: }\textit{#1}{\bf ]}}
@@ -32,8 +33,8 @@
 
 \begin{document}
 
-\title{Environment Interface Standard for Agent-Oriented Programming \\
-\textit{Guide for EIS v0.3}
+\title{\bf 
+Guide for \EIS-0.3
 }
 
 \author{Tristan Behrens}
@@ -62,11 +63,18 @@ the folder that contains the file \texttt{pom.xml} and run this command:
 \texttt{mvn install}
 \end{quote}
 This will compile \EIS, run some JUnit tests, bundle the compiled classes into a single jar-file and install it to 
-your local Maven-repository. After that you will find the file \texttt{eis-0.3.jar} in the \texttt{target/}-folder.
+your local Maven-repository. 
+After that, you will find three different jar-files in the \texttt{target/}-folder:
+\begin{itemize}
+\item\texttt{eis-0.3.jar} contains the compiled classed, constituting the main dependency,
+\item\texttt{eis-0.3-javadoc.jar} contains the javadoc generated from the classes, which is very useful, and
+\item\texttt{eis-0.3-sources.jar} contains the sources of \EIS, which is useful for source-attachments to you project.
+\end{itemize}
 
-You can then add this file to the class-path of you project in the traditional way, that is copying and linking by hand. Alternatively, if your project already supports  
+It is required to add at least \texttt{eis-0.3.jar} to the class-path of your project.
+You can either do this in the traditional way, that is copying and linking by hand. Alternatively, if your project already supports  
 Maven you can add \EIS as a dependency to your \texttt{pom.xml}:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 <dependencies>
   <dependency>
     <groupId>apleis</groupId> 
@@ -76,7 +84,29 @@ Maven you can add \EIS as a dependency to your \texttt{pom.xml}:
   </dependency>
   ...
 </dependencies>
-\end{verbatim}
+\end{Verbatim}
+The dependency will then automatically be resolved, when you compile your project.
+
+\subsection{About \EIS-Versions}
+
+\EIS versioning works as follow. The first digit in the version-number is \texttt{0}. The second digit
+indicates the major revision (currently \texttt{3}). A major revision is characterized by the introduction of new features.
+Additionally, for minor revisions, the SVN-revision-number is stored in the manifest of the \EIS
+jar-file. This number can easily be accessed by unzipping the jar-file. Of course, to do so, you are free
+to use any means. In a UNIX-like environment you can do this in the console:
+\begin{Verbatim}[frame=single]
+\unzip -c target/eis-0.3.jar META-INF/MANIFEST.MF
+\end{Verbatim}
+Which would yield something like this:
+\begin{Verbatim}[frame=single]
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: tristanbehrens
+Build-Jdk: 1.6.0_22
+SCM-Revision: 67
+\end{Verbatim}
+The number \texttt{67} indicates the revision.
 
 \subsection{Interface Meta-Model}
 
@@ -129,13 +159,20 @@ for querying the environment and the environment interface for data, all live on
 
 \subsection{Interface Intermediate Language}
 
-\todo{Motivation}
-
-
 The  Interface Intermediate Language (\IILang) consists of 1. \emph{data containers} (e.g. actions and percepts), 2. \emph{parameters}
 to those containers, and 3. \emph{environment states} (see Fig.~\ref{FIG:IILANG}). 
 Members of the \IILang are stored as abstract syntax trees formed by Java-objects, which can be printed
 either in an XML- or in an logic-programming style for the sake of readability.
+
+Any token from the \IILang can be rendered to a textual representation by invoking the methods
+\texttt{toString()}, \texttt{toXML()}, or \texttt{toProlog()} alternatively.
+\texttt{toXML()} yields a XML-representation and \texttt{toProlog()} yields a Prolog-like one.
+\texttt{toString()} on the other hand yields the standard representation, which is XML per default.
+This can be changed during runtime by setting the static variable \texttt{toProlog} of the class
+\texttt{eis.iilang.IILangElement}, like this
+\begin{Verbatim}[frame=single]
+IILangElement.toProlog = true;
+\end{Verbatim}
 
 Parameters are: identifiers, numbers, truth-values, functions over parameters, and lists of parameters.
 These are the Java-classes representing parameters:
@@ -146,6 +183,12 @@ These are the Java-classes representing parameters:
 \item\texttt{eis.iilang.Function} represents a function over parameters, and
 \item\texttt{eis.iilang.ParameterList} represents a list of parameters.
 \end{itemize}
+
+Parameters are supposed to be instantiated by calling one constructor, like this:
+\begin{Verbatim}[frame=single]
+Identifier id = new Identifier("name");
+\end{Verbatim}
+See the javadoc for a full overview on the constructors.
 
 \begin{figure}[h]\centering
 \tikzstyle{node}=[rectangle,draw=black,minimum width =2.5cm,minimum height = 0.75cm]
@@ -174,8 +217,6 @@ These are the Java-classes representing parameters:
 \label{FIG:IILANG}
 \end{figure}
 
-\todo{Examples!}
-
 Data containers are: actions that are performed by agents,
 results of such actions,
 percepts that are received by agents, and
@@ -191,6 +232,13 @@ Here are the respective classes:
 \item\texttt{eis.iilang.Percept} is a percept.
 environment.
 \end{itemize}
+
+Like parameters, data containers are supposed to be instantiated using a constructor, like this:
+\begin{Verbatim}[frame=single]
+Action act = new Action("goto", new Identifier("node1"));
+\end{Verbatim}
+
+Again, please refer to the javadoc for a full overview of the constructors.
 
 \todo{Examples}
 
@@ -213,8 +261,8 @@ states of the environment(-inferface) and the possible state transitions.
 The state if represented by the enum \texttt{eis.iilang.EnvironmentState}.
 We have several states:
 \begin{itemize}
-\item\texttt{INITIALIZED}:\todo{this needs to be renamed}
-as soon as the environment-interface is instantiated it is also initialized. 
+\item\texttt{INITIALIZING}:
+as soon as the environment-interface is instantiated it is initializing. 
 \item\texttt{PAUSED}: as soon as the connection to the environment has been
 established the environment-interface is in the \texttt{PAUSED}-state.
 \item\texttt{STARTED}: the environment is running. Only in this state actions are accepted and 
@@ -349,14 +397,14 @@ The next thing that you have to do is to employ the jar-loading-mechanism that c
 Specific environment-interfaces are distributed as jar-files. 
 The class \texttt{eis.EILoader} should be used to load an environment-interface from a jar-file and instantiate it.
 Use the method \texttt{fromJarFile}:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 EnvironmentInterfaceStandard ei = null;
 try {
     ei = EILoader.fromJarFile(new File(jarFileName));
 } catch (IOException e) {
     // TODO handle the exception
 }
-\end{verbatim}
+\end{Verbatim}
 Note that you have to handle exceptions that are potentially thrown by the invocation of the method. 
 Possible causes for failure could be that the file does not exist or that the version (\EIS has a versioning-system) does not match the required one.
 
@@ -427,24 +475,24 @@ Since \EIS is very agnostic when it comes to the type/structure/architecture of 
 register your agents by providing their names. The reason for this is the desired generality. 
 So let us assume that you have some agent, which is represented by its name.
 You can register the agent like this:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 String agentName = ... ; // the name of your agent
 try {
     ei.registerAgent(agentName);
 } catch (AgentException e) {
   // TODO handle the exception
 }
-\end{verbatim}
+\end{Verbatim}
 Again, you have to handle possible exceptions. 
 The invocation fails if an agent with the same name has already registered.
 You can also unregister an agent if you want to cut it off from the environment-interface:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 try {
     ei.unregisterAgent(agentName);
 } catch (AgentException e) {
   // TODO handle the exception
 }
-\end{verbatim}
+\end{Verbatim}
 Here the invocation fails if the agent has not been registered to the interface.
 
 But why do you have to register your agents to the environment-interface? 
@@ -459,24 +507,24 @@ An agent that controls that elevator-entity can make it move
 to a specific floor and perceive its current floor. In order to have an agent control an entity both have to be associated.
 Similar to agents, entities are only represented by their name (again a String). 
 So assuming that you know that there is an entity with the name \texttt{"car1"}, you can make your agent control it like this:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 try {
     ei.associateEntity(agentName, "car1");
 } catch (RelationException e) {
   // TODO handle the exception
 }
-\end{verbatim}
+\end{Verbatim}
 The invocation could fail, so you have to handle the exception. Note that this a very naive way to associate your agent
 with an entity, because it assumes that you know the name of the entity beforehand. 
 You can however query the interface for all free entities and associate your agent with the first one:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 LinkedList<String> ens = ei.getFreeEntities();
 try {
     ei.associateEntity(agentName, ens.removeFirst());
 } catch (RelationException e) {
   // TODO handle the exception
 }
-\end{verbatim}
+\end{Verbatim}
 Which policy you apply here is your decision. There are more methods for manipulating the agents-entities-relationship
 (see the javadoc). Note that you can also query the type of an entity with the method \texttt{getType}. This could be useful
 for example if you want to instantiate different types of agents for different types of entities.
@@ -484,7 +532,7 @@ for example if you want to instantiate different types of agents for different t
 Now that you have your agent registered and associated with an entity, or you have already iterated the process and associated
 several agents with several entities, you want to make them act and perceive. Acting is quite simple. You have to invoke
 the method \texttt{performAction} like this:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 Action action = ... // this has to be an EIS-action
 try {
     Vector<Percept> ps = eis.performAction(agentName, action);
@@ -493,11 +541,11 @@ try {
 } catch (NoEnvironmentException e) {
   // TODO handle the exception
 }
-\end{verbatim}
+\end{Verbatim}
 The action must be an instance of \texttt{eis.iilang.Action}. You could for example instantiate an action like this:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 Action action = new Action("goto", new Ident("up"));
-\end{verbatim}
+\end{Verbatim}
 It might be necessary to implement a mapping from your definition of what an action is to \EIS-actions.
 Note that performing an action could return a percept. This is necessary for active sensing. 
 Make sure that such return-values are handled properly.
@@ -506,7 +554,7 @@ Note that you can sometimes (depending on the environment-interface) associate a
 This can be reflected by \texttt{performAction} that accepts an optional array of strings 
 (vararg language feature\footnote{\url{http://java.sun.com/developer/JDCTechTips/2005/tt0104.html}}) as the third parameter. 
 The array should contain a subset of the set of entities that are associated with the agent: 
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 try {
   Vector<Percept> ps = eis.performAction(agentName, action,"entity1","entity2");
 } catch (ActException e) {
@@ -514,7 +562,7 @@ try {
 } catch (NoEnvironmentException e) {
   // TODO handle the exception
 }
-\end{verbatim}
+\end{Verbatim}
 If the array is empty, all
 entities will be taken into account. Note that you can determine the source (e.g. the entity) of each percept via the
 \texttt{getSource}-method.
@@ -522,7 +570,7 @@ entities will be taken into account. Note that you can determine the source (e.g
 You definitely are advised to handle the exceptions. \texttt{NoEnvironmentException} is thrown if the environment-interface
 is not properly connected to an environment. \texttt{ActException} is thrown if the action could not be executed. Possible
 reasons for that are reflected by the type of the exception:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 try {
   ei.performAction(agentName, action,entities);
 } catch (ActException e) {
@@ -542,7 +590,7 @@ try {
 } catch(NoEnvironmentException e) {
   // TODO handle the exception
 }
-\end{verbatim}
+\end{Verbatim}
 
 The type \texttt{NOTSPECIFIC} denotes that the type of the exception has not been indicated specifically. 
 Although we expect  more detailed information about why the method has failed, we do not enforce this.
@@ -557,7 +605,7 @@ For example \texttt{goto(up)} could fail if the path is blocked in the respectiv
  
 Now let us talk percepts. There is a method to retrieve all percepts. This has been shown to be very useful for some APL platforms.
 You can do this:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 try {
   LinkedList<Percept> percepts = ei.getAllPercepts(agentName);
   // TODO process the percepts
@@ -566,7 +614,7 @@ try {
 } catch (NoEnvironmentException e) {
   // TODO handle the exception
 }
-\end{verbatim}
+\end{Verbatim}
 After the invocation you have to make sure that the percepts are processed in a proper manner. 
 Also a \texttt{PerceiveException} is thrown if perception fails, that is if the agent is not registered or has no associated
 entities. An instance of \texttt{NoEnvironmentException} is thrown if there is no environment. Similar
@@ -582,7 +630,7 @@ The string \texttt{agent} of the \texttt{handlePercept}-method indicates the rec
 Note that it is your responsibility to make sure that the percept is passed to the respective agent.
 
 You can establish percepts-as-notifications like this:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 class YourPlatform implements AgentListener {
 
   EnvironmentInterface Standard ei;
@@ -598,12 +646,12 @@ class YourPlatform implements AgentListener {
   }
 
 }
-\end{verbatim}
+\end{Verbatim}
 
 Now we will discuss \emph{environment-events}. Such events are generated if 1. the set of entities changes or is modified, an 2. if the executional-state of the environment changes. Again you have to implement the interface 
 \texttt{eis.EnvironmentListener} and its
 methods: 
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 class YourPlatform implements EnvironmentListener {
 
   EnvironmentInterface Standard ei;
@@ -631,7 +679,7 @@ class YourPlatform implements EnvironmentListener {
   }
 
 }
-\end{verbatim}
+\end{Verbatim}
 
 The method \texttt{handleNewEntity} is called when there is a new entity, wheras \texttt{handleFreeEntity} is called
 when an entity is freed, and \texttt{handleDeletedEntity} is called when an entity is deleted. 
@@ -641,7 +689,7 @@ We will come back to \texttt{handleEnvironmentEvent} in a minute.
 
 Finally we will discuss methods of environment-management. For managing the environment you can use
 the method \texttt{manageEnvironment}:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 EnvironmentCommand command = ...; 
 try {
     ei.manageEnvironment(command);
@@ -650,14 +698,14 @@ try {
 } catch (NoEnvironmentException e) {
     // TODO Auto-generated catch block
 }
-\end{verbatim}
+\end{Verbatim}
 An environment-command can either be: starting the environment, killing it, pausing its execution, resetting it, and
 initializing it with parameters. A \texttt{ManagementException} is thrown when the command passed as a parameter
 is not supported. We do not assume that all environments support all environment-commands (if any at all). 
 A \texttt{NoEnvironmentException} is thrown when the environment-interface is not connected to an environment.
 
 The environment-interface can also notify about the change of the state of the execution of the environment.
-Such an event can either be that the environment has been started, killed, paused, reset, or initialized.
+Such an event can either be that the environment has been started, killed, paused, reset, or is initializing.
 Note that we do not assume that all environment-interfaces notify about such events.
 
 
@@ -753,28 +801,19 @@ throw an \texttt{ActException} with type \texttt{NOSUPPORTEDBYENTITY},
 	
 \subsection{Querying Mechanism}
 
-\begin{verbatim}
-default implementation versus interface-definition
-  interface comes without any functionality
-versioning
-associating agents with entities
-environment management support
-  TODO copy EMS-stuff here
-acting and perceiving
-action validation mechanism
-  explain act exception
-  using interface: make sure that the exceptions are instantiated the right way
-  using default impl... implement the isSupported etc methods
-  act-exception: interface vs defaultimpl
-querying-mechanism
-  query the interface in general
-  query entities in specific
-footnotes: what is new/different in EIS 0.3
-checklists?
-\end{verbatim}
+This version of \EIS also introduces a rudimentary \emph{querying mechanism}, which allows you to query
+the environment-interface and, if possible, the environment itself.
+It is assumed that each queryable property is denoted by a unique identifier and
+the idea is that you can query a property by using this very identifier.
 
-
-
+We define two ways to querying properties. The first one queries a general property, the second one queries a property of an entity.
+Querying is facilitated by two methods:
+\begin{itemize}
+\item \texttt{String queryProperty(String property)} queries the environment-interface for a general property, and
+\item \texttt{String queryEntityProperty(String entity, String property)} queries the environment-interface for a property
+of an entity.
+\end{itemize}
+Note that any of these methods will yield an instance of \texttt{eis.exceptions.QueryException} if querying fails.
 
 
 
@@ -1036,7 +1075,7 @@ We recommend using the default-implementation over using the standard-interface.
 You can add the jar-file to the class-path directly:
 Alternatively, if your project supports  
 Maven\footnote{http://maven.apache.org/}, you can add \EIS as a dependency to your \texttt{pom.xml}:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 <dependencies>
   <dependency>
     <groupId>apleis</groupId> 
@@ -1046,13 +1085,13 @@ Maven\footnote{http://maven.apache.org/}, you can add \EIS as a dependency to yo
   </dependency>
   ...
 </dependencies>
-\end{verbatim}
+\end{Verbatim}
 
 
 \subsection{Using the default-implementation}
 
 The first thing you would do is create your main-class and let it extend class \texttt{eis.EIDefaultImpl}:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 package yourproject;
 
 import eis.*;
@@ -1060,26 +1099,26 @@ import eis.*;
 public class MyEnvironmentInterface extends EIDefaultImpl {
   // TODO implement the abstract methods
 }
-\end{verbatim}
+\end{Verbatim}
 The default-implementation already implements all needed functions. 
 You only have to implement methods that are specific to your environment-interface. 
 
 You have to implement the abstract method \texttt{isConnected}:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public boolean isConnected() {
   // TODO implement
 }
-\end{verbatim}
+\end{Verbatim}
 This method is supposed to return \texttt{true} if the environment is connected to the environment-interface and \texttt{false}
 otherwise. 
 
 Also you have to implement \texttt{getAllPerceptsFromEntity}:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public LinkedList<Percept> getAllPerceptsFromEntity(String entity) 
     throws PerceiveException, NoEnvironmentException {
   // TODO implement
 }
-\end{verbatim}
+\end{Verbatim}
 This method should return all percepts of the entity \texttt{entity}.
 
 Also, you should employ percepts-as-notifications wherever possible. Such percepts are supposed to be sent to
@@ -1091,12 +1130,12 @@ Now we have to discuss the definition and executions of actions.
 For each action with a fixed named and fixed parameters you have to implement a method.
 For example assume that you have a \texttt{goto}-action with a parameter that determines the
 direction you would implement:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public Percept actiongoto(String entity, Ident dir) throws ActException, 
     NoEnvironmentException {
   // TODO implement
 }
-\end{verbatim}
+\end{Verbatim}
 Note that this is a convention. The action-name itself is mapped to a method-call via Java-reflection.
 However if you prefer your own custom mechanism for executing actions feel free to overwrite the \texttt{performAction}-method. 
 
@@ -1105,10 +1144,10 @@ that an action fails. An instance of \texttt{NoEnvironmentException} should be t
 connected to an environment. If there is a connection an instance of \texttt{ActException} should be thrown. 
 Please heed that that exception-class is typed, that is it communicates more detailed information about the 
 action-failure by carrying a type that can be queried when the exception is caught. Do it like this:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 // the syntax of the action is wrong
 throw new ActException( ActException.WRONGSYNTAX );
-\end{verbatim}
+\end{Verbatim}
 The type \texttt{NOTSPECIFIC} is the default type of \texttt{ActException}. We strongly discourage you from using this one.
 We expect you to provide more detailed information about why the method has failed.
 \texttt{NOTREGISTERED} indicates that the agent has not registered to the environment-interface.
@@ -1121,21 +1160,21 @@ And \texttt{FAILURE} indicates that the action has failed although it matched al
 For example \texttt{goto(up)} could fail if the path is blocked in the respective direction.
 
 The next method is \texttt{release} which is supposed to disconnect the environment-interface from the environment:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void release() {
     // TODO release the environment
 }
-\end{verbatim}
+\end{Verbatim}
 After invoking that method \texttt{isConnected} should always return \texttt{false}.
 
 Finally, let us discuss managing the environment. You should allow for managing the environment by implementing
 the method \texttt{manageEnvironment}:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void manageEnvironment(EnvironmentCommand command)
         throws ManagementException {
     // TODO implement environment-management	
 }
-\end{verbatim}
+\end{Verbatim}
 An environment-command can either be: starting the environment, killing it, pausing its execution, resetting it, and
 initializing it with parameters. A \texttt{ManagementException} is thrown when the command passed as a parameter
 is not supported. We explicitly do note make obligatory that you should implement all environment-commands. If your
@@ -1146,7 +1185,7 @@ A \texttt{NoEnvironmentException} is thrown when the environment-interface is no
 
 Instead of extending the default-implementation you can also implement the standard-interface.
 The first thing you would do is create your main-class and let it implement the interface \texttt{EnvironmentInterfaceStandard}:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 package yourproject;
 
 import eis.*;
@@ -1154,7 +1193,7 @@ import eis.*;
 public class MyEnvironmentInterface implements EnvironmentInterfaceStandard {
 
 }
-\end{verbatim}
+\end{Verbatim}
 This is of course not everything. You have to implement the interface's methods. Quite some of them, to be honest.
 Please have a look at the default-implementation for some inspiration about how to implement those.
 
@@ -1164,34 +1203,34 @@ We assume that you internally store a list of registered listeners. For example 
 But feel free to use anything that fits your needs
 Environment-listeners are used to inform observers about the change of the state of execution of the environment.
 Every observer that is interested in such events should register via:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void attachEnvironmentListener(EnvironmentListener listener) {
   // TODO store the listener internally
 }
-\end{verbatim}
+\end{Verbatim}
 
 It should also be possible to remove an observer:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void detachEnvironmentListener(EnvironmentListener listener) {
   // TODO remove the listener from the internal representation
 }
-\end{verbatim}
+\end{Verbatim}
 
 For the agent-listeners it is almost the same. 
 These are used to send percepts-as-notifications to the agents.
 Here you should store for each agent a set of listeners:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void attachAgentListener(String agent, AgentListener listener) {
   // TODO store the listener internally
 }
-\end{verbatim}
+\end{Verbatim}
 
 Again, removing the listener should also be allowed:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void detachAgentListener(String agent, AgentListener listener) {
   // TODO remove the listener from the internal representation
 }
-\end{verbatim}
+\end{Verbatim}
 
 Of course when implementing your specialized interface you should implement means to notify the listeners.
 Employ agent-listeners to send percepts to agents, and use environment-listeners to send environment events.
@@ -1203,105 +1242,105 @@ and some map for associating agents and entities.
 For example you could use \texttt{LinkedList<String>} for the lists and \texttt{ConcurrentHashMap<String,HashSet<String>>} for the mapping.
 
 Please allow for registering agents:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void registerAgent(String agent) throws AgentException {
   // TODO store internally
 }
-\end{verbatim}
+\end{Verbatim}
 You should throw an \texttt{AgentException} if the agent has already registered.
 
 Then allow for unregistering:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void unregisterAgent(String agent) throws AgentException {
   // TODO remove form internal representation
 }
-\end{verbatim}
+\end{Verbatim}
 Here you should throw an \texttt{AgentException} if the agent has not registered.
 
 Also make sure that the list of agents can be retrieved:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public LinkedList<String> getAgents() {
   // TODO return the list of agents
 }
-\end{verbatim}
+\end{Verbatim}
 
 And make sure to to the same for entities as well:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public LinkedList<String> getEntities() {
   // TODO return the list of entities
 }
-\end{verbatim}
+\end{Verbatim}
 
 Then associate an agent with an entity
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void associateEntity(String agent, String entity) throws RelationException {
   // TODO update the mapping
 }
-\end{verbatim}
+\end{Verbatim}
 Make sure to throw an \texttt{RelationException} if associating the agent with the entity is not possible.
 This is the case for example when the agent or the entity are not stored in the internal lists. 
 
 After that allow for freeing an entity from all associations with agents:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void freeEntity(String entity) throws RelationException {
   // TODO update the mapping
 }
-\end{verbatim}
+\end{Verbatim}
 Here you should throw an \texttt{RelationException} if the entity could not be freed. 
 That is when is not contained in the internal list of entities.
 
 Do the same for an agent:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void freeAgent(String agent) throws RelationException {
     // TODO update the mapping
 }
-\end{verbatim}
+\end{Verbatim}
 
 Then remove a specific agent-entity-pair from the mapping:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public void freePair(String agent, String entity) throws RelationException {
   // TODO update the mapping
 }
-\end{verbatim}
+\end{Verbatim}
 Again throw an \texttt{RelationException} if the operation fails.
 
 After manipulating the agents-entities-relation it would be useful to allow for querying the data-structures.
 You should provide a method that returns the entities associated to an agent:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public HashSet<String> getAssociatedEntities(String agent) throws AgentException {
 }
-\end{verbatim}
+\end{Verbatim}
 Make sure to throw an \texttt{AgentException} if the agent is not registered to the interface.
 
 And you should provide the same for an entity:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public HashSet<String> getAssociatedAgents(String entity) throws EntityException {
 }
-\end{verbatim}
+\end{Verbatim}
 Here you should throw an \texttt{EntityException} if the entity has not been added to the interface.
 
 Finally return the list of free entities, that is a list of entities that are not associated:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public LinkedList<String> getFreeEntities() {
 }
-\end{verbatim}
+\end{Verbatim}
 
 Also it is necessary to return the type of an entity:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public String getType(String entity) throws EntityException
-\end{verbatim}
+\end{Verbatim}
 Throw an \texttt{EntityException} if the entity does not exist.
 
 Now we have to discuss acting and perceiving. Entities are the ones that provide agents with sensory and effectoric
 capabilities. Agents act and perceive through entities.
 
 This is the first essential method:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public LinkedList<Percept> performAction(String agent, Action action, String...entities)
 	throws ActException, NoEnvironmentException {
   // TODO perform the action and return a percept
 }
-\end{verbatim}
+\end{Verbatim}
 It should allow an agent to act through a set of his associated entities provided as an array. If the array is empty
 all associated entities should perform the action. Here you need to throw an \texttt{ActException} if the action
 fails, that is when one or more of the entities failed to execute the action or of one or several of the provided
@@ -1312,12 +1351,12 @@ something very sophisticated. Finally you should make sure to indicate the origi
 the \texttt{setSource}-method of \texttt{Percept}.
 
 You should also implement this method for retrieving all percepts:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 public LinkedList<Percept> getAllPercepts(String agent, String...entities) 
     throws PerceiveException, NoEnvironmentException {
   // TODO return all percepts   
 }
-\end{verbatim}
+\end{Verbatim}
 This method is supposed to return all percepts of the entities that are associated with an agent. 
 Again the associated entities are provided as an array. If the array is empty all entities are used for sensing.
 The method fails with an \texttt{PerceiveException} if perceiving through one or several entities is not possible,
@@ -1325,14 +1364,14 @@ or of one or several of the provided entities are not associated. The \texttt{No
 if no environment is connected.
 
 
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
       what happens once you implement the interface? what do you have to do?
         you have to implement a couple of methods
           isConnected
           manageEnvironment
           release
       what is which method supposed to do?
-\end{verbatim}
+\end{Verbatim}
 
 \section{Environment Interface Documentation Policy}
 

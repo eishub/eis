@@ -1,0 +1,32 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>apleis</groupId>
+  <artifactId>eispackage</artifactId>
+  <version>0.3</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>apleis</module>
+    <module>eiscarriage</module>
+  </modules>
+
+<build>
+   <plugins>
+     <plugin>
+       <artifactId>maven-assembly-plugin</artifactId>
+       <executions>
+         <execution>
+           <goals>
+             <goal>attached</goal>
+           </goals>
+           <phase>package</phase>
+         </execution>
+       </executions>
+       <configuration>
+         <descriptor>dep.xml</descriptor>
+       </configuration>
+     </plugin>
+  </plugins>
+</build>
+
+</project>
