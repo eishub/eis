@@ -1,6 +1,8 @@
 package eis.carriage;
 
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
 
 import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
@@ -49,9 +51,9 @@ class PushingAgent extends Agent {
 			while(true) {
 			
 				// perceive
-				LinkedList<Percept> percepts = null;
+				Map<String, Collection<Percept>> percepts = null;
 				percepts = ei.getAllPercepts(id);
-				say("I believe the carriage is at " + percepts);
+				say("I believe the carriage is at " + percepts.values());
 
 				// act
 				ei.performAction(id, new Action("push"));
@@ -95,16 +97,16 @@ class AlternatingAgent extends Agent {
 			while(true) {
 				
 				// perceive
-				LinkedList<Percept> percepts = null;
+				Map<String, Collection<Percept>> percepts = null;
 				percepts = ei.getAllPercepts(id);
-				say("I believe the carriage is at " + percepts);
+				say("I believe the carriage is at " + percepts.values());
 
 				// act
 				ei.performAction(id, new Action("push"));
 
 				// perceive
 				percepts = ei.getAllPercepts(id);
-				say("I believe the carriage is at " + percepts);
+				say("I believe the carriage is at " + percepts.values());
 
 				// act
 				ei.performAction(id, new Action("wait"));

@@ -117,7 +117,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 		return "0.3";
 	}
 
-	@Override
+	/*@Override
 	public boolean areParametersCorrect(Action action) {
 
 		if ( action.getName().equals("wait") && action.getParameters().size() == 0 )
@@ -126,7 +126,7 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 			return true;
 		
 		return false;
-	}
+	}*/
 
 	@Override
 	public boolean isSupportedByEntity(Action action, String entity) {
