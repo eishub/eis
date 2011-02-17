@@ -884,4 +884,94 @@ of an entity.
 \end{itemize}
 Note that any of these methods will yield an instance of \texttt{eis.exceptions.QueryException} if querying fails.
 
+\subsection{Distributing}
+
+{\EIS}ification means creating an environment-interface-class
+-- this is the \emph{main-class} -- that wraps your environment or connects to it. In order to distribute your
+environment-interface you are required to perform these steps:
+\begin{enumerate}
+\item create a jar-file from your classes, while
+\begin{itemize}
+\item specifying the main-class in the manifest-file, and
+\item including all dependencies in the jar itself, or adding them to the class-path using the manifest-file, and
+\end{itemize}
+\item make the jar-file available.
+\end{enumerate}
+
+If you would like us to host your {\EIS}ified environment, please feel free to contact us. We would be happy to
+arrange hosting your environment-interface. 
+
+\subsection{Environment Interface Documentation Policy}
+
+In order to ensure transparency and accessibility when publishing your environment-interfaces, you should
+provide a documentation. That documentation should contain all necessary information, including 
+1. a description of the environment, 
+2. the name of the jar-file that contains the environment-interface,
+3. the names of the entities that populate the environment,
+4. the types of those entities,
+5. the actions of the entities, and
+6. the percepts.
+
+Please provide a description of the environment:\smallskip\\
+\fbox{\begin{minipage}{15cm}
+\textbf{Environment description:} the environment is a simple 3-dimensional world with a ground level. It is populated
+by jeeps that are not controllable entities. Controllable entities are unmanned vehicles, that should be used to locate
+the jeeps.
+\end{minipage}}\medskip
+
+After that you should say, in which jar-file the environment-interface is contained, and optionally where to find that file:\smallskip\\
+\fbox{\begin{minipage}{15cm}
+\textbf{Jar-file:} \texttt{uv-simulation.jar}
+\end{minipage}}\medskip
+
+Now you should give an overview of the different entities that populate the environment. Please provide their names
+and their characteristics:\smallskip\\
+\fbox{\begin{minipage}{15cm}
+\textbf{Entities:}
+\begin{description}
+\item[\texttt{uv1},\texttt{uv2},$\ldots$] are several unmanned ground vehicles. There are 100 in the simulation.
+\end{description}
+\end{minipage}}\medskip
+
+Please provide the types of entities as well:\smallskip\\
+\fbox{\begin{minipage}{15cm}
+\begin{description}
+\item[\texttt{groundvehicle}] these are unmanned ground vehicles.
+\item[\texttt{airvehicle}] these are unmanned aerial vehicles.
+\end{description}
+\end{minipage}}\medskip
+
+Now, denote and describe the different actions that are supported. Please make sure to include the parameters
+of the actions and their meaning. And do not forget to mention, what kind of percepts an action would return,
+if it was a sensing action\smallskip\\
+\fbox{\begin{minipage}{15cm}
+\textbf{Actions:}
+\begin{description}
+\item[\texttt{move(Identifier)}] moves the entity into a specific direction. Possible directions are:
+\texttt{north}, \texttt{east}, \texttt{south}, and \texttt{west}. Example: \texttt{move(east)}
+\item[\texttt{useCamera}] uses the camera and returns the most prominent, visible object.
+\item[\texttt{liftOff}] lifts an entity off the ground. Only available to aerial vehicles.
+\item[\texttt{land}] lands and entity. Only available to aerial vehicles.
+\end{description}
+\end{minipage}}\medskip
+
+Now describe the different percepts. Again please describe the possible parameters and their meaning. Also
+explain how the different percepts are made available. Do you retrieve an agent via the \texttt{getAllPercepts}-method,
+by a notification, or by both?\smallskip\\
+\fbox{\begin{minipage}{15cm}
+\textbf{Percepts:}
+\begin{description}
+\item[\texttt{time(Numeral)}] indicates the current time-stamp of the simulation. Returned by \texttt{getAllPercepts}
+and send as a notification every second. 
+\item[\texttt{currentPos(Number,Number,Number)}] denotes the current position of the vehicle in the three dimensions of
+space. Returned by \texttt{getAllPercepts} and send as a notification every second.
+\end{description}
+\end{minipage}}\medskip
+
+And finally make clear, which means for environment-management are supported:\smallskip\\
+\fbox{\begin{minipage}{15cm}
+\textbf{Environment-management:} the environment can be initialized with a parameter that denotes that map
+that should be used. All other environment-commands are not supported.
+\end{minipage}}\medskip
+
 \end{document}

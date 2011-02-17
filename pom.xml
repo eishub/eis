@@ -10,23 +10,47 @@
     <module>eiscarriage</module>
   </modules>
 
-<build>
-   <plugins>
-     <plugin>
-       <artifactId>maven-assembly-plugin</artifactId>
-       <executions>
-         <execution>
-           <goals>
-             <goal>attached</goal>
-           </goals>
-           <phase>package</phase>
-         </execution>
-       </executions>
-       <configuration>
-         <descriptor>dep.xml</descriptor>
-       </configuration>
-     </plugin>
-  </plugins>
-</build>
+  <scm>
+    <connection>scm:svn:svn://vz103.in.tu-clausthal.de/massim/</connection>
+    <developerConnection>scm:svn:svn://vz103.in.tu-clausthal.de/massim/</developerConnection>
+    <url>http://multiagentcontest.org/</url>
+  </scm>
+
+  <build>
+    <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.0-beta-3</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <doCheck>true</doCheck>
+          <doUpdate>true</doUpdate>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>attached</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <descriptor>dep.xml</descriptor>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
