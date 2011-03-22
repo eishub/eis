@@ -6,7 +6,9 @@ import eis.*;
 import eis.exceptions.ActException;
 import eis.exceptions.EntityException;
 import eis.exceptions.EnvironmentInterfaceException;
+import eis.exceptions.ManagementException;
 import eis.iilang.Action;
+import eis.iilang.EnvironmentState;
 import eis.iilang.Percept;
 import eis.iilang.Numeral;
 
@@ -30,6 +32,13 @@ public class EnvironmentInterface extends EIDefaultImpl implements Runnable {
 		Thread t = new Thread( this ); 
 		//t.setPriority(Thread.MIN_PRIORITY);
 		t.start();
+	
+		try {
+			this.setState(EnvironmentState.PAUSED);
+		} catch (ManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

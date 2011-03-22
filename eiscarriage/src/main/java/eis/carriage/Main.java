@@ -6,6 +6,7 @@ import java.util.Map;
 
 import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
+import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
@@ -143,6 +144,9 @@ public class Main {
 
 			// loading the environment
 			EnvironmentInterface ei = new EnvironmentInterface();
+			if ( ei.isStartSupported() )
+				ei.start();
+			
 			Thread.sleep(1000);
 
 			// creating two agents
@@ -161,6 +165,9 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (AgentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ManagementException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

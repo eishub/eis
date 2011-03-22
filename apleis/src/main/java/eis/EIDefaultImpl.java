@@ -411,8 +411,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			throw new RelationException("Agent \"" + agent + "\" has not been registered!");
 
 		// check if associated
-		if( !freeEntities.contains(entity) )
-			throw new RelationException("Entity \"" + entity + "\" has already been associated!");
+		//if( !freeEntities.contains(entity) )
+		//	throw new RelationException("Entity \"" + entity + "\" has already been associated!");
 	
 		// remove
 		freeEntities.remove(entity);
@@ -711,7 +711,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			throw new PerceiveException("Agent \"" + agent + "\" has no associated entities.");
 
 		// return value
-		Map<String,Collection<Percept>> ret = new HashMap();
+		Map<String,Collection<Percept>> ret = new HashMap<String,Collection<Percept>>();
 
 		// gather all percepts
 		if( entities.length == 0 ) {
