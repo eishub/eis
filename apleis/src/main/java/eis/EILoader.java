@@ -62,7 +62,7 @@ public class EILoader {
 			method.invoke(sysloader,new Object[]{ url });
 		} catch (Throwable t) {
 			t.printStackTrace();
-			throw new IOException("Error, could not add URL to system classloader");
+			throw new IOException("Error, could not add URL to system classloader",t);
 		}
 
 		// 4. load the class
@@ -71,7 +71,7 @@ public class EILoader {
 		try {
 			envInterfaceClass = loader.loadClass(mainClass);
 		} catch (ClassNotFoundException e) {
-			throw new IOException("Class \"" + mainClass + "\" could not be loaded from \"" + file + "\"");
+			throw new IOException("Class \"" + mainClass + "\" could not be loaded from \"" + file + "\"",e);
 		}
 		
 		// 5.  get an instance of the class
@@ -110,7 +110,7 @@ public class EILoader {
 		try {
 			envInterfaceClass = loader.loadClass(className);
 		} catch (ClassNotFoundException e) {
-			throw new IOException("Class \"" + className + "\" could not be loaded");
+			throw new IOException("Class \"" + className + "\" could not be loaded",e);
 		}
 		
 		// 5.  get an instance of the class

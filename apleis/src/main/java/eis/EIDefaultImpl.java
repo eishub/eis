@@ -3,9 +3,11 @@ package eis;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.List;
 import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -58,11 +60,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	private LinkedList<String> entities = null;
 	
 	/**
-	 * This is a list of entities, that are not associated with any agent.
-	 */
-	private LinkedList<String> freeEntities = null;
-
-	/**
 	 * This map stores the agents-entities-relation.
 	 */
 	private ConcurrentHashMap<String,HashSet<String>> agentsToEntities = null;
@@ -101,7 +98,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		
 		registeredAgents 	= new LinkedList<String>();
 		entities 			= new LinkedList<String>();
-		freeEntities 		= new LinkedList<String>();
 		agentsToEntities 	= new ConcurrentHashMap<String,HashSet<String>>();
 		entitiesToTypes		= new HashMap<String,String>();
 		
@@ -295,6 +291,21 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	}
 
 	
+	/**
+	 * Check all given entities and notify agents of free entities. If
+	 * an entity is free, {@link notifyFreeEntity} is called.
+	 * @param entities is list of entities to be checked.
+	 * @param agents is list of agents that were associated with the entity.
+	 */
+	private void notifyIfFree(Set<String> entities, List<String> agents) {
+		List<String> free = getFreeEntities();
+		for( String en : entities ) {
+			if (free.contains(en)) {
+				notifyFreeEntity(en,agents);
+			}
+		}	
+	}
+
 	
 	/**
 	 * Notifies all listeners about an entity that has been newly created.
@@ -409,13 +420,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 
 		if( !registeredAgents.contains(agent) )
 			throw new RelationException("Agent \"" + agent + "\" has not been registered!");
-
-		// check if associated
-		//if( !freeEntities.contains(entity) )
-		//	throw new RelationException("Entity \"" + entity + "\" has already been associated!");
-	
-		// remove
-		freeEntities.remove(entity);
 		
 		// associate
 		HashSet<String> ens = agentsToEntities.get(agent);
@@ -465,10 +469,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		// fail if entity has not been associated
 		if( associated == false)
 			throw new RelationException("Entity \"" + entity + "\" has not been associated!");
-	
-		// add to free entites
-		freeEntities.add(entity);
-		
+			
 		// notify
 		notifyFreeEntity(entity,agents);
 		
@@ -485,19 +486,16 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		
 		HashSet<String> ens = agentsToEntities.get(agent);
 	
-		this.freeEntities.addAll(ens);
-
 		LinkedList<String> agents = new LinkedList<String>();
 		agents.add(agent);
 		
-		// notify
-		for( String en : ens )
-			notifyFreeEntity(en,agents);
-
+		notifyIfFree(ens, agents);
+		
 		agentsToEntities.remove(agent);
 		
 		
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see eis.EnvironmentInterfaceStandard#freePair(java.lang.String, java.lang.String)
@@ -524,12 +522,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		LinkedList<String> agents = new LinkedList<String>();
 		agents.add(agent);
 
-		// store as free entity
-		this.freeEntities.add(entity);
-
-		// notify
-		for( String en : ens )
-			notifyFreeEntity(en,agents);
+		notifyIfFree(ens, agents);
 	
 	}
 	
@@ -571,14 +564,15 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see eis.EnvironmentInterfaceStandard#getFreeEntities()
+	/**
+	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	public LinkedList<String> getFreeEntities() {
-		
-		return (LinkedList<String>)freeEntities.clone();
-		
+		LinkedList<String> free = getEntities();
+		for (String agent: agentsToEntities.keySet()) {
+			free.removeAll(agentsToEntities.get(agent));
+		}
+		return free;
 	}
 
 	
@@ -771,21 +765,21 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	/**
 	 * Returns true if the action is supported by the environment.
 	 * @param action
-	 * @return
+	 * @return true if the action is supported by the environment
 	 */
 	protected abstract boolean isSupportedByEnvironment(Action action);
 
 	/**
-	 * Returns true if the action is supported by the environment.
+	 * Returns true if the action is supported by the type.
 	 * @param action
-	 * @return
+	 * @return Returns true if the action is supported by the type
 	 */
 	protected abstract boolean isSupportedByType(Action action, String type);
 
 	/**
-	 * Returns true if the action is supported by the environment.
+	 * Returns true if the action is supported by the entity.
 	 * @param action
-	 * @return
+	 * @return true if action supported by entity.
 	 */
 	protected abstract boolean isSupportedByEntity(Action action, String entity);
 
@@ -798,7 +792,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	/**
 	 * @param entity
 	 * @param action
-	 * @return
+	 * @return Percept that is result of the action.
 	 * @throws ActException
 	 */
 	protected abstract Percept performEntityAction(String entity, Action action) throws ActException;
@@ -838,7 +832,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		
 		// add
 		entities.add(entity);
-		freeEntities.add(entity);
 		
 		// notify
 		notifyNewEntity(entity);
@@ -860,7 +853,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		
 		// add
 		entities.add(entity);
-		freeEntities.add(entity);
 		
 		// set type
 		this.setType(entity, type);
@@ -887,7 +879,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 		LinkedList<String> agents = new LinkedList<String>();
 		
 		// find the association and remove
-		boolean associated = false;
+		//boolean associated = false;
 		for( Entry<String,HashSet<String>> entry : agentsToEntities.entrySet()) {
 			
 			String agent = entry.getKey();
@@ -899,7 +891,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 				
 				agentsToEntities.put(agent, ens);
 				
-				associated = true;
+				//associated = true;
 				
 				if ( agents.contains(agent) == false )
 					agents.add(agent);
@@ -918,12 +910,9 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 				e.printStackTrace();
 			}*/
 	
-		// add to free entites
-		freeEntities.add(entity);
 		
 		// finally delete
 		entities.remove(entity);
-		freeEntities.remove(entity);
 		if(this.entitiesToTypes.containsKey(entity))
 			this.entitiesToTypes.remove(entity);
 		
