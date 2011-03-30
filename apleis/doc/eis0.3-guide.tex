@@ -841,6 +841,7 @@ Note that the default implementation already generates the right type of excepti
 you are supposed to adhere to the convention above.
 That is, when implementing the \texttt{EnvironmentInterfaceStandard} interface or overwriting the respective method you have to make sure that your implementation of \texttt{performAction} fits the specification above when it comes to the exception-types.
 
+
 The \texttt{EIDefaultImpl} already enforces the specification and requires you to implement a set of helper methods:
 \begin{itemize}
 \item\texttt{boolean isSupportedByEnvironment(Action action)}: is supposed to return \texttt{true} iff the action
@@ -860,13 +861,14 @@ The implementation of \texttt{performAction} in \texttt{EIDefaultImpl} works as 
 \item if \texttt{agent} has no associated entities throw an \texttt{ActException} with type \texttt{NOENTITIES},
 \item if \texttt{entities} contains at least one entity that is not associated with \texttt{agent} throw an \texttt{ActException} with type \texttt{WRONGENTITY},
 \item if \texttt{isSupportedByEnvironment(...)} returns \texttt{false} 
-throw an \texttt{ActException} with type \texttt{NOSUPPORTEDBYENVIRONMENTs},
+throw an \texttt{ActException} with type \texttt{NOSUPPORTEDBYENVIRONMENT},
 \item \texttt{isSupportedByType(...)} returns \texttt{false} for at least one type of the entities
 throw an \texttt{ActException} with type \texttt{NOSUPPORTEDBYTYPE},
 \item if \texttt{isSupportedByEntity(...)} returns \texttt{false} for at least one entity in \texttt{entities} 
 throw an \texttt{ActException} with type \texttt{NOSUPPORTEDBYENTITY},
-\item call \texttt{performEntityAction(...)} which can yield an \texttt{ActException} with type \texttt{FAILED}, which is then rethrown.
+\item call \texttt{performEntityAction(...)} which can yield an \texttt{ActException} with type \texttt{FAILURE}, which is then rethrown.
 \end{enumerate}
+Anyway, if you perform an action, that action fails for any reason that cannot be represented by one of the first seven types described above, you are supposed to throw an \texttt{ActException} with the \texttt{FAILURE}-type. If, on top of that, the action's failure is indicated by an arbitrary exception somewhere else, you are supposed to catch that very exception and wrap it into a new instance of \texttt{ActException}, again giving it the \texttt{FAILURE}-type.
 
 \subsection{Querying Mechanism}
 
