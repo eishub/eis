@@ -14,7 +14,7 @@ public class ManagementException extends EnvironmentInterfaceException {
 	}
 
 	public ManagementException(String string, Exception e) {
-		super(string);
+		super(string,e);
 	}
 	
 }
