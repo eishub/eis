@@ -1,0 +1,68 @@
+EIS Documentation for Domestic-Robot environment 
+------------------------------------------------
+
+* Environment description
+
+A domestic robot has the goal of serving beer to its owner. Its
+mission is quite simple, it just receives some beer requests from the
+owner, goes to the fridge, takes out a bottle of beer, and brings it
+back to the owner.  However, the robot should also be concerned with
+the beer stock (and eventually order more beer using the supermarketâ its
+home delivery service) and some rules hard-wired into the robot by
+the Department of Health (in this example this rule defines the limit
+of daily beer consumption).
+
+A more detailed description is provided in the Jason Book, chapter 3.
+
+* Jar-file: eis-documestic-robot.jar
+
+* Entities: one robot, one owner, and one supermarket
+
+* Actions
+
+  (see overview.png for a Prometheus diagram)
+
+- for entity robot:
+   - open(fridge)
+   - get(beer)
+   - close(fridge)
+   - hand_in(beer)
+   - move_towards(Place)
+
+- for entity owner
+   - sip(beer)
+
+- for entity supermarket
+   - deliver(beer,N)
+
+Most of the actions have obvious meanings, except perhaps
+move_towards. Again, to simplify the example, the way the robot moves
+in the house is greatly simplified. We assume that when it performs
+the action move_towards(fridge), its hardware (or the simulator)
+performs one step towards the fridge, so the robot does not need to be
+concerned with the path to reach the fridge.
+
+* Percepts
+
+- at(robot,Place): to simplify the example, only two places are
+   perceived: fridge (when the robot is in front of the fridge) and
+   owner (when the robot is next to the owner). Thus, depending on its
+   location in the house, the robot will perceive either
+   at(robot,fridge) or at(robot,owner), or of course no at percept at
+   all (in case it is in neither of those places).
+
+- stock(beer,N): when the fridge is open, the robot will perceive how
+   many beers are stored in the fridge (the quantity is represented by
+   the variable N).
+
+- has(owner,beer): is perceived by the robot and the owner when the
+   owner has a (non-empty) bottle of beer.
+
+
+* Environment-management
+
+The environment supports INIT commands with one parameter: "gui(on)" or
+"gui(off)".  This parameter creates or not the GUI of the environment.
+
+The KILL command is also supported and simply closes the GUI window.
+
