@@ -6,6 +6,7 @@ import java.io.IOException;
 import eis.EILoader;
 import eis.EnvironmentInterfaceStandard;
 import eis.exceptions.ManagementException;
+import eis.iilang.EnvironmentState;
 
 /**
  * This app instantiates an interpreter (loading agents),
@@ -46,6 +47,20 @@ public class App {
 			} catch (ManagementException e) {
 				e.printStackTrace();
 			}
+		}
+		
+		// wait
+		while ( ei.getState() != EnvironmentState.PAUSED ) {
+			
+			System.out.println("environment not in PAUSED-state. waiting...");
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		
 		// start the interface
