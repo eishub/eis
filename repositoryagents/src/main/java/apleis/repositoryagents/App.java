@@ -65,7 +65,8 @@ public class App {
 		
 		// start the interface
 		try {
-			ei.start();
+			if ( ei.isStartSupported() );
+				ei.start();
 		} catch (ManagementException e) {
 			e.printStackTrace();
 		}

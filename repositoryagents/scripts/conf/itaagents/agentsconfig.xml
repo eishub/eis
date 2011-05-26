@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <javaAgentsConfig>
-  <environment jar="ita-2.1.0.jar"/>
+  <environment jar="ita-2.1.1.jar"/>
   <agents>
     <agent name="Decco" entity="Decco" class="apleis.repositoryagents.ita.CleanerAgent" team="A"/>
     <agent name="Harry" entity="Harry" class="apleis.repositoryagents.ita.CleanerAgent" team="A"/>

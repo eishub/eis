@@ -270,6 +270,7 @@ public class AgentsInterpreter implements Interpreter,AgentListener,EnvironmentL
 		agents = new HashMap<String,Agent>();
 		
 		// process agent-specs
+		System.out.println("available entities \"" + ei.getEntities());
 		for ( AgentSpec as : agentSpecs ) {
 			
 			Agent agent = Agent.createAgentFromClass(as.name, as.team, as.className);
