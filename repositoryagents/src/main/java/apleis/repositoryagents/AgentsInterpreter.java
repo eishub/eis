@@ -155,7 +155,7 @@ public class AgentsInterpreter implements Interpreter,AgentListener,EnvironmentL
 				continue;
 
 			// parse the environment
-			if( rootChild.getNodeName().equalsIgnoreCase("environment") ) {
+			else if( rootChild.getNodeName().equalsIgnoreCase("environment") ) {
 
 				// get the jar-file
 				String jarFileName = rootChild.getAttribute("jar");
@@ -203,7 +203,7 @@ public class AgentsInterpreter implements Interpreter,AgentListener,EnvironmentL
 			}			
 
 			// parse the agents list
-			if( rootChild.getNodeName().equalsIgnoreCase("agents") ) {
+			else if( rootChild.getNodeName().equalsIgnoreCase("agents") ) {
 
 				NodeList rootChildChildren = rootChild.getChildNodes();
 				for( int b = 0 ; b < rootChildChildren.getLength() ; b++ ) {
@@ -215,7 +215,7 @@ public class AgentsInterpreter implements Interpreter,AgentListener,EnvironmentL
 						continue;
 
 					// parse the entites list
-					if( rootChildChild.getNodeName().equalsIgnoreCase("agent") ) {	
+					else if( rootChildChild.getNodeName().equalsIgnoreCase("agent") ) {	
 						
 						Element e = (Element) rootChildChild;
 						

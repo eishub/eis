@@ -1,0 +1,35 @@
+Copyright 2009-2011 Tristan Behrens.
+
+This software is distributed under the terms of the GNU
+Lesser General Public License.
+
+Contacts...
+
+
+http://www.gnu.org/licenses/gpl-howto.html
+
+
+Whichever license you plan to use, the process involves adding two
+elements to each source file of your program: a copyright notice (such
+as “Copyright 1999 Terry Jones”), and a statement of copying permission,
+saying that the program is distributed under the terms of the GNU
+General Public License (or the Lesser GPL).
+
+The copyright notice should include the year in which you finished
+preparing the release (so if you finished it in 1998 but didn't post it
+until 1999, use 1998). You should add the proper year for each release;
+for example, “Copyright 1998, 1999 Terry Jones” if some versions were
+finished in 1998 and some were finished in 1999. If several people
+helped write the code, use all their names.
+
+For software with several releases over multiple years, it's okay to use
+a range (“2008-2010”) instead of listing individual years (“2008, 2009,
+2010”) if and only if every year in the range, inclusive, really is a
+“copyrightable” year that would be listed individually; and you make an
+explicit statement in your documentation about this usage.
+
+Always use the English word “Copyright”; by international convention,
+this is used worldwide, even for material in other languages. The
+copyright symbol “©” can be included if you wish (and your character set
+supports it), but it's not necessary. There is no legal significance to
+using the three-character sequence “(C)”, although it does no harm.
