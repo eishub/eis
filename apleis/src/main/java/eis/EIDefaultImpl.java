@@ -647,7 +647,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 				continue;
 			}
 			
-			if( isSupportedByEntity(action,type) == false )
+			if( isSupportedByEntity(action,entity) == false )
 				throw new ActException( ActException.NOTSUPPORTEDBYENTITY );
 			
 		}
