@@ -110,9 +110,9 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 	 * @param parameters
 	 * @throws ManagementException is thrown either when the initializing is not supported or the parameters are wrong.
 	 */
-	void reset(Map<String,Parameter> parameters) throws ManagementException {
+	public void reset(Map<String,Parameter> parameters) throws ManagementException {
 	
-		state = Environment.PAUSED;
+		state = EnvironmentState.PAUSED;
 	
 	}	
 	
