@@ -14,7 +14,9 @@ public abstract class IILElement implements Serializable {
 	
 	/** 
 	 * Returns a string-representation.
+	 * @deprecated use IIL-Visitors instead.
 	 */
+	@Deprecated
 	public final String toString() { 
 	
 		if ( toProlog )
@@ -28,14 +30,18 @@ public abstract class IILElement implements Serializable {
 	 * Returns an XML-representation encoded in a string.
 	 * @param depth is the depth of indendation.
 	 * @return an XML-string.
+	 * @deprecated use IIL-Visitors instead.
 	 */
+	@Deprecated
 	protected abstract String toXML(int depth);
 	
 	/**
 	 * Returns an XML-string including the header.
 	 * 
 	 * @return an XML-string including the header.
+	 * @deprecated use IIL-Visitors instead.
 	 */
+	@Deprecated
 	public final String toXMLWithHeader() {
 		
 		String xml = "";
@@ -51,7 +57,9 @@ public abstract class IILElement implements Serializable {
 	 * Returns an XML-representation encoded in a string.
 	 * 
 	 * @return an XML-string.
+	 * @deprecated use IIL-Visitors instead.
 	 */
+	@Deprecated
 	public final String toXML() {
 		
 		return toXML(0);
@@ -61,7 +69,9 @@ public abstract class IILElement implements Serializable {
 	/**
 	 * Returns a Prolog-representation encoded in a string.
 	 * @return a Prolog-string
+	 * @deprecated use IIL-Visitors instead.
 	 */
+	@Deprecated
 	public abstract String toProlog();
 
 	/**
@@ -92,5 +102,8 @@ public abstract class IILElement implements Serializable {
 
 	public abstract int hashCode();
 
+	public abstract void accept(IILVisitor visitor);
+
+	public abstract Object accept(IILObjectVisitor visitor, Object object);
 	
 }

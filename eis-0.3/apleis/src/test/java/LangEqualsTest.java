@@ -1,24 +1,13 @@
 import static org.junit.Assert.*;
 
-import java.util.LinkedList;
-
 import org.junit.Test;
 
-import eis.EIDefaultImpl;
-import eis.exceptions.ActException;
-import eis.exceptions.EntityException;
-import eis.exceptions.EnvironmentInterfaceException;
-import eis.exceptions.ManagementException;
-import eis.exceptions.NoEnvironmentException;
-import eis.exceptions.PerceiveException;
 import eis.iilang.Action;
 import eis.iilang.Function;
 import eis.iilang.Identifier;
 import eis.iilang.Numeral;
-import eis.iilang.Parameter;
 import eis.iilang.ParameterList;
 import eis.iilang.Percept;
-
 
 public class LangEqualsTest {
 

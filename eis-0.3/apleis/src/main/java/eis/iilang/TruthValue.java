@@ -114,4 +114,18 @@ public class TruthValue extends Parameter {
 		return true;
 	}
 
+	@Override
+	public Object accept(IILObjectVisitor visitor, Object object) {
+
+		return visitor.visit(this,object);
+
+	}
+
+	@Override
+	public void accept(IILVisitor visitor) {
+		
+		visitor.visit(this);
+		
+	}
+	
 }
