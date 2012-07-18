@@ -5,6 +5,7 @@ VERSION
 - implemented the EMS
 - moved examples to different artifacts
 - added a class for truth-values to the IIL
+- introduced visitors for the IIL (toXML and toProlog are now deprecated)
 
 VERSION 0.2-21January2010
 
