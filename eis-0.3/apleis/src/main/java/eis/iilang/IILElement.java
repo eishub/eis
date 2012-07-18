@@ -8,6 +8,7 @@ import java.io.Serializable;
  * @author tristanbehrens
  *
  */
+@SuppressWarnings("serial") // nox expected to be serialized
 public abstract class IILElement implements Serializable {
 
 	public static boolean toProlog = false;
@@ -100,10 +101,23 @@ public abstract class IILElement implements Serializable {
 	 */
 	public abstract boolean equals(Object obj);
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	public abstract int hashCode();
 
+	/**
+	 * Is called by a visitor. 
+	 * @param visitor
+	 * @see eis.iilang.IILVisitor
+	 */
 	public abstract void accept(IILVisitor visitor);
 
+	/**
+	 * Is called by an object visitor. 
+	 * @param visitor
+	 * @see eis.iilang.IILObjectVisitor
+	 */
 	public abstract Object accept(IILObjectVisitor visitor, Object object);
 	
 }

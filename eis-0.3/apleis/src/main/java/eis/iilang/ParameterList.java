@@ -62,6 +62,25 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	}
 
 	/**
+	 * Returns the index of an element.
+	 */
+	public int indexOf(Parameter p) {
+		
+		return list.indexOf(p); 
+		
+	}
+	
+	/**
+	 * Returns the size of the list.
+	 * @return
+	 */
+	public int size() {
+		
+		return list.size();
+		
+	}
+	
+	/**
 	 * Checks for emptyness.
 	 * @return true if empty, false otherwise
 	 */

@@ -44,7 +44,7 @@ public class TruthValue extends Parameter {
 	@Override
 	protected String toXML(int depth) {
 
-		return indent(depth) + "<number value=\"" + value + "\"/>" + "\n";
+		return indent(depth) + "<truthvalue value=\"" + value + "\"/>" + "\n";
 
 	}
 	

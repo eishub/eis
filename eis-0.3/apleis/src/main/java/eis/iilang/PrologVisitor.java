@@ -1,73 +1,154 @@
 package eis.iilang;
 
+/**
+ * Takes an IILElement and yields its Prolog-representation.
+ * 
+ * @author tristanbehrens
+ *
+ */
 public class PrologVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(Action element, Object object) {
-		assert false : "Implement!";
-		return null;
+		
+		String ret = "";
+		
+		ret += element.name + "(";
+		for ( Parameter p : element.getParameters() ) {
+			ret += p.accept(this,null);
+			if ( element.getParameters().indexOf(p) != element.getParameters().size() - 1 )
+				ret += ",";
+		}
+		ret += ")";
+
+		return ret;
+
 	}
 
 	@Override
 	public Object visit(DataContainer element, Object object) {
-		assert false : "Implement!";
-		return null;
+		return "UNKNOWN";
 	}
 
 	@Override
 	public Object visit(Function element, Object object) {
-		assert false : "Implement!";
-		return null;
+
+		String ret = "";
+		
+		ret += element.getName() + "(";
+		int count = 0;
+		for ( Parameter p : element.getParameters() ) {
+			ret += p.accept(this,null);
+			//if ( element.getParameters().indexOf(p) != element.getParameters().size() - 1 )
+			//	ret += ",";
+			if ( count < element.getParameters().size() - 1 ) ret += ",";
+			count ++;
+		}
+		ret += ")";
+
+		return ret;
 	}
 
 	@Override
 	public Object visit(Identifier element, Object object) {
-		assert false : "Implement!";
-		return null;
+
+		return element.getValue();
+	
 	}
 
 	@Override
 	public Object visit(IILElement element, Object object) {
-		assert false : "Implement!";
-		return null;
+		return "UNKNOWN";
 	}
 
 	@Override
 	public Object visit(Numeral element, Object object) {
-		assert false : "Implement!";
-		return null;
+
+		return element.getValue();
+
 	}
 
 	@Override
 	public Object visit(Parameter element, Object object) {
-		assert false : "Implement!";
-		return null;
+		return "UNKNOWN";
 	}
 
 	@Override
 	public Object visit(ParameterList element, Object object) {
-		assert false : "Implement!";
-		return null;
+
+		String ret = "";
+		
+		ret += "[";
+		for ( Parameter p : element ) {
+			ret += p.accept(this,null);
+			if ( element.indexOf(p) != element.size() - 1 )
+				ret += ",";
+		}
+		ret += "]";
+
+		return ret;
+	
 	}
 
 	@Override
 	public Object visit(Percept element, Object object) {
-		assert false : "Implement!";
-		return null;
+
+		String ret = "";
+		
+		ret += element.name + "(";
+		for ( Parameter p : element.getParameters() ) {
+			ret += p.accept(this,null);
+			if ( element.getParameters().indexOf(p) != element.getParameters().size() - 1 )
+				ret += ",";
+		}
+		ret += ")";
+
+		return ret;
+	
 	}
 
 	@Override
 	public Object visit(TruthValue element, Object object) {
-		assert false : "Implement!";
-		return null;
+
+		return element.getValue();
+
 	}
 
+	/**
+	 * Can be used for convenience's sake. Instantiates a visitor and visits the element.
+	 * @param element
+	 * @return
+	 */
 	public static String staticVisit(IILElement element) {
 		
 		String ret = "";
 		
 		PrologVisitor visitor = new PrologVisitor();
-		ret += visitor.visit(element,null);
+		
+		if ( element instanceof Action ) {
+			ret += visitor.visit((Action)element,"");
+		}
+		else if ( element instanceof Function ) {
+			ret += visitor.visit((Function)element,"");
+		}
+		else if ( element instanceof Identifier ) {
+			ret += visitor.visit((Identifier)element,"");
+		}
+		else if ( element instanceof Numeral ) {
+			ret += visitor.visit((Numeral)element,"");
+		}
+		else if ( element instanceof ParameterList ) {
+			ret += visitor.visit((ParameterList)element,"");
+		}
+		else if ( element instanceof Percept ) {
+			ret += visitor.visit((Percept)element,"");
+		}
+		else if ( element instanceof TruthValue ) {
+			ret += visitor.visit((TruthValue)element,"");
+		}
+		else if ( element instanceof Percept ) {
+			assert false : "not expected " + element.getClass();
+		}
 		
 		return ret;
 		

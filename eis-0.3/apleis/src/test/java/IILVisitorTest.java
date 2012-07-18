@@ -12,16 +12,29 @@ import eis.iilang.Numeral;
 import eis.iilang.ParameterList;
 import eis.iilang.Percept;
 import eis.iilang.PrologVisitor;
+import eis.iilang.TruthValue;
 import eis.iilang.XMLVisitor;
 
 public class IILVisitorTest {
 
+	/**
+	 * Tests both the XML- and Prolog-Visitor.
+	 */
 	@Test
 	public void testXML() {
 		
 		DataContainer cont = null;
 		Vector<DataContainer> dcs = new Vector<DataContainer>();
 		
+		// testing values
+		cont = new Percept(
+						"values", 
+						new Identifier("id"),
+						new Numeral(1), 
+						new TruthValue(true)
+						);
+		dcs.add(cont);
+
 		// moving to (2,3)
 		cont = new Action(
 						"moveTo", 
@@ -74,21 +87,36 @@ public class IILVisitorTest {
 		);
 		dcs.add(cont);
 
-		// test
+		// test to XML
 		for ( DataContainer dc : dcs ) {
-			System.out.println("TEST");
 			String str1,str2;
 			str1 = dc.toXML();
 			str2 = XMLVisitor.staticVisit(dc);
-			System.out.println("toXML:\n" + str1); 
-			System.out.println("visit:\n" + str2); 
-			str1 = str1.replace(" ", "").replace("\n","").replace("\t","");
-			str2 = str2.replace(" ", "").replace("\n","").replace("\t","");
-			boolean eq = str1.equals(str2);
-			if ( !eq ) System.out.println("NOT EQUAL");
-			else System.out.println("EQUAL");
+			String str1Clean = str1.replace(" ", "").replace("\n","").replace("\t","");
+			String str2Clean = str2.replace(" ", "").replace("\n","").replace("\t","");
+			boolean eq = str1Clean.equals(str2Clean);
+			if ( !eq ) {
+				System.out.println("toXML:\n" + str1); 
+				System.out.println("XMLVisitor:\n" + str2); 
+				fail("NOT EQUAL");
+			}
 			assertTrue(eq);
-			System.out.println("\n\n");
+		}
+		
+		// test to XML
+		for ( DataContainer dc : dcs ) {
+			String str1,str2;
+			str1 = dc.toProlog();
+			str2 = PrologVisitor.staticVisit(dc);
+			String str1Clean = str1.replace(" ", "").replace("\n","").replace("\t","");
+			String str2Clean = str2.replace(" ", "").replace("\n","").replace("\t","");
+			boolean eq = str1Clean.equals(str2Clean);
+			if ( !eq ) {
+				System.out.println("toProlog:\n" + str1); 
+				System.out.println("PrologVisitor:\n" + str2); 
+				fail("NOT EQUAL");
+			}
+			assertTrue(eq);
 		}
 		
 	}

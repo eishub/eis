@@ -1,5 +1,11 @@
 package eis.iilang;
 
+/**
+ * Takes an IILElement and yields its XML-representation.
+ * 
+ * @author tristanbehrens
+ *
+ */
 public class XMLVisitor implements IILObjectVisitor {
 
 	private static String indent = "  ";
@@ -88,11 +94,11 @@ public class XMLVisitor implements IILObjectVisitor {
 		String ret = "";
 		
 		ret += object.toString() + "<percept name=\"" + element.name + "\">" + newline;
-		ret += object.toString() + indent + "<perceptParameter>" + newline;
 		for ( Parameter p : element.getParameters() ) {
+			ret += object.toString() + indent + "<perceptParameter>" + newline;
 			ret += p.accept(this,object.toString() + indent + indent);
+			ret += object.toString() + indent + "</perceptParameter>" + newline;
 		}
-		ret += object.toString() + indent + "</perceptParameter>" + newline;
 		ret += object.toString() + "</percept>" + newline;
 
 		return ret;
@@ -106,6 +112,11 @@ public class XMLVisitor implements IILObjectVisitor {
 
 	}
 
+	/**
+	 * Can be used for convenience's sake. Instantiates a visitor and visits the element.
+	 * @param element
+	 * @return
+	 */
 	public static String staticVisit(IILElement element) {
 		
 		String ret = "";

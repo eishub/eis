@@ -66,24 +66,6 @@ public class Action extends DataContainer {
 	
 	}
 
-/*	@Override
-	public String toProlog() {
-		
-		String ret = "action";
-		
-		ret+="(";
-		
-		ret+=name;
-		
-		for( Parameter p : params ) 
-			ret += "," + p.toProlog();
-		
-		ret+=")";
-		
-		return ret;
-	
-	}*/
-
 	@Override
 	public String toProlog() {
 		
