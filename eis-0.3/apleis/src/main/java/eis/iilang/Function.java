@@ -23,8 +23,8 @@ public class Function extends Parameter {
 	 * @param parameters the parameters.
 	 */
 	public Function(String name, Parameter... parameters) {
-		
-		this.name = name;
+
+		setName(name);
 		
 		for( Parameter p : parameters )
 			this.params.add(p);
@@ -39,7 +39,7 @@ public class Function extends Parameter {
 	 */
 	public Function(String name, LinkedList<Parameter> parameters) {
 		
-		this.name = name;
+		setName(name);
 
 		this.params = parameters;
 		
@@ -63,6 +63,7 @@ public class Function extends Parameter {
 	 */
 	public void setName(String name) {
 		
+		assert Character.isLowerCase(name.charAt(0)) : name + " should start with a lowercase letter";
 		this.name = name;
 
 	}

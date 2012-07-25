@@ -17,11 +17,11 @@ import eis.iilang.Percept;
 
 public class LangHashCodeEqualsTest {
 
-	private static final String ACTION = "Action";
-	private static final String PERCEPT = "Percept";
+	private static final String ACTION = "action";
+	private static final String PERCEPT = "percept";
 	private static final String FUN = "fun";
 	private static final int NUM = 42;
-	private static final String LITT = "FourtyTwo";
+	private static final String LITT = "fourtyTwo";
 	
 	Percept perceptB;
 	Action actionB;
@@ -68,7 +68,7 @@ public class LangHashCodeEqualsTest {
 	}
 
 	@Test
-	public void testEqauls() {
+	public void testEquals() {
 		
 		// If equals is correctly implemented the following should pass.
 		assertEquals(identifierA, identifierB);

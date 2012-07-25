@@ -36,7 +36,7 @@ public abstract class DataContainer extends IILElement {
 	 */
 	public DataContainer(String name, Parameter... parameters) {
 		
-		this.name = name;
+		setName(name);
 		
 		for( Parameter p : parameters )
 			this.params.add(p);
@@ -51,7 +51,7 @@ public abstract class DataContainer extends IILElement {
 	 */
 	public DataContainer(String name, LinkedList<Parameter> parameters) {
 		
-		this.name = name;
+		setName(name);
 
 		this.params = parameters;
 		
@@ -75,6 +75,7 @@ public abstract class DataContainer extends IILElement {
 	 */
 	public void setName(String name) {
 		
+		assert Character.isLowerCase(name.charAt(0)) : name + " should start with a lowercase letter";
 		this.name = name;
 		
 	}

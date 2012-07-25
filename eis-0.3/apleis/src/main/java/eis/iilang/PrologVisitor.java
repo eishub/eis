@@ -121,36 +121,8 @@ public class PrologVisitor implements IILObjectVisitor {
 	 */
 	public static String staticVisit(IILElement element) {
 		
-		String ret = "";
-		
 		PrologVisitor visitor = new PrologVisitor();
-		
-		if ( element instanceof Action ) {
-			ret += visitor.visit((Action)element,"");
-		}
-		else if ( element instanceof Function ) {
-			ret += visitor.visit((Function)element,"");
-		}
-		else if ( element instanceof Identifier ) {
-			ret += visitor.visit((Identifier)element,"");
-		}
-		else if ( element instanceof Numeral ) {
-			ret += visitor.visit((Numeral)element,"");
-		}
-		else if ( element instanceof ParameterList ) {
-			ret += visitor.visit((ParameterList)element,"");
-		}
-		else if ( element instanceof Percept ) {
-			ret += visitor.visit((Percept)element,"");
-		}
-		else if ( element instanceof TruthValue ) {
-			ret += visitor.visit((TruthValue)element,"");
-		}
-		else if ( element instanceof Percept ) {
-			assert false : "not expected " + element.getClass();
-		}
-		
-		return ret;
+		return (String) element.accept(visitor,"");
 		
 	}
 }

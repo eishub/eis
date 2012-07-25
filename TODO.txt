@@ -1,0 +1,12 @@
+state machine 
+  problems
+    always necessary to override stuff
+    pause is not always there/necessary
+    kill should be possible from all states
+  solutions
+    remove all restrictions
+    use late listener pattern
+    ensure query and notify
+    
+conventions for strings
+  

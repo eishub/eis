@@ -22,6 +22,7 @@ public class Identifier extends Parameter {
 	 */
 	public Identifier(String value) {
 		
+		assert Character.isLowerCase(value.charAt(0)) : value + " should start with a lowercase letter";
 		this.value = value;
 		
 	}
