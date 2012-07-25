@@ -8,5 +8,29 @@ state machine
     use late listener pattern
     ensure query and notify
     
-conventions for strings
+conventions for strings [TEST]
+
+incorporate eis2java
+  copy to runtime [TEST]
+  make example
+  unit tests for example
+  
+issue with the ActException
+  check if throw AssertionError is nice
+  ensure that catch + wrap + rethrow works
+  maybe a new type
+  consider subclassing actexception, but research first
+  make sure that exception-chaining works
+  
+make implementation that equals entities and agents
+  
+use standard java logging
+  which log levels?
+  
+how to advertise
+  offer repositories
+  
+EIS documentation: make thread-safety policy explicit
+
+consider using more design patterns
   
