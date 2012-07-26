@@ -8,12 +8,12 @@ state machine
     use late listener pattern
     ensure query and notify
     
-conventions for strings [TEST]
+conventions for strings [DONE]
 
 incorporate eis2java
-  copy to runtime [TEST]
-  make example
-  unit tests for example
+  copy to runtime [DONE]
+  make example [DONE]
+  unit tests for example [DONE]
   
 issue with the ActException
   check if throw AssertionError is nice
