@@ -679,8 +679,9 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 					e.printStackTrace();
 					throw new AssertionError("must be an instance of ActException");
 				}
-				if( ((ActException)e).getType() != ActException.FAILURE )
-					throw new AssertionError("must have type FAILURE");
+				if( ((ActException)e).getType() != ActException.FAILURE ) {
+					throw new AssertionError("must have type FAILURE, expection is " + e.toString());
+				}
 				
 				// rethrow
 				throw (ActException)e;
