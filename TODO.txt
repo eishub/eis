@@ -8,7 +8,9 @@ state machine
     use late listener pattern
     ensure query and notify
     
-conventions for strings [DONE]
+conventions 
+  for IIL strings [DONE]
+  for agents/entities
 
 incorporate eis2java
   copy to runtime [DONE]
@@ -23,14 +25,46 @@ issue with the ActException
   make sure that exception-chaining works
   
 make implementation that equals entities and agents
+
+give more infos when entity/agent is removed, i.e. associated agents/entities
   
 use standard java logging
   which log levels?
   
 how to advertise
   offer repositories
+
+use enums instead of int constants
   
 EIS documentation: make thread-safety policy explicit
 
 consider using more design patterns
   
+get rid of all warnings
+
+copy copyright stuff to right place and into all sourcecodes (LGPL)
+
+make a repository of environment interfaces
+  copy GOAL environments
+  ask the AgentFactory guys from Ireland (VacWorld)
+  maybe: 2apl blockworld and MSAgent
+  Jason: domestic
+  EISMASSim
+  document properly
+
+documentation
+  who supports EIS?
+  which interfaces are available
+  
+re-establishing heterogeneity
+  consider JADE (heavyweight)
+  consider Agentscape (lightweight)
+  generally: consider going down the middleware road
+  
+CArtAgO bridge
+
+support for statistics
+
+support for simulations
+
+check if URLLoader can load from Maven repositories
