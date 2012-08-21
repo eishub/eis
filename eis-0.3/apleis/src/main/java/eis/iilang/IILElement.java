@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  */
 @SuppressWarnings("serial") // nox expected to be serialized
-public abstract class IILElement implements Serializable {
+public abstract class IILElement implements Serializable,Cloneable {
 
 	public static boolean toProlog = false;
 	

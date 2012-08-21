@@ -3,7 +3,7 @@ package eis;
 import eis.iilang.Percept;
 
 /**
- * In order to receive percepts-as-notifications connected objects 
+ * In order to receive percepts-as-notifications connected objects
  * have to implement this interface.
  * 
  * @author tristanbehrens

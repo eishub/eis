@@ -671,7 +671,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,Seri
 			
 			try {
 				Percept p = this.performEntityAction(entity, action);
-				ret.put(entity, p);				
+				if ( p != null ) 
+					ret.put(entity, p);				
 			}
 			catch(Exception e) {
 				
