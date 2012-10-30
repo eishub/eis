@@ -4,6 +4,7 @@ import java.util.AbstractCollection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import eis.eis2java.exception.NoTranslatorException;
 import eis.eis2java.exception.TranslationException;
 import eis.iilang.Identifier;
 import eis.iilang.Numeral;
@@ -124,8 +125,7 @@ public class Translator {
 		}
 
 		if (rawTranslator == null) {
-			throw new TranslationException("No translator found for class "
-					+ o.getClass().getName());
+			throw new NoTranslatorException(o.getClass());
 		}
 
 		Java2Parameter<T> translator = (Java2Parameter<T>) rawTranslator;
@@ -145,10 +145,11 @@ public class Translator {
 	 * @return The parameter translated into the object of class T.
 	 * @throws TranslationException
 	 *             if the translation could not be made.
+	 * @throws NoTranslatorException
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T translate2Java(Parameter parameter, Class<T> parameterClass)
-			throws TranslationException {
+			throws TranslationException, NoTranslatorException {
 		Class<?> clazz = parameterClass;
 		if (clazz.isPrimitive()) {
 			clazz = getWrapper(clazz);
@@ -157,8 +158,7 @@ public class Translator {
 		Parameter2Java<?> rawTranslator = parameter2JavaTranslators.get(clazz);
 
 		if (rawTranslator == null) {
-			throw new TranslationException("No translator found for class "
-					+ parameterClass.getName());
+			throw new NoTranslatorException(clazz);
 		}
 
 		Parameter2Java<T> translator = (Parameter2Java<T>) rawTranslator;
@@ -364,8 +364,12 @@ public class Translator {
 		@SuppressWarnings("unchecked")
 		@Override
 		public Class<? extends AbstractCollection<T>> translatesFrom() {
+			// mpkorstanje 2012-05-24: When using OpenJDK we can't cast directly
+			// from
+			// Class<AbstractCollection> to Class<? extends
+			// AbstractCollection<T>>. This is a work around.
 			@SuppressWarnings("rawtypes")
-			Class cls = AbstractCollection.class; // JVM bug workaround...
+			Class cls = AbstractCollection.class;
 			return (Class<? extends AbstractCollection<T>>) cls;
 		}
 	}

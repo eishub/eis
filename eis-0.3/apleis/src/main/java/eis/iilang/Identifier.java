@@ -8,57 +8,60 @@ package eis.iilang;
  */
 /**
  * @author tristanbehrens
- *
+ * 
  */
+@SuppressWarnings("serial")
 public class Identifier extends Parameter {
 
 	/** The identifier itself. */
 	private String value = null;
 
-	/** 
+	/**
 	 * Constructs an identifier.
 	 * 
 	 * @param value
 	 */
 	public Identifier(String value) {
-		
-		assert Character.isLowerCase(value.charAt(0)) : value + " should start with a lowercase letter";
+		// assert Character.isLowerCase(value.charAt(0)) : "Identifier '" +
+		// value
+		// + "' should start with a lowercase letter";
+		// See #3581918
 		this.value = value;
-		
+
 	}
-	
+
 	/**
 	 * Returns the identifier.
 	 * 
 	 * @return the identifier as a string
 	 */
 	public String getValue() {
-		
+
 		return value;
-		
+
 	}
-	
+
 	@Override
 	protected String toXML(int depth) {
-		
+
 		return indent(depth) + "<identifier value=\"" + value + "\"/>" + "\n";
-	
+
 	}
-	
+
 	@Override
 	public String toProlog() {
-		
+
 		String ret = value;
-		
+
 		return ret;
-	
+
 	}
 
 	@Override
 	public Object clone() {
 
 		return new Identifier(this.value);
-	
+
 	}
 
 	@Override
@@ -87,15 +90,15 @@ public class Identifier extends Parameter {
 	@Override
 	public Object accept(IILObjectVisitor visitor, Object object) {
 
-		return visitor.visit(this,object);
+		return visitor.visit(this, object);
 
 	}
 
 	@Override
 	public void accept(IILVisitor visitor) {
-		
+
 		visitor.visit(this);
-		
+
 	}
-	
+
 }

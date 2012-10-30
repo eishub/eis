@@ -16,12 +16,14 @@ import eis.iilang.Percept;
  * parameters but is allowed to return any value for which a
  * {@link Java2Parameter} translator has been registered.
  * <p>
- * {@link @AsPercept} tags have three parameters:
+ * {@link @AsPercept} tags have four parameters:
  * <ol>
  * <li>name: the name of the percept to be returned
  * <li>multiplePercepts: true when the percept function returns a List of List
  * of (translatable) Objects;
  * <li>filter. One of Filter.Type.ALWAYS, ONCE, ONCHANGE or ONCHANGENEG.
+ * <li>event. True when the percepts are event based and the results from all
+ * calls to this method should be passed to the agent.
  * </ol>
  * 
  * The filter type determines the way percepts are filtered before sending out
@@ -86,4 +88,6 @@ public @interface AsPercept {
 	boolean multiplePercepts() default false;
 
 	Filter.Type filter() default Filter.Type.ALWAYS;
+
+	boolean event() default false;
 }

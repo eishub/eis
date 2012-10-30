@@ -4,8 +4,9 @@ package eis.iilang;
  * Encapsulates a number.
  * 
  * @author tristanbehrens
- *
+ * 
  */
+@SuppressWarnings("serial")
 public class Numeral extends Parameter {
 
 	/** The value of the numner. */
@@ -17,32 +18,33 @@ public class Numeral extends Parameter {
 	 * @param value
 	 */
 	public Numeral(Number value) {
-		
+
 		this.value = value;
-		
+
 	}
-	
+
 	@Override
 	protected String toXML(int depth) {
 
 		return indent(depth) + "<number value=\"" + value + "\"/>" + "\n";
 
 	}
-	
+
 	@Override
 	public String toProlog() {
-		
+
 		String ret = "";
-		
+
 		ret += value;
-		
+
 		return ret;
-	
+
 	}
+
 	public Number getValue() {
-		
+
 		return value;
-		
+
 	}
 
 	@Override
@@ -76,15 +78,15 @@ public class Numeral extends Parameter {
 	@Override
 	public Object accept(IILObjectVisitor visitor, Object object) {
 
-		return visitor.visit(this,object);
+		return visitor.visit(this, object);
 
 	}
 
 	@Override
 	public void accept(IILVisitor visitor) {
-		
+
 		visitor.visit(this);
-		
+
 	}
-	
+
 }
