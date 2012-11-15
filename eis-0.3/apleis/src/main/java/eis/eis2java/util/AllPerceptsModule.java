@@ -10,16 +10,24 @@ import java.util.Map;
 import java.util.Set;
 
 import eis.eis2java.annotation.AsPercept;
+import eis.eis2java.handlers.DefaultPerceptHandler;
 import eis.exceptions.EntityException;
 import eis.exceptions.PerceiveException;
 
 /**
- * Module that prepares a batch of percepts. Percepts are gathered based on
- * {@link AsPercept} annotations.
+ * A module that prepares a batch of percepts. Percepts are gathered based on
+ * {@link AsPercept} annotations. A batch can be collected using
+ * {@link AllPerceptsModule#getAllPercepts()}.
  * 
- * A batch can be collected using {@link AllPerceptsModule#getAllPercepts()}.
+ * This class simplifies the implementation of the {@link AllPerceptsProvider}
+ * by providing the functionality normally provided by the
+ * {@link DefaultPerceptHandler}.
+ * 
+ * Whenever the agent is ready to provide a new batch of percepts the agent
+ * should call {@link #updatePercepts}.
  * 
  * @author mpkorstanje
+ * 
  * 
  */
 public class AllPerceptsModule {

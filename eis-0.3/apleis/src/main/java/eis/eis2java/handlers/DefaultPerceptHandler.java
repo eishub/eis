@@ -14,6 +14,14 @@ import eis.exceptions.EntityException;
 import eis.exceptions.PerceiveException;
 import eis.iilang.Percept;
 
+/**
+ * Default {@link PerceptHandler} for EIS2Java. When called the
+ * DefaultPercepthandler will call all percept methods on the agent and return
+ * and translate their results.
+ * 
+ * @author mpkorstanje
+ * 
+ */
 public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 
 	/** Collection of methods on the entity */

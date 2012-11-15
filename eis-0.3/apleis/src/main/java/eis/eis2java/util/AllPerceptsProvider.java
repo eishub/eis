@@ -4,15 +4,19 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import eis.eis2java.annotation.AsPercept;
+import eis.eis2java.handlers.AllPerceptPerceptHandler;
 import eis.exceptions.EntityException;
 import eis.exceptions.PerceiveException;
 
 /**
- * Interface for agents that can not provide percepts one at a time. These
- * objects agents prepare a batch of percepts ahead of time by analyzing their
- * own annotations.
+ * Interface for agents that use the {@link AllPerceptPerceptHandler}.
+ * 
+ * This implementation can be greatly simplified by using the
+ * {@link AllPerceptsModule} in the agent. This module will use the
+ * {@link AsPercept} annotations to gather percepts.
  * 
  * @author mpkorstanje
+ * 
  * 
  */
 public interface AllPerceptsProvider {

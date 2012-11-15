@@ -14,6 +14,14 @@ import eis.iilang.Action;
 import eis.iilang.Parameter;
 import eis.iilang.Percept;
 
+/**
+ * Default implementation of EIS2Java action handling. When an action is called,
+ * the handler will call the associated action method on the agent.
+ * 
+ * @author mpkorstanje
+ * 
+ */
+
 public class DefaultActionHandler extends ActionHandler {
 
 	protected final Map<String, Method> actionMethods;

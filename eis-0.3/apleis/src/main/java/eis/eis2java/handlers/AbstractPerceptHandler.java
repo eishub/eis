@@ -17,6 +17,13 @@ import eis.iilang.Function;
 import eis.iilang.Parameter;
 import eis.iilang.Percept;
 
+/**
+ * Abstract handler for percepts. Provides access to the entity, the translation
+ * and unpacking phases of EIS2java.
+ * 
+ * @author mpkorstanje
+ * 
+ */
 public abstract class AbstractPerceptHandler extends PerceptHandler {
 
 	/**

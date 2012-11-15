@@ -53,6 +53,22 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 				new DefaultPerceptHandler(entity));
 	}
 
+	/**
+	 * Couples a name to an entity and parses it's annotations for percepts and
+	 * actions using the specified handlers.
+	 * 
+	 * @param name
+	 *            The name of the entity.
+	 * @param entity
+	 *            The entity itself.
+	 * @param actionHandler
+	 *            the associated action handler.
+	 * 
+	 * @param perceptHandler
+	 *            the associated percept handler.
+	 * @throws EntityException
+	 *             if the entity could not be added.
+	 */
 	public final <T> void registerEntity(String name, T entity,
 			ActionHandler actionHandler, PerceptHandler perceptHandler)
 			throws EntityException {
@@ -82,6 +98,25 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 				new DefaultActionHandler(entity), new DefaultPerceptHandler(
 						entity));
 	}
+
+	/**
+	 * Couples a name to an entity and parses it's annotations for percepts and
+	 * actions using the specified handlers.
+	 * 
+	 * @param name
+	 *            The name of the entity.
+	 * @param type
+	 *            The type of entity
+	 * @param entity
+	 *            The entity itself.
+	 * @param actionHandler
+	 *            the associated action handler.
+	 * 
+	 * @param perceptHandler
+	 *            the associated percept handler.
+	 * @throws EntityException
+	 *             if the entity could not be added.
+	 */
 
 	public final <T> void registerEntity(String name, String type, T entity,
 			ActionHandler actionHandler, PerceptHandler perceptHandler)

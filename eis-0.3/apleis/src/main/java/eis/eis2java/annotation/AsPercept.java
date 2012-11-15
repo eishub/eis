@@ -7,8 +7,10 @@ import java.lang.annotation.Target;
 import java.util.Collection;
 
 import eis.eis2java.environment.AbstractEnvironment;
+import eis.eis2java.handlers.DefaultPerceptHandler;
 import eis.eis2java.translation.Filter;
 import eis.eis2java.translation.Java2Parameter;
+import eis.eis2java.util.AllPerceptsModule;
 import eis.iilang.Percept;
 
 /**
@@ -89,5 +91,13 @@ public @interface AsPercept {
 
 	Filter.Type filter() default Filter.Type.ALWAYS;
 
+	/**
+	 * If defined as true the method returns a list of events that have occurred
+	 * since its last invocation. This flag is used by {@link AllPerceptsModule}
+	 * to ensure that all events on each update are stored passed on to the
+	 * environment as a batch. This setting has no effect on the
+	 * {@link DefaultPerceptHandler}.
+	 * 
+	 */
 	boolean event() default false;
 }

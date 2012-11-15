@@ -44,7 +44,8 @@ public class EIS2JavaUtil {
 	}
 
 	/**
-	 * Processes all annotations for the given class.
+	 * Processes all annotations for the given class. The annotations are
+	 * provided as map action names and methods.
 	 * 
 	 * @return processed annotations
 	 * 
@@ -85,12 +86,15 @@ public class EIS2JavaUtil {
 	}
 
 	/**
-	 * Returns the name of the action method used for storage. The name given in
-	 * the {@link AsAction#name()} and the number of parameters are used as an
-	 * identifier.
+	 * Returns the name of the action method as name/number. The name given in
+	 * the {@link AsAction#name()}. The number is the number of parameters.
+	 * 
+	 * Action names can be used to uniquely identify the action.
 	 * 
 	 * @param action
 	 *            The method to get the name of.
+	 * @return the name/number of the action or null when the method does not
+	 *         have the AsAction annotation.
 	 */
 	public static String getNameOfAction(Method method) {
 		AsAction annotation = method.getAnnotation(AsAction.class);
@@ -102,6 +106,16 @@ public class EIS2JavaUtil {
 		return annotation.name() + "/" + method.getParameterTypes().length;
 	}
 
+	/**
+	 * Returns the name of the percept method. The name is given in the
+	 * {@link AsPercept#name()}.
+	 * 
+	 * Percept names can not be used to uniquely identify percepts.
+	 * 
+	 * @param method
+	 * @return the name of the percept or null when the method does not have the
+	 *         AsPercept annotation.
+	 */
 	public static String getNameOfPercept(Method method) {
 		AsPercept annotation = method.getAnnotation(AsPercept.class);
 		if (annotation == null) {
