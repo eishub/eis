@@ -11,3 +11,8 @@ eis0.2-interfaceguide.pdf: is an tutorial on how to create an environment-
 interface for your environment.
 
 You will also find the javadoc of the implementation here.
+
+Short explanation from Rien:
+1. Maak een agent zoals met EIS2Java.
+2. Voeg AllPerceptsModule toe aan agent en zorg dat updatePercepts met enige regelmaat aangeroepen word.
+3. Registreer de agent samen met de AllPerceptsPerceptHandler.
