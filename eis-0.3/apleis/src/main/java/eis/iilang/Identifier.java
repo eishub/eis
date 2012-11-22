@@ -10,9 +10,12 @@ package eis.iilang;
  * @author tristanbehrens
  * 
  */
-@SuppressWarnings("serial")
 public class Identifier extends Parameter {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2932464954431024965L;
 	/** The identifier itself. */
 	private String value = null;
 

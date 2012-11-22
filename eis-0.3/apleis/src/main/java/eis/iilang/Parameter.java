@@ -7,8 +7,12 @@ package eis.iilang;
  * @author tristanbehrens
  * 
  */
-@SuppressWarnings("serial")
 public abstract class Parameter extends IILElement {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5689680197270823728L;
 
 	abstract public boolean equals(Object obj);
 

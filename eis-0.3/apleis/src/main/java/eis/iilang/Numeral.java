@@ -6,9 +6,12 @@ package eis.iilang;
  * @author tristanbehrens
  * 
  */
-@SuppressWarnings("serial")
 public class Numeral extends Parameter {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7361584275569246985L;
 	/** The value of the numner. */
 	private Number value;
 

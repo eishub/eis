@@ -51,6 +51,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 		Serializable {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3728998641924854414L;
+
+	/**
 	 * This is a list of registered agents.
 	 * <p/>
 	 * Only registered agents can act and be associated with entities.
