@@ -14,6 +14,13 @@ import eis.exceptions.EntityException;
 import eis.exceptions.PerceiveException;
 import eis.iilang.Percept;
 
+/**
+ * Generic test procedure for percept handlers (
+ * {@link AllPerceptPerceptHandler} and {@link DefaultPerceptHandler}).
+ * 
+ * @author Lennard de Rijk
+ * 
+ */
 public abstract class PerceptHandlerTest {
 
 	protected PerceptHandler handler;
@@ -47,6 +54,9 @@ public abstract class PerceptHandlerTest {
 		assertTrue(percepts.containsAll(entity.getMultipleAlways()));
 		assertTrue(percepts.containsAll(entity.getMultipleOnChange()));
 
+		assertTrue(percepts.contains(entity.getMultiArgs()));
+		assertTrue(percepts.containsAll(entity.getMultipleMultiArgs()));
+
 		percepts = handler.getAllPercepts();
 
 		assertTrue(percepts.contains(entity.getAlways()));
@@ -57,7 +67,8 @@ public abstract class PerceptHandlerTest {
 		assertTrue(percepts.containsAll(entity.getOnChangedNegation()));
 		assertTrue(percepts.containsAll(entity.getMultipleAlways()));
 		assertTrue(percepts.containsAll(entity.getMultipleOnChange()));
+		assertTrue(percepts.contains(entity.getMultiArgs()));
+		assertTrue(percepts.containsAll(entity.getMultipleMultiArgs()));
 
 	}
-
 }

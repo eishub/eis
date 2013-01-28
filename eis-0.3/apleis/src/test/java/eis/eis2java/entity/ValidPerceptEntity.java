@@ -15,8 +15,17 @@ import eis.exceptions.EntityException;
 import eis.exceptions.PerceiveException;
 import eis.iilang.Function;
 import eis.iilang.Identifier;
+import eis.iilang.Numeral;
 import eis.iilang.Percept;
 
+/**
+ * Entity for testing. It has the normal @AsPercept annotated functions, but
+ * also for each @AsPercept(X) an associated getX() function that returns what
+ * the percept SHOULD return after calling.
+ * 
+ * @author Lennard de Rijk?
+ * 
+ */
 public class ValidPerceptEntity implements AllPerceptsProvider {
 
 	private AllPerceptsModule percepts;
@@ -125,6 +134,53 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 			list.add(new Percept("multipleOnChange", new Identifier("Three")));
 
 		return list;
+	}
+
+	/**
+	 * a single multi-argumented percept
+	 * 
+	 * @return
+	 */
+	@AsPercept(name = "multiArgs", multipleArguments = true, filter = Type.ALWAYS)
+	public List<Integer> multiArgs() {
+		ArrayList<Integer> list = new ArrayList<Integer>(2);
+		list.add(1);
+		list.add(2);
+		return list;
+	}
+
+	public Percept getMultiArgs() {
+		return new Percept("multiArgs", new Numeral(1), new Numeral(2));
+
+	}
+
+	/**
+	 * combined multiple Arguments and MultiplePercepts
+	 * 
+	 * @return
+	 */
+	@AsPercept(name = "multipleMultiArgs", multipleArguments = true, multiplePercepts = true, filter = Type.ALWAYS)
+	public List<List<Integer>> multipleMultiArgs() {
+		List<List<Integer>> list = new ArrayList<List<Integer>>();
+		List<Integer> list1 = new ArrayList<Integer>();
+		list1.add(1);
+		list1.add(2);
+		List<Integer> list2 = new ArrayList<Integer>();
+		list2.add(3);
+		list2.add(4);
+		list.add(list1);
+		list.add(list2);
+		return list;
+	}
+
+	public List<Percept> getMultipleMultiArgs() {
+		return Arrays
+				.asList(new Percept[] {
+						new Percept("multipleMultiArgs", new Numeral(1),
+								new Numeral(2)),
+						new Percept("multipleMultiArgs", new Numeral(3),
+								new Numeral(4)) });
+
 	}
 
 	public List<Percept> getMultipleOnChanged() {

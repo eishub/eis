@@ -21,12 +21,24 @@ import eis.iilang.Percept;
  * {@link @AsPercept} tags have four parameters:
  * <ol>
  * <li>name: the name of the percept to be returned
- * <li>multiplePercepts: true when the percept function returns a List of List
- * of (translatable) Objects;
+ * <li>multiplePercepts: true when the percept function returns a List of
+ * (translatable) Objects, and each of the elements in the list should give
+ * another percept. E.g. "on" returning [1,2] gives the percepts {on(1), on(2)}.
+ * <li>multipleArguments: true when the percept function returns a List of
+ * (translatable) objects, and each of the elements of the list should be put as
+ * another argument in the percept. E.g., "on" returning [1,2] gives the percept
+ * on(1,2).
  * <li>filter. One of Filter.Type.ALWAYS, ONCE, ONCHANGE or ONCHANGENEG.
  * <li>event. True when the percepts are event based and the results from all
  * calls to this method should be passed to the agent.
  * </ol>
+ * 
+ * <p>
+ * It is possible to combine multiplePercepts and multipleArguments, in which
+ * case the function should return a list of lists. The outside list is used for
+ * the multiplePercepts, the inner for the multipleArguments. E.g., "on"
+ * returning [[1,2],[3,4,5]] then results in the percepts {on(1,2),on(3,4,5)}.
+ * </p>
  * 
  * The filter type determines the way percepts are filtered before sending out
  * through EIS:
@@ -89,6 +101,18 @@ public @interface AsPercept {
 	 */
 	boolean multiplePercepts() default false;
 
+	/**
+	 * if defined as true the return value of the annotated function must be of
+	 * type {@link Collection}. The return value will be used to generate
+	 * multiple arguments for the percept. If {@link #multiplePercepts()} is
+	 * also true, {@link #multiplePercepts()} takes the outer {@link Collection}
+	 * , and each element inside that collection is a {@link Collection} for
+	 * multipleActions.
+	 * 
+	 * @return
+	 */
+	boolean multipleArguments() default false;
+
 	Filter.Type filter() default Filter.Type.ALWAYS;
 
 	/**
@@ -100,4 +124,5 @@ public @interface AsPercept {
 	 * 
 	 */
 	boolean event() default false;
+
 }

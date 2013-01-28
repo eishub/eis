@@ -4,6 +4,12 @@ import eis.eis2java.entity.ValidPerceptEntity;
 import eis.eis2java.util.AllPerceptsProvider;
 import eis.exceptions.EntityException;
 
+/**
+ * Apply the test getAllPercept test to the {@link AllPerceptPerceptHandler}.
+ * 
+ * @author Lennard de Rijk
+ * 
+ */
 public class AllPerceptPerceptHandlerTest extends PerceptHandlerTest {
 
 	@Override

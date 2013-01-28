@@ -86,6 +86,17 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	}
 
 	/**
+	 * get the ith parameter of the list.
+	 * 
+	 * @param i
+	 *            element number, starting at 0.
+	 * @return ith parameter in the list.
+	 */
+	public Parameter get(int i) {
+		return list.get(i);
+	}
+
+	/**
 	 * Checks for emptyness.
 	 * 
 	 * @return true if empty, false otherwise

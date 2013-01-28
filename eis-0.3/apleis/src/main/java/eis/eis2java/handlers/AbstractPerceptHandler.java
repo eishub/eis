@@ -15,6 +15,7 @@ import eis.eis2java.translation.Translator;
 import eis.exceptions.PerceiveException;
 import eis.iilang.Function;
 import eis.iilang.Parameter;
+import eis.iilang.ParameterList;
 import eis.iilang.Percept;
 
 /**
@@ -50,8 +51,9 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 * @param method
 	 *            the method which produced the percepts
 	 * @param perceptObjects
-	 *            the generated percept objects.
-	 * @return
+	 *            the java percept objects that need to be translated into
+	 *            {@link Percept}s. Each object is converted into one percept.
+	 * @return list of {@link Percept} objects.
 	 * @throws PerceiveException
 	 */
 	protected final List<Percept> translatePercepts(Method method,
@@ -105,6 +107,9 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 			try {
 				parameters = Translator.getInstance().translate2Parameter(
 						javaObject);
+				if (annotation.multipleArguments()) {
+					parameters = extractMultipleParameters(parameters);
+				}
 			} catch (TranslationException e) {
 				throw new PerceiveException("Unable to translate percept "
 						+ perceptName, e);
@@ -118,6 +123,9 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 			try {
 				parameters = Translator.getInstance().translate2Parameter(
 						javaObject);
+				if (annotation.multipleArguments()) {
+					parameters = extractMultipleParameters(parameters);
+				}
 			} catch (TranslationException e) {
 				throw new PerceiveException("Unable to translate percept "
 						+ perceptName, e);
@@ -131,9 +139,38 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	}
 
 	/**
+	 * Handle multiple arguments. The parameter list must be a list containing
+	 * just one {@link ParameterList}. Returns a list with all elements in that
+	 * {@link ParameterList}.
+	 * 
+	 * @param parameters
+	 * @return
+	 * @throws PerceiveException
+	 *             if parameters is not the right format.
+	 */
+	private Parameter[] extractMultipleParameters(Parameter[] parameters)
+			throws PerceiveException {
+		if (parameters.length == 1 && parameters[0] instanceof ParameterList) {
+			// special case where the top set is the set of arguments
+			// for function
+			ParameterList params = (ParameterList) parameters[0];
+			parameters = new Parameter[params.size()];
+			for (int i = 0; i < params.size(); i++) {
+				parameters[i] = params.get(i);
+			}
+		} else {
+			throw new PerceiveException(
+					"multipleArguments parameter is set and therefore expecting a set but got "
+							+ parameters);
+		}
+		return parameters;
+	}
+
+	/**
 	 * Depending on {@link AsPercept#multiplePercepts()} a perceptObject is
 	 * either a collection that contains multiple percept objects or a single
 	 * percept. This method unpacks either case into a list of percept objects.
+	 * The {@link AsPercept#multipleArguments()} aspect is not handled here.
 	 * 
 	 * @param method
 	 *            that generated the percept object
@@ -147,8 +184,8 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 		AsPercept annotation = method.getAnnotation(AsPercept.class);
 		String perceptName = annotation.name();
 
-		// This is percept does not provide multiples.
 		if (!annotation.multiplePercepts()) {
+			// This is percept does not provide multiples.
 			List<Object> unpacked = new ArrayList<Object>(1);
 			if (perceptObject != null) {
 				unpacked.add(perceptObject);
