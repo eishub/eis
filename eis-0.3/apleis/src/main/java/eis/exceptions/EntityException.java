@@ -5,6 +5,7 @@ package eis.exceptions;
  * add or remove an entity.
  * 
  * @author tristanbehrens
+ * @modified W.Pasman 14mar13 new constructor allowing exception chaining.
  * 
  */
 public class EntityException extends EnvironmentInterfaceException {
@@ -16,6 +17,10 @@ public class EntityException extends EnvironmentInterfaceException {
 
 	public EntityException(String string) {
 		super(string);
+	}
+
+	public EntityException(String string, Exception cause) {
+		super(string, cause);
 	}
 
 }

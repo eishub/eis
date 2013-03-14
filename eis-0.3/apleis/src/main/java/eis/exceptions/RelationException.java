@@ -5,6 +5,7 @@ package eis.exceptions;
  * agents-entities-relation has failed.
  * 
  * @author tristanbehrens
+ * @modified W.Pasman 14mar13 new constructor allowing exception chaining.
  * 
  */
 public class RelationException extends EnvironmentInterfaceException {
@@ -16,6 +17,10 @@ public class RelationException extends EnvironmentInterfaceException {
 
 	public RelationException(String string) {
 		super(string);
+	}
+
+	public RelationException(String string, Exception cause) {
+		super(string, cause);
 	}
 
 }

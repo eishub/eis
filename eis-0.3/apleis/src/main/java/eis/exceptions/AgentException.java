@@ -5,6 +5,7 @@ package eis.exceptions;
  * failed.
  * 
  * @author tristanbehrens
+ * @modified W.Pasman 14mar13 new constructor allowing exception chaining.
  * 
  */
 public class AgentException extends EnvironmentInterfaceException {
@@ -18,4 +19,7 @@ public class AgentException extends EnvironmentInterfaceException {
 		super(string);
 	}
 
+	public AgentException(String string, Exception cause) {
+		super(string, cause);
+	}
 }

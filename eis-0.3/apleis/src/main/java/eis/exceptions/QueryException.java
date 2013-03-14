@@ -5,6 +5,7 @@ package eis.exceptions;
  * 
  * @author tristanbehrens
  * @author W.Pasman 16feb2012 added constructor for convenience
+ * @modified W.Pasman 14mar13 new constructor allowing exception chaining.
  * 
  */
 public class QueryException extends Exception {
@@ -16,4 +17,9 @@ public class QueryException extends Exception {
 	public QueryException(String string) {
 		super(string);
 	}
+
+	public QueryException(String string, Exception cause) {
+		super(string, cause);
+	}
+
 }
