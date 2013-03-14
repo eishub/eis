@@ -5,24 +5,23 @@ package eis.exceptions;
  * percepts has failed.
  * 
  * @author tristanbehrens
+ * @modified W.Pasman 14mar13 made unchecked so we can always throw this in
+ *           exceptional cases.
  * 
  */
-public class NoEnvironmentException extends EnvironmentInterfaceException {
+public class NoEnvironmentException extends RuntimeException {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6014167691338765953L;
+	private static final long serialVersionUID = 7234401388974172460L;
 
 	public NoEnvironmentException(String string) {
 		super(string);
 	}
 
-	public NoEnvironmentException(String message, Exception cause) {
-		super(message);
-
-		this.initCause(cause);
-
+	public NoEnvironmentException(String string, Exception cause) {
+		super(string, cause);
 	}
 
 }
