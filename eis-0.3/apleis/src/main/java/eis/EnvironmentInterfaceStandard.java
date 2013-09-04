@@ -269,6 +269,14 @@ public interface EnvironmentInterfaceStandard {
 
 	/**
 	 * Resets the environment(-interface) with a set of key-value-pairs.
+	 * Resetting the environment means the following
+	 * <ul>
+	 * <li>Reset environment to its initial state
+	 * <li>Reset all entities to their initial state
+	 * <li>Prepare to send the entitiess the initial percept
+	 * <li>keep all agents attached, do not remove entities, create new ones
+	 * etc.
+	 * </ul>
 	 * 
 	 * @param parameters
 	 * @throws ManagementException
