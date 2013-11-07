@@ -31,6 +31,13 @@ import eis.iilang.Percept;
  * <li>loading environment-interfaces from jar-files.</li>
  * </ul>
  * 
+ * <h1>Thread Safety</h1>
+ * <p>
+ * This interface does not pose any requirements on thread safety. Therefore it
+ * can not be assumed that an environment behind this interface is thread safe.
+ * 
+ * </p>
+ * 
  * @author tristanbehrens
  * 
  */
