@@ -769,7 +769,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 		// fail if the environment does not run
 		if (state != EnvironmentState.RUNNING)
-			throw new PerceiveException("Environment does not run");
+			throw new PerceiveException("Environment does not run but is "
+					+ state);
 
 		// fail if ther agent is not registered
 		if (registeredAgents.contains(agent) == false)
