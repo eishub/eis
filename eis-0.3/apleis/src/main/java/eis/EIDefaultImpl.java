@@ -19,6 +19,7 @@ import eis.exceptions.EnvironmentInterfaceException;
 import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
+import eis.exceptions.QueryException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
 import eis.iilang.EnvironmentState;
@@ -1217,10 +1218,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see eis.EnvironmentInterfaceStandard#queryProperty()
 	 */
 	@Override
-	public String queryProperty(String property) {
-
+	public String queryProperty(String property) throws QueryException {
 		return null;
-
 	}
 
 	/*
