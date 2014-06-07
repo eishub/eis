@@ -4,7 +4,7 @@
 	<groupId>apleis</groupId>
 	<artifactId>eis</artifactId>
 	<version>0.3</version>
-	<url>http://sourceforge.net/projects/apleis/</url>
+	<url>http://github.com/eishub/eis/</url>
 
 	<licenses>
 		<license>
@@ -21,7 +21,12 @@
 			<organization>TU Delft</organization>
 			<organizationUrl>http://www.tudelft.nl</organizationUrl>
 		</developer>
-
+		<developer>
+			<name>W.Pasman</name>
+			<email>W.Pasman@TUDelft.nl</email>
+			<organization>TU Delft</organization>
+			<organizationUrl>http://www.tudelft.nl</organizationUrl>
+		</developer>
 	</developers>
 
 
@@ -115,13 +120,6 @@
 			</extension>
 		</extensions>
 	</build>
-
-	<distributionManagement>
-		<repository>
-			<id>multiagentcontest.org</id>
-			<url>scpexe://vz102.in.tu-clausthal.de:222/var/www/html/joomla/maven</url>
-		</repository>
-	</distributionManagement>
 
 
 
