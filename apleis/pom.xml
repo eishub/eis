@@ -102,10 +102,18 @@
 
 		</plugins>
 
-		<!--extensions> <extension> <groupId>org.apache.maven.wagon</groupId> <artifactId>wagon-ssh-external</artifactId> 
-			<version>1.0-beta-6</version> </extension> <extension> <groupId>org.apache.maven.wagon</groupId> 
-			<artifactId>wagon-ftp</artifactId> <version>1.0-beta-6</version> </extension> 
-			</extensions -->
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
 	</build>
 
 	<distributionManagement>
