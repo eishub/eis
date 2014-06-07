@@ -108,9 +108,12 @@
 			</extensions -->
 	</build>
 
-	<!--distributionManagement> <repository> <id>multiagentcontest.org</id> 
-		<url>scpexe://vz102.in.tu-clausthal.de:222/var/www/html/joomla/maven</url> 
-		</repository> </distributionManagement -->
+	<distributionManagement>
+		<repository>
+			<id>multiagentcontest.org</id>
+			<url>scpexe://vz102.in.tu-clausthal.de:222/var/www/html/joomla/maven</url>
+		</repository>
+	</distributionManagement>
 
 
 
