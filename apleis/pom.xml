@@ -129,6 +129,7 @@
             <configuration>
                 <message>Maven artifacts for ${project.version}</message>
                 <noJekyll>true</noJekyll>
+                <merge>true</merge>
                 <outputDirectory>${project.build.directory}/releases</outputDirectory>
                 <branch>refs/heads/releases</branch>
                 <includes><include>**/*</include></includes>
