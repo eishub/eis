@@ -28,12 +28,9 @@
 		</developer>
 	</developers>
 
-  <scm>
-        <url>https://github.com/MartinRogalla/eis</url>
-        <connection>scm:git:https://github.com/MartinRogalla/eis.git</connection>
-        <developerConnection>scm:git:git@github.com:MartinRogalla/eis.git</developerConnection>
-        <tag>HEAD</tag>
-  </scm>
+	<scm>
+    <connection>scm:git:git://github.com/MartinRogalla/eis.git</connection>
+	</scm>
 
   <properties>
       <!-- github server corresponds to entry in ~/.m2/settings.xml -->
