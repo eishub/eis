@@ -55,9 +55,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-publish-plugin</artifactId>
         <version>1.1</version>
-        <configuration>
-          <scmBranch>releases</scmBranch>
-        </configuration>
       </plugin>
       <plugin>
 				<groupId>org.codehaus.mojo</groupId>
