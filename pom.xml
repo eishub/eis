@@ -13,12 +13,6 @@
     <module>eiscarriage</module>
   </modules>
 
-  <scm>
-    <connection>scm:svn:svn://vz103.in.tu-clausthal.de/massim/</connection>
-    <developerConnection>scm:svn:svn://vz103.in.tu-clausthal.de/massim/</developerConnection>
-    <url>http://multiagentcontest.org/</url>
-  </scm>
-
   <build>
     <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
     <plugins>
