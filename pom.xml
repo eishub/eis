@@ -7,6 +7,10 @@
   <artifactId>eispackage</artifactId>
   <version>0.3</version>
   <packaging>pom</packaging>
+  
+  <scm>
+	<connection>scm:git:git://github.com/eishub/eis.git</connection>
+  </scm>
 
   <modules>
     <module>apleis</module>
@@ -20,18 +24,20 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>buildnumber-maven-plugin</artifactId>
         <version>1.3</version>
+        <configuration>
+          <format>{0,date,yyyy-MM-dd}</format>
+          <items>
+            <item>timestamp</item>
+          </items>
+          <shortRevisionLength>5</shortRevisionLength>
+        </configuration>
         <executions>
           <execution>
-            <phase>validate</phase>
             <goals>
               <goal>create</goal>
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <doCheck>true</doCheck>
-          <doUpdate>true</doUpdate>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -50,5 +56,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>
