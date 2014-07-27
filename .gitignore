@@ -1,1 +1,10 @@
 /target
+.project
+/apleis/.classpath
+/apleis/.project
+/apleis/.settings
+/apleis/bin
+/apleis/target
+/eiscarriage/.classpath
+/eiscarriage/.settings
+/eiscarriage/target
