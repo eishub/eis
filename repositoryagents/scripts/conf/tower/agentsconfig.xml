@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<javaAgentsConfig>
-  <environment jar="towerenv.jar">
-  </environment>
-  <agents>
-    <agent name="toweragent" entity="car0" class="apleis.repositoryagents.tower.TowerAgent" team="A"/>
-  </agents>
-</javaAgentsConfig>

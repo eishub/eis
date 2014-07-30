@@ -22,14 +22,6 @@
         <include>*.jar</include>
       </includes>
     </fileSet>
-    
-    <fileSet>
-      <directory>eiscarriage/target</directory>
-      <outputDirectory>interfaces</outputDirectory>
-      <includes>
-        <include>*.jar</include>
-      </includes>
-    </fileSet>
   
   </fileSets>
   
