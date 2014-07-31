@@ -1,4 +1,8 @@
-VERSION
+# Version 0.4
+- Added eis2java package that supports translating actions and percepts from and to EIS to Java.
+- Added `reset` method to interface.
+
+# Version 0.3
 - added static factory methods to EnvironmentCommand and EnvironmentEvent
 - EILoader.fromJarFile throws an IOException that might contain a deeper exception
 - replaced specific classes for collections with the generic one
@@ -7,7 +11,7 @@ VERSION
 - added a class for truth-values to the IIL
 - introduced visitors for the IIL (toXML and toProlog are now deprecated)
 
-VERSION 0.2-21January2010
+# Version 0.2-21 January 2010
 
 - made static fields of ActException final
 - EIDefaultImpl if an action...-method returns null, null is not added to the collection that is returned
@@ -18,7 +22,7 @@ VERSION 0.2-21January2010
 - added a connector to the agent contest 2007 scenario
 - fixed the empty-parameter-list bug
 
-VERSION 0.2-5January2010
+# Version 0.2-5 January 2010
 
 - made getAssociatedEntities and getAssociatedAgents in EnvironmentInterfaceStandard public.
 - getAllPerceptsFromEntity throws exceptions now.
@@ -31,7 +35,3 @@ VERSION 0.2-5January2010
 - added getType to EnvironmentInterfaceStandard; implemented getType and setType in EIDefaultImpl
 - added timestamp and source to DataContainer
 - added type to ActionException
-
-VERSION 0.1
-
-First release.
