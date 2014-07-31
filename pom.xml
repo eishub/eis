@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>eishub</groupId>
   <artifactId>eispackage</artifactId>
-  <version>0.3</version>
+  <version>0.4</version>
   <packaging>pom</packaging>
   
   <scm>
@@ -38,6 +38,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.4</version>
