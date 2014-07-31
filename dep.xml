@@ -8,7 +8,7 @@
   <fileSets>
 
     <fileSet>
-      <directory>apleis/doc</directory>
+      <directory>eis/doc</directory>
       <outputDirectory>doc</outputDirectory>
       <includes>
         <include>eis0.3-guide.pdf</include>
@@ -16,7 +16,7 @@
     </fileSet>
 
     <fileSet>
-      <directory>apleis/target</directory>
+      <directory>eis/target</directory>
       <outputDirectory>bin</outputDirectory>
       <includes>
         <include>*.jar</include>

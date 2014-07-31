@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>apleis</groupId>
+  <groupId>eishub</groupId>
   <artifactId>eispackage</artifactId>
   <version>0.3</version>
   <packaging>pom</packaging>
@@ -13,7 +13,7 @@
   </scm>
 
   <modules>
-    <module>apleis</module>
+    <module>eis</module>
   </modules>
 
   <build>
