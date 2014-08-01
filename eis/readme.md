@@ -4,7 +4,7 @@ The environment interface framework provides support for connecting agents to an
 
 ## Releases
 
-Releases of the EIS interface can be found [here](https://github.com/eishub/eis/releases). You can also find releases in [eishub's maven repository](https://github.com/eishub/mvn-repo/tree/master/apleis).
+Releases of the EIS interface can be found [here](https://github.com/eishub/eis/releases). You can also find releases in [eishub's maven repository](https://github.com/eishub/mvn-repo/tree/master/eis).
 
 ## Building
 
