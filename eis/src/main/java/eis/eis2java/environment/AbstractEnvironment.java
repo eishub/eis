@@ -188,6 +188,6 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 
 	@Override
 	public final String requiredVersion() {
-		return "0.3";
+		return "0.4";
 	}
 }

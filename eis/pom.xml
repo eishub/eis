@@ -118,9 +118,9 @@
 					<noJekyll>true</noJekyll>
 					<merge>true</merge>
 					<outputDirectory>${project.build.directory}/releases</outputDirectory>
-					<branch>refs/heads/releases</branch>
+					<branch>refs/heads/master</branch>
 					<includes><include>**/*</include></includes>
-					<repositoryName>eis</repositoryName>
+					<repositoryName>mvn-repo</repositoryName>
 					<repositoryOwner>eishub</repositoryOwner>
 				</configuration>
 				<executions>
