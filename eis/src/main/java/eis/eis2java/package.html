@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+</head>
+<body bgcolor="white">
+
+This package puts a layer on EIS that facilitates translating between eis.iilang and java objectgs.
+Also it provides an annotation mechanism for percepts and actions, 
+and introduces an AbstractEnvironment base implementation that can handle these annotations.
+
+eis2java adds an abstraction mechanism on top of the basic eis.iilang structure. 
+In contrast with the EnvironmentInterfaceStandard, 
+eis2java provides java-typed objects in its interface. You saw this already where we wrote as action moveDisc(int disc, int to) rather than moveDisk(Identifier disk, Identifier to).
+
+<br>
+To give an example:
+<br>
+<ul>
+<li>    on the EIS interface layer we can have a percept on('a','b') as an eis.iilang object. 'on' is an eis.iilang.Function and the Parameters are eis.iilang.identifiers 'a' and 'b'.
+<li>On the eis2java layer we could have a java object of class 'on' with two class fields, say String below; String ontop; The @AsPercept can directly return such an 'on(a,b)' java class object.
+</ul>
+<br>
+To pass objects back and forth through eis2java, percept objects have to be translated into eis.iilang.Parameter objects. When percepts go from EIS to the Agent, we have to translate an object to parameter. When an action goes from an Agent to EIS we have to translate from Parameter to Object.
+<br>
+eis2java determines automatically which translators are needed. To do this, it uses introspection to determine the parameters required for the @AsAction function, and it can determine directly from the objects coming out of the @AsPercept functions.
+<br>
+Translation between percept and object is done by Java2Parameter and Parameter2Java. A translator-factory is available to manage translations: eis2java.translation.Translator.
+<br>
+A number of translators are provided by EIS: Boolean, Char, Double, Float, integer, Long, Number, Short, String.
+<br>
+If you want to use other percept objects, you need to do a few things
+<br>
+<ol>
+<li>    create a class T representing your percept object
+<li>    this class must properly implement equals. This is because the percept filter (see above) uses this directly on percepts objects to check percept changes.
+<li>    create translators: a Java2Parameter and a Parameter2Java that translates between eis.iilang objects and objects of type T
+<li>    register these translators with the eis2java.translation.Translator. Usually this is done in a static code block in your Entity.
+</ol>
+</body>
+</html>
