@@ -552,6 +552,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 		HashSet<String> ens = agentsToEntities.get(agent);
 
+		if (ens == null) {
+			return;
+		}
+
 		LinkedList<String> agents = new LinkedList<String>();
 		agents.add(agent);
 
