@@ -550,11 +550,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 			throw new RelationException("Agent \"" + agent
 					+ "\" does not exist!");
 
-		HashSet<String> ens = agentsToEntities.get(agent);
-
-		if (ens == null) {
+		if (!agentsToEntities.containsKey(agent)) {
 			return;
 		}
+		HashSet<String> ens = agentsToEntities.get(agent);
 
 		LinkedList<String> agents = new LinkedList<String>();
 		agents.add(agent);
