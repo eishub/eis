@@ -125,7 +125,7 @@ public class DefaultActionHandler extends ActionHandler {
 		} catch (InvocationTargetException e) {
 			throw new ActException(ActException.FAILURE, "Action "
 					+ action.getName() + " with parameters " + parameters
-					+ " failed to execute", e);
+					+ " failed to execute", e.getTargetException());
 		}
 
 		if (returnValue == null) {

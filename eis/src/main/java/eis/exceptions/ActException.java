@@ -57,7 +57,7 @@ public class ActException extends EnvironmentInterfaceException {
 	 * @param message
 	 * @param cause
 	 */
-	public ActException(String message, Exception cause) {
+	public ActException(String message, Throwable cause) {
 		super(message);
 
 		this.initCause(cause);
@@ -105,7 +105,7 @@ public class ActException extends EnvironmentInterfaceException {
 
 	}
 
-	public ActException(int type, String message, Exception cause) {
+	public ActException(int type, String message, Throwable cause) {
 		super(message);
 
 		setType(type);
