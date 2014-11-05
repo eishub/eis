@@ -158,7 +158,9 @@ public interface EnvironmentInterfaceStandard {
 	void freeAgent(String agent) throws RelationException;
 
 	/**
-	 * Removes a pair from the agents-entities-relation.
+	 * Removes a pair from the agents-entities-relation. This un-associates the
+	 * agent from the entity, and is the reverse of
+	 * {@link #associateEntity(String, String)}.
 	 * 
 	 * @param agent
 	 *            the agent to be freed

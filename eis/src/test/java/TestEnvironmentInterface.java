@@ -2,13 +2,21 @@ import java.util.LinkedList;
 
 import eis.EIDefaultImpl;
 import eis.exceptions.ActException;
+import eis.exceptions.EntityException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.iilang.Action;
 import eis.iilang.Percept;
 
-
-public class TextEnvironmentInterface extends EIDefaultImpl {
+/**
+ * A test environment implementing EIDefaultImpl
+ * 
+ * @author Tristan
+ * @modified W.Pasman 5nov14 added default entity for testing.
+ *
+ */
+@SuppressWarnings("serial")
+public class TestEnvironmentInterface extends EIDefaultImpl {
 
 	@Override
 	protected LinkedList<Percept> getAllPerceptsFromEntity(String entity)
@@ -46,6 +54,10 @@ public class TextEnvironmentInterface extends EIDefaultImpl {
 	public String requiredVersion() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void doAddEntity() throws EntityException {
+		addEntity("entityname", "entity");
 	}
 
 }
