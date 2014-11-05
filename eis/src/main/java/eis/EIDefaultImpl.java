@@ -114,21 +114,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 	}
 
-	/**
-	 * Resets the environment(-interface) with a set of key-value-pairs.
-	 * 
-	 * @param parameters
-	 * @throws ManagementException
-	 *             is thrown either when the initializing is not supported or
-	 *             the parameters are wrong.
-	 */
-	public void reset(Map<String, Parameter> parameters)
-			throws ManagementException {
-
-		state = EnvironmentState.PAUSED;
-
-	}
-
 	/*
 	 * Listener functionality. Attaching, detaching, notifying listeners.
 	 */
@@ -139,6 +124,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see eis.EnvironmentInterfaceStandard#attachEnvironmentListener(eis.
 	 * EnvironmentListener)
 	 */
+	@Override
 	public void attachEnvironmentListener(EnvironmentListener listener) {
 
 		if (environmentListeners.contains(listener) == false)
@@ -152,6 +138,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see eis.EnvironmentInterfaceStandard#detachEnvironmentListener(eis.
 	 * EnvironmentListener)
 	 */
+	@Override
 	public void detachEnvironmentListener(EnvironmentListener listener) {
 
 		if (environmentListeners.contains(listener) == true)
@@ -166,6 +153,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * eis.EnvironmentInterfaceStandard#attachAgentListener(java.lang.String,
 	 * eis.AgentListener)
 	 */
+	@Override
 	public void attachAgentListener(String agent, AgentListener listener) {
 
 		if (registeredAgents.contains(agent) == false)
@@ -189,6 +177,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * eis.EnvironmentInterfaceStandard#detachAgentListener(java.lang.String,
 	 * eis.AgentListener)
 	 */
+	@Override
 	public void detachAgentListener(String agent, AgentListener listener) {
 
 		if (registeredAgents.contains(agent) == false)
@@ -396,6 +385,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * 
 	 * @see eis.EnvironmentInterfaceStandard#registerAgent(java.lang.String)
 	 */
+	@Override
 	public void registerAgent(String agent) throws AgentException {
 
 		if (registeredAgents.contains(agent))
@@ -411,6 +401,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * 
 	 * @see eis.EnvironmentInterfaceStandard#unregisterAgent(java.lang.String)
 	 */
+	@Override
 	public void unregisterAgent(String agent) throws AgentException {
 
 		// fail if agents is not registered
@@ -438,6 +429,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * 
 	 * @see eis.EnvironmentInterfaceStandard#getAgents()
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public LinkedList<String> getAgents() {
 
@@ -450,6 +442,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * 
 	 * @see eis.EnvironmentInterfaceStandard#getEntities()
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public LinkedList<String> getEntities() {
 
@@ -467,6 +460,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see eis.EnvironmentInterfaceStandard#associateEntity(java.lang.String,
 	 * java.lang.String)
 	 */
+	@Override
 	public void associateEntity(String agent, String entity)
 			throws RelationException {
 
@@ -495,6 +489,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * 
 	 * @see eis.EnvironmentInterfaceStandard#freeEntity(java.lang.String)
 	 */
+	@Override
 	public void freeEntity(String entity) throws RelationException,
 			EntityException {
 
@@ -543,6 +538,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * 
 	 * @see eis.EnvironmentInterfaceStandard#freeAgent(java.lang.String)
 	 */
+	@Override
 	public void freeAgent(String agent) throws RelationException {
 
 		// check if exists
@@ -570,6 +566,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see eis.EnvironmentInterfaceStandard#freePair(java.lang.String,
 	 * java.lang.String)
 	 */
+	@Override
 	public void freePair(String agent, String entity) throws RelationException {
 
 		// check if exists
@@ -605,6 +602,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see
 	 * eis.EnvironmentInterfaceStandard#getAssociatedEntities(java.lang.String)
 	 */
+	@Override
 	public HashSet<String> getAssociatedEntities(String agent)
 			throws AgentException {
 
@@ -627,6 +625,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see
 	 * eis.EnvironmentInterfaceStandard#getAssociatedAgents(java.lang.String)
 	 */
+	@Override
 	public HashSet<String> getAssociatedAgents(String entity)
 			throws EntityException {
 
@@ -650,6 +649,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public LinkedList<String> getFreeEntities() {
 		LinkedList<String> free = getEntities();
 		for (String agent : agentsToEntities.keySet()) {
@@ -661,6 +661,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	/*
 	 * Acting/perceiving functionality.
 	 */
+	@Override
 	public final Map<String, Percept> performAction(String agent,
 			Action action, String... entities) throws ActException {
 
@@ -767,6 +768,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see eis.EnvironmentInterfaceStandard#getAllPercepts(java.lang.String,
 	 * java.lang.String[])
 	 */
+	@Override
 	public Map<String, Collection<Percept>> getAllPercepts(String agent,
 			String... entities) throws PerceiveException,
 			NoEnvironmentException {
@@ -899,6 +901,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * 
 	 * @see eis.EnvironmentInterfaceStandard#getType(java.lang.String)
 	 */
+	@Override
 	public String getType(String entity) throws EntityException {
 
 		if (!this.entities.contains(entity))
@@ -1177,6 +1180,22 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 		if (isInitSupported() == false)
 			throw new ManagementException("init is not supported");
 		setState(EnvironmentState.INITIALIZING);
+	}
+
+	/**
+	 * Resets the environment(-interface) with a set of key-value-pairs.
+	 * 
+	 * @param parameters
+	 * @throws ManagementException
+	 *             is thrown either when the initializing is not supported or
+	 *             the parameters are wrong.
+	 */
+	@Override
+	public void reset(Map<String, Parameter> parameters)
+			throws ManagementException {
+
+		state = EnvironmentState.PAUSED;
+
 	}
 
 	/*
