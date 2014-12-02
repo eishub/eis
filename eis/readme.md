@@ -9,3 +9,20 @@ Releases of the EIS interface can be found [here](https://github.com/eishub/eis/
 ## Building
 
 The environment interface project uses [Apache's Maven](http://maven.apache.org). Run "mvn package" to compile classes and generate jar-file.
+
+## Dependency information
+
+```
+<repository>
+ <id>eishub-mvn-repo</id>
+ <url>https://github.com/eishub/mvn-repo/master</url>
+</repository>
+```
+
+```
+<dependency>
+ <groupId>eishub</groupId>
+ <artifactId>eis</artifactId>
+ <version>0.4</version>
+</dependency>
+```
