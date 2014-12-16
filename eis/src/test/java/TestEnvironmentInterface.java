@@ -3,9 +3,11 @@ import java.util.LinkedList;
 import eis.EIDefaultImpl;
 import eis.exceptions.ActException;
 import eis.exceptions.EntityException;
+import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.iilang.Action;
+import eis.iilang.EnvironmentState;
 import eis.iilang.Percept;
 
 /**
@@ -17,6 +19,9 @@ import eis.iilang.Percept;
  */
 @SuppressWarnings("serial")
 public class TestEnvironmentInterface extends EIDefaultImpl {
+	public TestEnvironmentInterface() throws ManagementException {
+		setState(EnvironmentState.PAUSED);
+	}
 
 	@Override
 	protected LinkedList<Percept> getAllPerceptsFromEntity(String entity)

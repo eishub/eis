@@ -7,8 +7,10 @@ import org.junit.Test;
 import eis.eis2java.environment.AbstractEnvironment;
 import eis.exceptions.AgentException;
 import eis.exceptions.EntityException;
+import eis.exceptions.ManagementException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
+import eis.iilang.EnvironmentState;
 
 /**
  * Unit tests for AbstractEnv
@@ -20,6 +22,11 @@ public class AbstractEnvTest {
 
 	@SuppressWarnings("serial")
 	class MyEnv extends AbstractEnvironment {
+
+		public MyEnv() throws ManagementException {
+			setState(EnvironmentState.PAUSED);
+		}
+
 		@Override
 		protected boolean isSupportedByEnvironment(Action action) {
 			return true;
@@ -37,7 +44,7 @@ public class AbstractEnvTest {
 	}
 
 	// @Test disabled until we can fix #42
-	public void testAddEntity() throws EntityException {
+	public void testAddEntity() throws EntityException, ManagementException {
 		MyEnv env = new MyEnv();
 		env.doAddEntity();
 
@@ -47,7 +54,7 @@ public class AbstractEnvTest {
 
 	@Test
 	public void testFreePair() throws EntityException, AgentException,
-			RelationException {
+			RelationException, ManagementException {
 		MyEnv env = new MyEnv();
 		env.doAddEntity();
 

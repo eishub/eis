@@ -139,11 +139,14 @@ public interface EnvironmentInterfaceStandard {
 	void associateEntity(String agent, String entity) throws RelationException;
 
 	/**
-	 * Frees an entity from its associated agent(s).
+	 * Frees an entity from its associated agent(s). This will re=announce an
+	 * entity as free and therefore can only be used when environment is
+	 * {@link EnvironmentState#RUNNING} or {@link EnvironmentState#PAUSED}
 	 * 
 	 * @param entity
 	 *            the id of the entity to be freed.
 	 * @throws EntityException
+	 *             if the entity can't be freed
 	 * @throws PlatformException
 	 *             is thrown if the entity does not exist, or if it is not
 	 *             associated.
@@ -151,19 +154,25 @@ public interface EnvironmentInterfaceStandard {
 	void freeEntity(String entity) throws RelationException, EntityException;
 
 	/**
-	 * Frees an agent from the agents-entities-relation.
+	 * Frees an agent from the agents-entities-relation. This will re=announce
+	 * an entity as free and therefore should only be used when environment is
+	 * {@link EnvironmentState#RUNNING} or {@link EnvironmentState#PAUSED}
 	 * 
 	 * @param agent
 	 *            is the agent to be freed.
 	 * @throws RelationException
 	 *             is thrown if the agent has not been registered.
+	 * @throws EntityException
+	 *             if the entity can't be freed
 	 */
-	void freeAgent(String agent) throws RelationException;
+	void freeAgent(String agent) throws RelationException, EntityException;
 
 	/**
 	 * Removes a pair from the agents-entities-relation. This un-associates the
 	 * agent from the entity, and is the reverse of
-	 * {@link #associateEntity(String, String)}.
+	 * {@link #associateEntity(String, String)}. This should re=announce an
+	 * entity as free and therefore should only be used when environment is
+	 * {@link EnvironmentState#RUNNING} or {@link EnvironmentState#PAUSED}.
 	 * 
 	 * @param agent
 	 *            the agent to be freed
@@ -171,8 +180,11 @@ public interface EnvironmentInterfaceStandard {
 	 *            the entity to be freed
 	 * @throws RelationException
 	 *             is thrown when the agent is not associated with the entity
+	 * @throws EntityException
+	 *             if the entity can't be freed
 	 */
-	void freePair(String agent, String entity) throws RelationException;
+	void freePair(String agent, String entity) throws RelationException,
+			EntityException;
 
 	/**
 	 * Returns the entities associated to a given agent.
@@ -244,8 +256,8 @@ public interface EnvironmentInterfaceStandard {
 	 * <p/>
 	 * Either returns the percepts of all associated entities of or a subset.
 	 * <p/>
-	 * This function must work both in {@link EnvironmentState#RUNNING} and in
-	 * {@link EnvironmentState#PAUSED}.
+	 * This function should be called only when {@link #getState()} is
+	 * {@link EnvironmentState#RUNNING} or {@link EnvironmentState#PAUSED}.
 	 * <p/>
 	 * <em>NOTE</em> In many environments the return value depends on previous
 	 * calls to getAllPercepts. There may be percepts that are sent only once.

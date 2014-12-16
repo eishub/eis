@@ -316,8 +316,12 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 *            is the free entity.
 	 * @param agents
 	 *            is the list of agents that were associated
+	 * @throws ManagementException
 	 */
-	protected void notifyFreeEntity(String entity, Collection<String> agents) {
+	protected void notifyFreeEntity(String entity, Collection<String> agents)
+			throws EntityException {
+
+		checkPausedOrRunning();
 
 		for (EnvironmentListener listener : environmentListeners) {
 
@@ -328,6 +332,21 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	}
 
 	/**
+	 * Checks if we are in PAUSED or RUNNING mode. Throws if not.
+	 * 
+	 * @throws EntityException
+	 *             if environment not running or paused.
+	 */
+	private void checkPausedOrRunning() throws EntityException {
+
+		if (state != EnvironmentState.PAUSED
+				&& state != EnvironmentState.RUNNING) {
+			throw new EntityException(
+					"environment state not running or paused, but " + state);
+		}
+	}
+
+	/**
 	 * Check all given entities and notify agents of free entities. If an entity
 	 * is free, {@link notifyFreeEntity} is called.
 	 * 
@@ -335,8 +354,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 *            is list of entities to be checked.
 	 * @param agents
 	 *            is list of agents that were associated with the entity.
+	 * @throws EntityException
 	 */
-	private void notifyIfFree(Set<String> entities, List<String> agents) {
+	private void notifyIfFree(Set<String> entities, List<String> agents)
+			throws EntityException {
 		List<String> free = getFreeEntities();
 		for (String en : entities) {
 			if (free.contains(en)) {
@@ -348,15 +369,17 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	/**
 	 * Notifies all listeners about an entity that has been newly created.
 	 * <p>
-	 * Your environment must be able to handle
-	 * {@link #getAllPercepts(String, String...)} and
-	 * {@link #getAllPerceptsFromEntity(String)} when this is called.
+	 * This should be called only when the environment is in
+	 * {@link EnvironmentState#PAUSED} or {@link EnvironmentState#RUNNING}
 	 * 
 	 * @param entity
 	 *            is the new entity.
+	 * @throws EntityException
+	 *             if environment not paused or running.
 	 */
-	protected void notifyNewEntity(String entity) {
+	protected void notifyNewEntity(String entity) throws EntityException {
 
+		checkPausedOrRunning();
 		for (EnvironmentListener listener : environmentListeners) {
 
 			listener.handleNewEntity(entity);
@@ -544,7 +567,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see eis.EnvironmentInterfaceStandard#freeAgent(java.lang.String)
 	 */
 	@Override
-	public void freeAgent(String agent) throws RelationException {
+	public void freeAgent(String agent) throws RelationException,
+			EntityException {
 
 		// check if exists
 		if (!registeredAgents.contains(agent))
@@ -572,7 +596,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * java.lang.String)
 	 */
 	@Override
-	public void freePair(String agent, String entity) throws RelationException {
+	public void freePair(String agent, String entity) throws RelationException,
+			EntityException {
 
 		// check if exists
 		if (!registeredAgents.contains(agent))

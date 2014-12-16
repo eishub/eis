@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import eis.exceptions.AgentException;
 import eis.exceptions.EntityException;
+import eis.exceptions.ManagementException;
 import eis.exceptions.RelationException;
 
 /**
@@ -15,7 +16,7 @@ import eis.exceptions.RelationException;
 public class EIDefaultImplTest {
 
 	@Test
-	public void testAddEntity() throws EntityException {
+	public void testAddEntity() throws EntityException, ManagementException {
 		TestEnvironmentInterface env = new TestEnvironmentInterface();
 		env.doAddEntity();
 
@@ -25,7 +26,7 @@ public class EIDefaultImplTest {
 
 	@Test
 	public void testFreePair() throws EntityException, AgentException,
-			RelationException {
+			RelationException, ManagementException {
 		TestEnvironmentInterface env = new TestEnvironmentInterface();
 		env.doAddEntity();
 
