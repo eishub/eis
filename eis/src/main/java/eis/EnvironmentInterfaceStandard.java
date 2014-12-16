@@ -243,8 +243,16 @@ public interface EnvironmentInterfaceStandard {
 	 * Gets all percepts.
 	 * <p/>
 	 * Either returns the percepts of all associated entities of or a subset.
+	 * <p/>
 	 * This function must work both in {@link EnvironmentState#RUNNING} and in
 	 * {@link EnvironmentState#PAUSED}.
+	 * <p/>
+	 * <em>NOTE</em> In many environments the return value depends on previous
+	 * calls to getAllPercepts. There may be percepts that are sent only once.
+	 * There may percepts that are sent if they were not sent the previous time
+	 * already. The exact behaviour is to be defined in environment's
+	 * documentation.
+	 * 
 	 * 
 	 * @param agent
 	 *            the agent that requests the percepts.

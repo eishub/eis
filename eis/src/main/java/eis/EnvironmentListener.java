@@ -23,7 +23,10 @@ public interface EnvironmentListener {
 	void handleStateChange(EnvironmentState newState);
 
 	/**
-	 * Handles the event that an entity has been freed.
+	 * Handles the event that an entity has been freed. This assumes that the
+	 * entity was already there and thus that the environment was ready to
+	 * handle
+	 * {@link EnvironmentInterfaceStandard#getAllPercepts(String, String...)}
 	 * 
 	 * @param entity
 	 *            is the entity that has been freed

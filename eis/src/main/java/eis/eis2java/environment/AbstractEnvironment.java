@@ -102,6 +102,11 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	/**
 	 * Couples a name to an entity and parses it's annotations for percepts and
 	 * actions using the specified handlers.
+	 * <p>
+	 * Your environment must be able to handle
+	 * {@link #getAllPercepts(String, String...)} and
+	 * {@link #getAllPerceptsFromEntity(String)} when this is called.
+	 * 
 	 * 
 	 * @param name
 	 *            The name of the entity.

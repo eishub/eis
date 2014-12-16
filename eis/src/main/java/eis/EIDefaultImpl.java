@@ -309,7 +309,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	}
 
 	/**
-	 * Notifies all listeners about an entity that is free.
+	 * Notifies all listeners about an entity that is free. This calls
+	 * {@link EnvironmentListener#handleFreeEntity(String, Collection)}
 	 * 
 	 * @param entity
 	 *            is the free entity.
@@ -346,6 +347,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 	/**
 	 * Notifies all listeners about an entity that has been newly created.
+	 * <p>
+	 * Your environment must be able to handle
+	 * {@link #getAllPercepts(String, String...)} and
+	 * {@link #getAllPerceptsFromEntity(String)} when this is called.
 	 * 
 	 * @param entity
 	 *            is the new entity.
@@ -919,6 +924,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 	/**
 	 * Adds an entity to the environment.
+	 * <p>
+	 * Your environment must be able to handle
+	 * {@link #getAllPercepts(String, String...)} and
+	 * {@link #getAllPerceptsFromEntity(String)} when this is called.
+	 * 
 	 * 
 	 * @param entity
 	 *            is the identifier of the entity that is to be added.
@@ -942,6 +952,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 	/**
 	 * Adds an entity to the environment.
+	 * <p>
+	 * Your environment must be able to handle
+	 * {@link #getAllPercepts(String, String...)} and
+	 * {@link #getAllPerceptsFromEntity(String)} when this is called.
+	 * 
 	 * 
 	 * @param entity
 	 *            is the identifier of the entity that is to be added.
@@ -1009,14 +1024,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 			}
 
 		}
-
-		// fail if entity has not been associated
-		/*
-		 * if( associated == false) try { throw new
-		 * RelationException("Entity \"" + entity +
-		 * "\" has not been associated!"); } catch (RelationException e) { //
-		 * TODO Auto-generated catch block e.printStackTrace(); }
-		 */
 
 		// finally delete
 		entities.remove(entity);
