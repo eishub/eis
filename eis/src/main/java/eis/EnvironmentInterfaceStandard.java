@@ -3,6 +3,7 @@ package eis;
 import java.util.Collection;
 import java.util.Map;
 
+import eis.eis2java.environment.AbstractEnvironment;
 import eis.exceptions.ActException;
 import eis.exceptions.AgentException;
 import eis.exceptions.EntityException;
@@ -260,10 +261,13 @@ public interface EnvironmentInterfaceStandard {
 	 * {@link EnvironmentState#RUNNING} or {@link EnvironmentState#PAUSED}.
 	 * <p/>
 	 * <em>NOTE</em> In many environments the return value depends on previous
-	 * calls to getAllPercepts. There may be percepts that are sent only once.
-	 * There may percepts that are sent if they were not sent the previous time
-	 * already. The exact behaviour is to be defined in environment's
-	 * documentation.
+	 * calls to getAllPercepts. There may be special percepts that are provided
+	 * only the first time getAllPercepts is called. There may be percepts that
+	 * are sent only once. There may percepts that are sent if they were not
+	 * sent the previous time already. The exact behaviour is to be defined in
+	 * environment's documentation. Both {@link EIDefaultImpl} and
+	 * {@link AbstractEnvironment} implements such a more detailed version of
+	 * getAllPercepts.
 	 * 
 	 * 
 	 * @param agent
@@ -285,7 +289,7 @@ public interface EnvironmentInterfaceStandard {
 	 *            is the old state.
 	 * @param newState
 	 *            is the new state.
-	 * @return
+	 * @return true iff transition valid
 	 */
 	// TODO needs to go to the default implementation
 	boolean isStateTransitionValid(EnvironmentState oldState,
@@ -306,13 +310,16 @@ public interface EnvironmentInterfaceStandard {
 	void init(Map<String, Parameter> parameters) throws ManagementException;
 
 	/**
-	 * Resets the environment(-interface) with a set of key-value-pairs.
-	 * Resetting the environment means the following
+	 * Soft resset. Resets the environment(-interface) with a set of
+	 * key-value-pairs. Resetting the environment means the following
 	 * <ul>
-	 * <li>Reset environment to its initial state
+	 * <li>set the environment state to {@link EnvironmentState#INITIALIZING}.
+	 * <li>Reset environment to its initial state (initial map for instance)
 	 * <li>Reset all entities to their initial state
-	 * <li>Prepare to send the entitiess the initial percept
-	 * <li>keep all agents attached, do not remove entities, create new ones
+	 * <li>Prepare to send the entities the initial percept (note:
+	 * "initial percepts" is not a contract with EIS but might a contract with
+	 * the specific environment)
+	 * <li>keep all agents attached, do not remove entities or create new ones
 	 * etc.
 	 * </ul>
 	 * 
@@ -353,35 +360,35 @@ public interface EnvironmentInterfaceStandard {
 	/**
 	 * Retrieves the state of the environment-interface.
 	 * 
-	 * @return
+	 * @return current {@link EnvironmentState}.
 	 */
 	EnvironmentState getState();
 
 	/**
 	 * Returns true when the init-command is supported.
 	 * 
-	 * @return
+	 * @return true iff {@link #init(Map)} is supported.
 	 */
 	boolean isInitSupported();
 
 	/**
 	 * Returns true when the start-command is supported.
 	 * 
-	 * @return
+	 * @return true iff {@link #start()} is supported
 	 */
 	boolean isStartSupported();
 
 	/**
 	 * Returns true when the pause-command is supported.
 	 * 
-	 * @return
+	 * @return true iff {@link #pause()} is supported
 	 */
 	boolean isPauseSupported();
 
 	/**
 	 * Returns true when the kill-command is supported.
 	 * 
-	 * @return
+	 * @return iff {@link #kill()} is supported
 	 */
 	boolean isKillSupported();
 
@@ -395,15 +402,20 @@ public interface EnvironmentInterfaceStandard {
 	 * Queries the interface of a certain property.
 	 * 
 	 * @param property
-	 * @return
+	 *            property to query
+	 * @return String defining the propery, or null if no such property.
 	 */
 	String queryProperty(String property) throws QueryException;
 
 	/**
 	 * Queries an entity of a certain property.
 	 * 
+	 * @param entity
+	 *            the entity to query
 	 * @param property
-	 * @return
+	 *            the property to query
+	 * @return String property value for given entity/property combination, or
+	 *         null if no such property.
 	 */
 	String queryEntityProperty(String entity, String property)
 			throws QueryException;

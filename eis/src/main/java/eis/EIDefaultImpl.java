@@ -1215,7 +1215,9 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	}
 
 	/**
-	 * Resets the environment(-interface) with a set of key-value-pairs.
+	 * Default soft reset. Resets the environment(-interface) with a set of
+	 * key-value-pairs. Sets the state to {@link EnvironmentState#INITIALIZING}.
+	 * Leaves all agent-entity relations as they were.
 	 * 
 	 * @param parameters
 	 * @throws ManagementException
@@ -1225,9 +1227,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	@Override
 	public void reset(Map<String, Parameter> parameters)
 			throws ManagementException {
-
-		state = EnvironmentState.PAUSED;
-
+		setState(EnvironmentState.INITIALIZING);
 	}
 
 	/*

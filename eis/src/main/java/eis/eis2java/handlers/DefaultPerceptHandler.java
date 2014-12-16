@@ -24,7 +24,7 @@ import eis.iilang.Percept;
  */
 public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 
-	/** Collection of methods on the entity */
+	/** Collection of methods on the entity (that were annotated with @Percept) */
 	protected final Collection<Method> perceptMethods;
 
 	public DefaultPerceptHandler(Object entity) throws EntityException {
@@ -83,12 +83,14 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 	}
 
 	/**
-	 * Get the percept objects for given percept name, using method.
+	 * Get the percept objects for given percept name, using method. May return
+	 * an empty list.
 	 * 
 	 * @param method
 	 * @param entity
 	 * @param perceptName
-	 * @return
+	 * @return percept objects for given percept name, using method. May return
+	 *         an empty list
 	 * @throws PerceiveException
 	 */
 	private List<Object> getPerceptObjects(Method method)

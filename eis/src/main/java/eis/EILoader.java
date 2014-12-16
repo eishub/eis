@@ -108,8 +108,10 @@ public class EILoader {
 	 * Instantiates an environment-interface from a given class-name. Assumes
 	 * that all required classes are already in the classpath.
 	 * 
-	 * @param file
-	 * @return
+	 * @param className
+	 *            the className to load
+	 * @return given class name, verified as implementing
+	 *         EnvironmentInterfaceStandard
 	 * @throws IOException
 	 */
 	public static EnvironmentInterfaceStandard fromClassName(String className)

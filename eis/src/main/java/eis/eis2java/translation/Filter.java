@@ -1,5 +1,7 @@
 package eis.eis2java.translation;
 
+import eis.eis2java.environment.AbstractEnvironment;
+
 public class Filter {
 	/**
 	 * The filter type determines which percepts are passed through each cycle
@@ -12,9 +14,10 @@ public class Filter {
 		 * Return all percepts always
 		 */
 		ALWAYS,
-
 		/**
-		 * Return all percepts only the first time.
+		 * Return the percepts only the first time
+		 * {@link AbstractEnvironment#getAllPercepts(String, String...)} is
+		 * called.
 		 */
 		ONCE,
 		/**

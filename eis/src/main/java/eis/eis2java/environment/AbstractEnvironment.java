@@ -21,11 +21,11 @@ import eis.iilang.Percept;
  * Base implementation for environments that want to work with automated percept
  * and action discovery in EIS2Java.
  * 
- * 11-02-2011: MP - Implemented synchronization feature to work with
- * asynchronous entities.
+ * 
  * 
  * @author Lennard de Rijk
- * @author M.P. Korstanje
+ * @author M.P. Korstanje * 11-02-2011: MP - Implemented synchronization feature
+ *         to work with asynchronous entities.
  */
 public abstract class AbstractEnvironment extends EIDefaultImpl {
 	private static final long serialVersionUID = 1L;
@@ -193,6 +193,7 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 
 	@Override
 	public final String requiredVersion() {
-		return "0.4";
+		return "0.5";
 	}
+
 }
