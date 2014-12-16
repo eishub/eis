@@ -32,11 +32,14 @@ import eis.iilang.Percept;
  * </ul>
  * 
  * <h1>Thread Safety</h1>
- * <p>
  * This interface does not pose any requirements on thread safety. Therefore it
  * can not be assumed that an environment behind this interface is thread safe.
  * 
- * </p>
+ * <h1>Initialization</h1>
+ * Implementors of this must have an empty default constructor, so that an
+ * instance of the interface can be created without any additional requirements.
+ * Your environment state can stay {@link EnvironmentState#INITIALIZING} and
+ * will become usable only after {@link #init(Map)} is called.
  * 
  * @author tristanbehrens
  * 
@@ -240,6 +243,8 @@ public interface EnvironmentInterfaceStandard {
 	 * Gets all percepts.
 	 * <p/>
 	 * Either returns the percepts of all associated entities of or a subset.
+	 * This function must work both in {@link EnvironmentState#RUNNING} and in
+	 * {@link EnvironmentState#PAUSED}.
 	 * 
 	 * @param agent
 	 *            the agent that requests the percepts.
@@ -268,6 +273,7 @@ public interface EnvironmentInterfaceStandard {
 
 	/**
 	 * Initializes the environment(-interface) with a set of key-value-pairs.
+	 * 
 	 * 
 	 * @param parameters
 	 * @throws ManagementException

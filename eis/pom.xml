@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eishub</groupId>
 	<artifactId>eis</artifactId>
-	<version>0.4</version>
+	<version>1.0.0</version>
 	<url>http://github.com/eishub/eis/</url>
 
 	<licenses>
