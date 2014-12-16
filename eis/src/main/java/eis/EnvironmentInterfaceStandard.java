@@ -281,7 +281,10 @@ public interface EnvironmentInterfaceStandard {
 
 	/**
 	 * Initializes the environment(-interface) with a set of key-value-pairs.
-	 * 
+	 * Normally, here an environment initializes its environment and moves to
+	 * the {@link EnvironmentState#PAUSED} or {@link EnvironmentState#RUNNING}
+	 * state. After that it then proceeds calling
+	 * {@link EnvironmentListener#handleNewEntity(String)} for all entities.
 	 * 
 	 * @param parameters
 	 * @throws ManagementException
@@ -309,7 +312,8 @@ public interface EnvironmentInterfaceStandard {
 	void reset(Map<String, Parameter> parameters) throws ManagementException;
 
 	/**
-	 * Starts the environment(-interface).
+	 * Starts the environment(-interface). Should change the state to
+	 * {@link EnvironmentState#RUNNING}.
 	 * 
 	 * @throws ManagementException
 	 *             when starting is not supported
@@ -317,7 +321,8 @@ public interface EnvironmentInterfaceStandard {
 	void start() throws ManagementException;
 
 	/**
-	 * Pauses the environment(-interface).
+	 * Pauses the environment(-interface). Should change the state to
+	 * {@link EnvironmentState#PAUSED}
 	 * 
 	 * @throws ManagementException
 	 *             when pausing is not supported
@@ -325,7 +330,8 @@ public interface EnvironmentInterfaceStandard {
 	void pause() throws ManagementException;
 
 	/**
-	 * Kills the environment.
+	 * Kills the environment. Environment should change to
+	 * {@link EnvironmentState#KILLED}
 	 * 
 	 * @throws ManagementException
 	 *             when killing is not supported.
@@ -368,7 +374,8 @@ public interface EnvironmentInterfaceStandard {
 	boolean isKillSupported();
 
 	/**
-	 * Returns the EIS-runtime-version that is compatible.
+	 * Returns the EIS-runtime-version that is compatible with the implemented
+	 * environment.
 	 */
 	String requiredVersion();
 
