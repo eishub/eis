@@ -26,4 +26,9 @@ public abstract class PerceptHandler {
 	public abstract LinkedList<Percept> getAllPercepts()
 			throws PerceiveException;
 
+	/**
+	 * Called when the entity is reset.
+	 */
+	public abstract void reset();
+
 }

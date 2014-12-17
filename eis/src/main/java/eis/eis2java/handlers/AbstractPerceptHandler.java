@@ -210,4 +210,8 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 		return unpacked;
 	}
 
+	@Override
+	public void reset() {
+		previousPercepts.clear();
+	}
 }

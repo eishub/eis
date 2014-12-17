@@ -34,4 +34,9 @@ public abstract class ActionHandler {
 	 */
 	public abstract Percept performAction(Action action) throws ActException;
 
+	/**
+	 * Called when the entity is reset.
+	 */
+	public abstract void reset();
+
 }

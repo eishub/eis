@@ -44,7 +44,27 @@ public abstract class PerceptHandlerTest {
 	@Test
 	public void testGetAllPercepts() throws PerceiveException {
 		LinkedList<Percept> percepts = handler.getAllPercepts();
+		assertAllPerceptsReceived(percepts);
 
+		percepts = handler.getAllPercepts();
+		assertPartialPerceptsReceived(percepts);
+
+		// Check, third time we should still get same percepts?
+		// percepts = handler.getAllPercepts();
+		// assertPartialPerceptsReceived(percepts);
+
+		handler.reset();
+		percepts = handler.getAllPercepts();
+		assertAllPerceptsReceived(percepts);
+
+	}
+
+	/**
+	 * Check that all percepts have been received
+	 * 
+	 * @param percepts
+	 */
+	private void assertAllPerceptsReceived(LinkedList<Percept> percepts) {
 		assertTrue(percepts.contains(entity.getAlways()));
 		assertTrue(percepts.contains(entity.getOnce()));
 		assertTrue(percepts.contains(entity.getOnChange()));
@@ -57,8 +77,15 @@ public abstract class PerceptHandlerTest {
 		assertTrue(percepts.contains(entity.getMultiArgs()));
 		assertTrue(percepts.containsAll(entity.getMultipleMultiArgs()));
 
-		percepts = handler.getAllPercepts();
+	}
 
+	/**
+	 * Check that only part of percepts were received, since this is not the
+	 * first call to getAllPercepts.
+	 * 
+	 * @param percepts
+	 */
+	private void assertPartialPerceptsReceived(LinkedList<Percept> percepts) {
 		assertTrue(percepts.contains(entity.getAlways()));
 		assertFalse(percepts.contains(entity.getOnce()));
 		assertFalse(percepts.contains(entity.getOnChange()));

@@ -142,4 +142,9 @@ public class DefaultActionHandler extends ActionHandler {
 		}
 	}
 
+	@Override
+	public void reset() {
+		// nothing to reset here
+	}
+
 }

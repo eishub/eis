@@ -11,10 +11,12 @@ import eis.eis2java.handlers.DefaultPerceptHandler;
 import eis.eis2java.handlers.PerceptHandler;
 import eis.exceptions.ActException;
 import eis.exceptions.EntityException;
+import eis.exceptions.ManagementException;
 import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
+import eis.iilang.Parameter;
 import eis.iilang.Percept;
 
 /**
@@ -196,4 +198,15 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 		return "0.5";
 	}
 
+	@Override
+	public void reset(Map<String, Parameter> parameters)
+			throws ManagementException {
+		super.reset(parameters);
+		for (PerceptHandler handler : perceptHandlers.values()) {
+			handler.reset();
+		}
+		for (ActionHandler handler : actionHandlers.values()) {
+			handler.reset();
+		}
+	}
 }
