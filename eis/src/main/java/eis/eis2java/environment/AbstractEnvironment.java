@@ -194,11 +194,6 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	}
 
 	@Override
-	public final String requiredVersion() {
-		return "0.5";
-	}
-
-	@Override
 	public void reset(Map<String, Parameter> parameters)
 			throws ManagementException {
 		super.reset(parameters);
