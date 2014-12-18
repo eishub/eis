@@ -321,7 +321,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	protected void notifyFreeEntity(String entity, Collection<String> agents)
 			throws EntityException {
 
-		checkPausedOrRunning();
+		if (!isPausedOrRunning()) {
+			throw new EntityException(
+					"entity can't be freed: environment is not running or paused, but "
+							+ state);
+		}
 
 		for (EnvironmentListener listener : environmentListeners) {
 
@@ -337,13 +341,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @throws EntityException
 	 *             if environment not running or paused.
 	 */
-	private void checkPausedOrRunning() throws EntityException {
-
-		if (state != EnvironmentState.PAUSED
-				&& state != EnvironmentState.RUNNING) {
-			throw new EntityException(
-					"environment state not running or paused, but " + state);
-		}
+	private boolean isPausedOrRunning() {
+		return (state == EnvironmentState.PAUSED || state == EnvironmentState.RUNNING);
 	}
 
 	/**
@@ -379,7 +378,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 */
 	protected void notifyNewEntity(String entity) throws EntityException {
 
-		checkPausedOrRunning();
+		if (!isPausedOrRunning()) {
+			throw new EntityException(
+					"can't create new entity: environment is not paused or running but "
+							+ state);
+		}
 		for (EnvironmentListener listener : environmentListeners) {
 
 			listener.handleNewEntity(entity);
