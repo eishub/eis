@@ -695,6 +695,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	public final Map<String, Percept> performAction(String agent,
 			Action action, String... entities) throws ActException {
 
+		// fail if the environment does not run
+		if (state != EnvironmentState.RUNNING) {
+			throw new ActException("Environment does not run but is " + state);
+		}
+
 		// 1. unregistered agents cannot act
 		if (registeredAgents.contains(agent) == false)
 			throw new ActException(ActException.NOTREGISTERED);
