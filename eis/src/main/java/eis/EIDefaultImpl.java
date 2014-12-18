@@ -791,35 +791,31 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 	}
 
-	// TODO maybe use isConnencted here
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see eis.EnvironmentInterfaceStandard#getAllPercepts(java.lang.String,
-	 * java.lang.String[])
-	 */
 	@Override
 	public Map<String, Collection<Percept>> getAllPercepts(String agent,
 			String... entities) throws PerceiveException,
 			NoEnvironmentException {
 
-		// fail if the environment does not run
-		if (state != EnvironmentState.RUNNING)
+		// fail if the environment does not run or paused
+		if (!(state == EnvironmentState.RUNNING || state == EnvironmentState.PAUSED)) {
 			throw new PerceiveException("Environment does not run but is "
 					+ state);
+		}
 
 		// fail if ther agent is not registered
-		if (registeredAgents.contains(agent) == false)
+		if (registeredAgents.contains(agent) == false) {
 			throw new PerceiveException("Agent \"" + agent
 					+ "\" is not registered.");
+		}
 
 		// get the associated entities
 		HashSet<String> associatedEntities = agentsToEntities.get(agent);
 
 		// fail if there are no associated entities
-		if (associatedEntities == null || associatedEntities.size() == 0)
+		if (associatedEntities == null || associatedEntities.size() == 0) {
 			throw new PerceiveException("Agent \"" + agent
 					+ "\" has no associated entities.");
+		}
 
 		// return value
 		Map<String, Collection<Percept>> ret = new HashMap<String, Collection<Percept>>();
