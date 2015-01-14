@@ -37,6 +37,6 @@ See [eishub](https://github.com/eishub/) for environments that implement the env
 <dependency>
 	<groupId>eishub</groupId>
 	<artifactId>eis</artifactId>
-	<version>0.4</version>
+	<version>0.5.0</version>
 </dependency>
 ```
