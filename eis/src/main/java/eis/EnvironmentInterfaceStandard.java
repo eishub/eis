@@ -245,7 +245,10 @@ public interface EnvironmentInterfaceStandard {
 	 *             is thrown if the agent has not been registered, if the agent
 	 *             has no associated entities, if at least one of the given
 	 *             entities is not associated, or if at least one one the
-	 *             actions fails.
+	 *             actions fails. If an agent should be notified of failure to
+	 *             execute the action but the entity and agent can proceed
+	 *             working, that should happen by means of a percept and not by
+	 *             throwing.
 	 * @throws NoEnvironmentException
 	 *             if the interface is not connected to an environment.
 	 */
@@ -275,7 +278,10 @@ public interface EnvironmentInterfaceStandard {
 	 * @return a list of percepts
 	 * @throws PerceiveException
 	 *             if the agent is not registered or if the agents requests
-	 *             percepts from an entity that is not associated.
+	 *             percepts from an entity that is not associated. If an agent
+	 *             should be notified of failure but the entity and agent can
+	 *             proceed working, that should happen by means of a percept and
+	 *             not by throwing.
 	 * @throws NoEnvironmentException
 	 */
 	Map<String, Collection<Percept>> getAllPercepts(String agent,
