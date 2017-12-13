@@ -123,6 +123,7 @@ public abstract class IILElement implements Serializable, Cloneable {
 	 * Is called by a visitor.
 	 * 
 	 * @param visitor
+	 *            the visitor to accept
 	 * @see eis.iilang.IILVisitor
 	 */
 	public abstract void accept(IILVisitor visitor);
@@ -131,6 +132,10 @@ public abstract class IILElement implements Serializable, Cloneable {
 	 * Is called by an object visitor.
 	 * 
 	 * @param visitor
+	 *            the visitor to accept
+	 * @param object
+	 *            object to visit ?
+	 * @return
 	 * @see eis.iilang.IILObjectVisitor
 	 */
 	public abstract Object accept(IILObjectVisitor visitor, Object object);

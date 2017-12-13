@@ -23,6 +23,7 @@ public class Identifier extends Parameter {
 	 * Constructs an identifier.
 	 * 
 	 * @param value
+	 *            the identifier
 	 */
 	public Identifier(String value) {
 		// assert Character.isLowerCase(value.charAt(0)) : "Identifier '" +

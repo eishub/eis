@@ -36,7 +36,9 @@ public abstract class DataContainer extends IILElement {
 	 * Contructs an DataContainer.
 	 * 
 	 * @param name
+	 *            the name of this datacontainer
 	 * @param parameters
+	 *            the parameter list
 	 */
 	public DataContainer(String name, Parameter... parameters) {
 
@@ -51,7 +53,9 @@ public abstract class DataContainer extends IILElement {
 	 * Contructs an DataContainer.
 	 * 
 	 * @param name
+	 *            the name of this datacontainer
 	 * @param parameters
+	 *            the parameter list
 	 */
 	public DataContainer(String name, LinkedList<Parameter> parameters) {
 
@@ -80,8 +84,7 @@ public abstract class DataContainer extends IILElement {
 	 */
 	public void setName(String name) {
 
-		assert Character.isLowerCase(name.charAt(0)) : name
-				+ " should start with a lowercase letter";
+		assert Character.isLowerCase(name.charAt(0)) : name + " should start with a lowercase letter";
 		this.name = name;
 
 	}
@@ -144,6 +147,7 @@ public abstract class DataContainer extends IILElement {
 	 * Converts a data container to a percept.
 	 * 
 	 * @param container
+	 *            the container convert to a percept
 	 * @return the percept
 	 */
 	public static Percept toPercept(DataContainer container) {

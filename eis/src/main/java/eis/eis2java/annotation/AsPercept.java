@@ -18,7 +18,7 @@ import eis.iilang.Percept;
  * parameters but is allowed to return any value for which a
  * {@link Java2Parameter} translator has been registered.
  * <p>
- * {@link @AsPercept} tags have four parameters:
+ * {@link AsPercept} tags have four parameters:
  * <ol>
  * <li>name: the name of the percept to be returned
  * <li>multiplePercepts: true when the percept function returns a List of
@@ -58,8 +58,7 @@ import eis.iilang.Percept;
  * </tr>
  * <tr>
  * <td>ONCE</td>
- * <td>send one time</td>
- * *
+ * <td>send one time</td> *
  * <td>send percepts only the first round</td>
  * </tr>
  * <tr>
@@ -77,12 +76,11 @@ import eis.iilang.Percept;
  * </tbody>
  * </table>
  * <p>
- * <em>
- * Important: </em>the {@link AbstractEnvironment} compares old and new percepts
- * based on the {@link Object} that is returned, not based on the translator
- * result. This is to avoid extra overhead of translation. This means that you
- * <em>must return</em> a static (non-changing) object as percept, and that that
- * percept object must have a functioning equals.
+ * <em> Important: </em>the {@link AbstractEnvironment} compares old and new
+ * percepts based on the {@link Object} that is returned, not based on the
+ * translator result. This is to avoid extra overhead of translation. This means
+ * that you <em>must return</em> a static (non-changing) object as percept, and
+ * that that percept object must have a functioning equals.
  * </p>
  * 
  * @author Lennard de Rijk
@@ -109,7 +107,7 @@ public @interface AsPercept {
 	 * , and each element inside that collection is a {@link Collection} for
 	 * multipleActions.
 	 * 
-	 * @return
+	 * @return true iff percept has multiple arguments
 	 */
 	boolean multipleArguments() default false;
 

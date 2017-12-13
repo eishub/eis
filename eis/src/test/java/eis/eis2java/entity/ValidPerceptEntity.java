@@ -77,14 +77,11 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 	}
 
 	public List<Percept> getOnChangeNegation() {
-		return Arrays.asList(new Percept[] { new Percept("onChangeNegation",
-				new Identifier("A")) });
+		return Arrays.asList(new Percept[] { new Percept("onChangeNegation", new Identifier("A")) });
 	}
 
 	public List<Percept> getOnChangedNegation() {
-		return Arrays.asList(new Percept[] {
-				new Percept("not", new Function("onChangeNegation",
-						new Identifier("A"))),
+		return Arrays.asList(new Percept[] { new Percept("not", new Function("onChangeNegation", new Identifier("A"))),
 				new Percept("onChangeNegation", new Identifier("B")) });
 
 	}
@@ -99,8 +96,7 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 	}
 
 	public List<Percept> getMultipleAlways() {
-		return Arrays.asList(new Percept[] {
-				new Percept("multipleAlways", new Identifier("One")),
+		return Arrays.asList(new Percept[] { new Percept("multipleAlways", new Identifier("One")),
 				new Percept("multipleAlways", new Identifier("Two")) });
 	}
 
@@ -137,9 +133,7 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 	}
 
 	/**
-	 * a single multi-argumented percept
-	 * 
-	 * @return
+	 * @return a single multi-argumented percept
 	 */
 	@AsPercept(name = "multiArgs", multipleArguments = true, filter = Type.ALWAYS)
 	public List<Integer> multiArgs() {
@@ -149,15 +143,18 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 		return list;
 	}
 
+	/**
+	 * @return a simple multi-arg percept
+	 */
 	public Percept getMultiArgs() {
 		return new Percept("multiArgs", new Numeral(1), new Numeral(2));
 
 	}
 
 	/**
-	 * combined multiple Arguments and MultiplePercepts
 	 * 
-	 * @return
+	 * 
+	 * @return combined multiple Arguments and MultiplePercepts
 	 */
 	@AsPercept(name = "multipleMultiArgs", multipleArguments = true, multiplePercepts = true, filter = Type.ALWAYS)
 	public List<List<Integer>> multipleMultiArgs() {
@@ -174,12 +171,8 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 	}
 
 	public List<Percept> getMultipleMultiArgs() {
-		return Arrays
-				.asList(new Percept[] {
-						new Percept("multipleMultiArgs", new Numeral(1),
-								new Numeral(2)),
-						new Percept("multipleMultiArgs", new Numeral(3),
-								new Numeral(4)) });
+		return Arrays.asList(new Percept[] { new Percept("multipleMultiArgs", new Numeral(1), new Numeral(2)),
+				new Percept("multipleMultiArgs", new Numeral(3), new Numeral(4)) });
 
 	}
 

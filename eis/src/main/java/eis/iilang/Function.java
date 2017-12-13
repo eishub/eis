@@ -73,8 +73,7 @@ public class Function extends Parameter {
 	 */
 	public void setName(String name) {
 
-		assert Character.isLowerCase(name.charAt(0)) : name
-				+ " should start with a lowercase letter";
+		assert Character.isLowerCase(name.charAt(0)) : name + " should start with a lowercase letter";
 		this.name = name;
 
 	}
@@ -94,6 +93,7 @@ public class Function extends Parameter {
 	 * Sets the parameters.
 	 * 
 	 * @param parameters
+	 *            the new parameters
 	 */
 	public void setParameters(LinkedList<Parameter> parameters) {
 

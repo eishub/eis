@@ -48,6 +48,7 @@ public class ActException extends EnvironmentInterfaceException {
 
 	/**
 	 * @param string
+	 *            the error message
 	 */
 	public ActException(String string) {
 		super(string);
@@ -55,7 +56,9 @@ public class ActException extends EnvironmentInterfaceException {
 
 	/**
 	 * @param message
+	 *            the error message
 	 * @param cause
+	 *            the cause (possibly null)
 	 */
 	public ActException(String message, Throwable cause) {
 		super(message);
@@ -66,7 +69,9 @@ public class ActException extends EnvironmentInterfaceException {
 
 	/**
 	 * @param string
+	 *            the error message
 	 * @param type
+	 *            the type of error
 	 */
 	public ActException(String string, int type) {
 		super(string);
@@ -75,22 +80,6 @@ public class ActException extends EnvironmentInterfaceException {
 
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 * @param type
-	 */
-	/*
-	 * public ActException(String message, Exception cause, int type) {
-	 * super(message);
-	 * 
-	 * this.initCause(cause);
-	 * 
-	 * setType(type);
-	 * 
-	 * }
-	 */
-
 	public ActException(int type) {
 		super("");
 
@@ -98,6 +87,12 @@ public class ActException extends EnvironmentInterfaceException {
 
 	}
 
+	/**
+	 * @param message
+	 *            the error message
+	 * @param type
+	 *            the type of error
+	 */
 	public ActException(int type, String message) {
 		super(message);
 
@@ -105,6 +100,15 @@ public class ActException extends EnvironmentInterfaceException {
 
 	}
 
+	/**
+	 * 
+	 * @param type
+	 *            type of the error
+	 * @param message
+	 *            the error message
+	 * @param cause
+	 *            the cause of the error
+	 */
 	public ActException(int type, String message, Throwable cause) {
 		super(message);
 
@@ -114,7 +118,7 @@ public class ActException extends EnvironmentInterfaceException {
 	}
 
 	/**
-	 * @return
+	 * @return type
 	 */
 	public int getType() {
 
@@ -124,6 +128,7 @@ public class ActException extends EnvironmentInterfaceException {
 
 	/**
 	 * @param type
+	 *            the new type of the error
 	 */
 	public void setType(int type) {
 

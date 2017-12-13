@@ -22,9 +22,9 @@ public abstract class PerceptHandler {
 	 * 
 	 * @return a list of the collected percepts
 	 * @throws PerceiveException
+	 *             if percepts can not be fetched
 	 */
-	public abstract LinkedList<Percept> getAllPercepts()
-			throws PerceiveException;
+	public abstract LinkedList<Percept> getAllPercepts() throws PerceiveException;
 
 	/**
 	 * Called when the entity is reset.

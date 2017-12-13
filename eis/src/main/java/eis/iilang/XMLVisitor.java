@@ -15,17 +15,17 @@ public class XMLVisitor implements IILObjectVisitor {
 	public Object visit(Action element, Object object) {
 
 		String ret = "";
-		
+
 		ret += object.toString() + "<action name=\"" + element.name + "\">" + newline;
-		for ( Parameter p : element.getParameters() ) {
+		for (Parameter p : element.getParameters()) {
 			ret += object.toString() + indent + "<actionParameter>" + newline;
-			ret += p.accept(this,object.toString() + indent + indent);
+			ret += p.accept(this, object.toString() + indent + indent);
 			ret += object.toString() + indent + "</actionParameter>" + newline;
 		}
 		ret += object.toString() + "</action>";
 
 		return ret;
-	
+
 	}
 
 	@Override
@@ -36,14 +36,14 @@ public class XMLVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(Function element, Object object) {
-	
+
 		String ret = "";
-		
+
 		ret += object.toString() + "<function name=\"" + element.getName() + "\">" + newline;
-		for ( Parameter p : element.getParameters() ) {
-			ret += p.accept(this,object.toString() + indent);
+		for (Parameter p : element.getParameters()) {
+			ret += p.accept(this, object.toString() + indent);
 		}
-		ret += object.toString() + "</function>"+ newline;
+		ret += object.toString() + "</function>" + newline;
 
 		return ret;
 
@@ -66,9 +66,9 @@ public class XMLVisitor implements IILObjectVisitor {
 	public Object visit(Numeral element, Object object) {
 
 		return object.toString() + "<number value=\"" + element.getValue() + "\"/>" + newline;
-	
+
 	}
-	
+
 	@Override
 	public Object visit(Parameter element, Object object) {
 		assert false : "Not expected";
@@ -78,10 +78,10 @@ public class XMLVisitor implements IILObjectVisitor {
 	@Override
 	public Object visit(ParameterList element, Object object) {
 		String ret = "";
-		
+
 		ret += object.toString() + "<parameterList>" + newline;
-		for ( Parameter p : element ) {
-			ret += p.accept(this,object.toString() + indent);
+		for (Parameter p : element) {
+			ret += p.accept(this, object.toString() + indent);
 		}
 		ret += object.toString() + "</parameterList>" + newline;
 
@@ -92,17 +92,17 @@ public class XMLVisitor implements IILObjectVisitor {
 	public Object visit(Percept element, Object object) {
 
 		String ret = "";
-		
+
 		ret += object.toString() + "<percept name=\"" + element.name + "\">" + newline;
-		for ( Parameter p : element.getParameters() ) {
+		for (Parameter p : element.getParameters()) {
 			ret += object.toString() + indent + "<perceptParameter>" + newline;
-			ret += p.accept(this,object.toString() + indent + indent);
+			ret += p.accept(this, object.toString() + indent + indent);
 			ret += object.toString() + indent + "</perceptParameter>" + newline;
 		}
 		ret += object.toString() + "</percept>" + newline;
 
 		return ret;
-	
+
 	}
 
 	@Override
@@ -113,15 +113,18 @@ public class XMLVisitor implements IILObjectVisitor {
 	}
 
 	/**
-	 * Can be used for convenience's sake. Instantiates a visitor and visits the element.
+	 * Can be used for convenience's sake. Instantiates a visitor and visits the
+	 * element.
+	 * 
 	 * @param element
-	 * @return
+	 *            the element to visit
+	 * @return result of calling {@link IILElement#accept(IILVisitor)}
 	 */
 	public static String staticVisit(IILElement element) {
-		
+
 		IILObjectVisitor visitor = (IILObjectVisitor) new XMLVisitor();
-		return (String) element.accept(visitor,"");
-		
+		return (String) element.accept(visitor, "");
+
 	}
-	
+
 }

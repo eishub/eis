@@ -48,8 +48,7 @@ import eis.iilang.Percept;
  * @author tristanbehrens
  * 
  */
-public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
-		Serializable {
+public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Serializable {
 
 	/**
 	 * 
@@ -207,8 +206,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 *             is thrown if at least one of the agents in the array is not
 	 *             registered.
 	 */
-	protected void notifyAgents(Percept percept, String... agents)
-			throws EnvironmentInterfaceException {
+	protected void notifyAgents(Percept percept, String... agents) throws EnvironmentInterfaceException {
 
 		// no listeners, no notification
 		// BUG
@@ -220,8 +218,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 			for (String agent : registeredAgents) {
 
-				HashSet<AgentListener> agentListeners = agentsToAgentListeners
-						.get(agent);
+				HashSet<AgentListener> agentListeners = agentsToAgentListeners.get(agent);
 
 				if (agentListeners == null)
 					continue;
@@ -241,11 +238,9 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 		for (String agent : agents) {
 
 			if (!registeredAgents.contains(agent))
-				throw new EnvironmentInterfaceException("Agent " + agent
-						+ " has not registered to the environment.");
+				throw new EnvironmentInterfaceException("Agent " + agent + " has not registered to the environment.");
 
-			HashSet<AgentListener> agentListeners = agentsToAgentListeners
-					.get(agent);
+			HashSet<AgentListener> agentListeners = agentsToAgentListeners.get(agent);
 
 			if (agentListeners == null)
 				continue;
@@ -268,21 +263,18 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 *            an array of entities
 	 * @throws EnvironmentInterfaceException
 	 */
-	protected void notifyAgentsViaEntity(Percept percept, String... pEntities)
-			throws EnvironmentInterfaceException {
+	protected void notifyAgentsViaEntity(Percept percept, String... pEntities) throws EnvironmentInterfaceException {
 
 		// check
 		for (String entity : pEntities)
 			if (this.entities.contains(entity) == false)
-				throw new EnvironmentInterfaceException("entity \"" + entity
-						+ "\" does not exist.");
+				throw new EnvironmentInterfaceException("entity \"" + entity + "\" does not exist.");
 
 		// use all entities
 		if (pEntities.length == 0) {
 
 			for (String entity : entities) {
-				for (Entry<String, HashSet<String>> entry : agentsToEntities
-						.entrySet()) {
+				for (Entry<String, HashSet<String>> entry : agentsToEntities.entrySet()) {
 
 					if (entry.getValue().contains(entity))
 						this.notifyAgents(percept, entry.getKey());
@@ -295,8 +287,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 		else {
 
 			for (String entity : pEntities) {
-				for (Entry<String, HashSet<String>> entry : agentsToEntities
-						.entrySet()) {
+				for (Entry<String, HashSet<String>> entry : agentsToEntities.entrySet()) {
 
 					if (entry.getValue().contains(entity))
 						this.notifyAgents(percept, entry.getKey());
@@ -318,13 +309,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 *            is the list of agents that were associated
 	 * @throws ManagementException
 	 */
-	protected void notifyFreeEntity(String entity, Collection<String> agents)
-			throws EntityException {
+	protected void notifyFreeEntity(String entity, Collection<String> agents) throws EntityException {
 
 		if (!isPausedOrRunning()) {
-			throw new EntityException(
-					"entity can't be freed: environment is not running or paused, but "
-							+ state);
+			throw new EntityException("entity can't be freed: environment is not running or paused, but " + state);
 		}
 
 		for (EnvironmentListener listener : environmentListeners) {
@@ -355,8 +343,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 *            is list of agents that were associated with the entity.
 	 * @throws EntityException
 	 */
-	private void notifyIfFree(Set<String> entities, List<String> agents)
-			throws EntityException {
+	private void notifyIfFree(Set<String> entities, List<String> agents) throws EntityException {
 		List<String> free = getFreeEntities();
 		for (String en : entities) {
 			if (free.contains(en)) {
@@ -379,9 +366,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	protected void notifyNewEntity(String entity) throws EntityException {
 
 		if (!isPausedOrRunning()) {
-			throw new EntityException(
-					"can't create new entity: environment is not paused or running but "
-							+ state);
+			throw new EntityException("can't create new entity: environment is not paused or running but " + state);
 		}
 		for (EnvironmentListener listener : environmentListeners) {
 
@@ -420,8 +405,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	public void registerAgent(String agent) throws AgentException {
 
 		if (registeredAgents.contains(agent))
-			throw new AgentException("Agent " + agent
-					+ " has already registered to the environment.");
+			throw new AgentException("Agent " + agent + " has already registered to the environment.");
 
 		registeredAgents.add(agent);
 
@@ -437,8 +421,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 		// fail if agents is not registered
 		if (!registeredAgents.contains(agent))
-			throw new AgentException("Agent " + agent
-					+ " has not registered to the environment.");
+			throw new AgentException("Agent " + agent + " has not registered to the environment.");
 
 		// remove from mapping, might be null
 		agentsToEntities.remove(agent);
@@ -492,17 +475,14 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * java.lang.String)
 	 */
 	@Override
-	public void associateEntity(String agent, String entity)
-			throws RelationException {
+	public void associateEntity(String agent, String entity) throws RelationException {
 
 		// check if exists
 		if (!entities.contains(entity))
-			throw new RelationException("Entity \"" + entity
-					+ "\" does not exist!");
+			throw new RelationException("Entity \"" + entity + "\" does not exist!");
 
 		if (!registeredAgents.contains(agent))
-			throw new RelationException("Agent \"" + agent
-					+ "\" has not been registered!");
+			throw new RelationException("Agent \"" + agent + "\" has not been registered!");
 
 		// associate
 		HashSet<String> ens = agentsToEntities.get(agent);
@@ -521,13 +501,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see eis.EnvironmentInterfaceStandard#freeEntity(java.lang.String)
 	 */
 	@Override
-	public void freeEntity(String entity) throws RelationException,
-			EntityException {
+	public void freeEntity(String entity) throws RelationException, EntityException {
 
 		// check if exists
 		if (!entities.contains(entity))
-			throw new EntityException("Entity \"" + entity
-					+ "\" does not exist!");
+			throw new EntityException("Entity \"" + entity + "\" does not exist!");
 
 		LinkedList<String> agents = new LinkedList<String>();
 
@@ -556,8 +534,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 		// fail if entity has not been associated
 		if (associated == false)
-			throw new RelationException("Entity \"" + entity
-					+ "\" has not been associated!");
+			throw new RelationException("Entity \"" + entity + "\" has not been associated!");
 
 		// notify
 		notifyFreeEntity(entity, agents);
@@ -570,13 +547,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see eis.EnvironmentInterfaceStandard#freeAgent(java.lang.String)
 	 */
 	@Override
-	public void freeAgent(String agent) throws RelationException,
-			EntityException {
+	public void freeAgent(String agent) throws RelationException, EntityException {
 
 		// check if exists
 		if (!registeredAgents.contains(agent))
-			throw new RelationException("Agent \"" + agent
-					+ "\" does not exist!");
+			throw new RelationException("Agent \"" + agent + "\" does not exist!");
 
 		if (!agentsToEntities.containsKey(agent)) {
 			return;
@@ -599,24 +574,20 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * java.lang.String)
 	 */
 	@Override
-	public void freePair(String agent, String entity) throws RelationException,
-			EntityException {
+	public void freePair(String agent, String entity) throws RelationException, EntityException {
 
 		// check if exists
 		if (!registeredAgents.contains(agent))
-			throw new RelationException("Agent \"" + agent
-					+ "\" does not exist!");
+			throw new RelationException("Agent \"" + agent + "\" does not exist!");
 
 		// check if exists
 		if (!entities.contains(entity))
-			throw new RelationException("Entity \"" + entity
-					+ "\" does not exist!");
+			throw new RelationException("Entity \"" + entity + "\" does not exist!");
 
 		HashSet<String> ens = agentsToEntities.get(agent);
 
 		if (ens == null || ens.contains(entity) == false)
-			throw new RelationException("Agent \"" + agent
-					+ " is not associated with entity \"" + entity + "\"!");
+			throw new RelationException("Agent \"" + agent + " is not associated with entity \"" + entity + "\"!");
 
 		// update mapping
 		ens.remove(entity);
@@ -636,12 +607,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * eis.EnvironmentInterfaceStandard#getAssociatedEntities(java.lang.String)
 	 */
 	@Override
-	public HashSet<String> getAssociatedEntities(String agent)
-			throws AgentException {
+	public HashSet<String> getAssociatedEntities(String agent) throws AgentException {
 
 		if (registeredAgents.contains(agent) == false)
-			throw new AgentException("Agent \"" + agent
-					+ "\" has not been registered.");
+			throw new AgentException("Agent \"" + agent + "\" has not been registered.");
 
 		HashSet<String> ret = this.agentsToEntities.get(agent);
 
@@ -659,12 +628,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * eis.EnvironmentInterfaceStandard#getAssociatedAgents(java.lang.String)
 	 */
 	@Override
-	public HashSet<String> getAssociatedAgents(String entity)
-			throws EntityException {
+	public HashSet<String> getAssociatedAgents(String entity) throws EntityException {
 
 		if (entities.contains(entity) == false)
-			throw new EntityException("Entity \"" + entity
-					+ "\" has not been registered.");
+			throw new EntityException("Entity \"" + entity + "\" has not been registered.");
 
 		HashSet<String> ret = new HashSet<String>();
 
@@ -695,8 +662,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * Acting/perceiving functionality.
 	 */
 	@Override
-	public final Map<String, Percept> performAction(String agent,
-			Action action, String... entities) throws ActException {
+	public final Map<String, Percept> performAction(String agent, Action action, String... entities)
+			throws ActException {
 
 		// fail if the environment does not run
 		if (state != EnvironmentState.RUNNING) {
@@ -785,8 +752,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 					ret.put(entity, p);
 			} catch (Exception e) {
 				if (!(e instanceof ActException)) {
-					throw new ActException(ActException.FAILURE,
-							"failure performing action", e);
+					throw new ActException(ActException.FAILURE, "failure performing action", e);
 				}
 
 				// exception was ok, rethrow
@@ -800,20 +766,17 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	}
 
 	@Override
-	public Map<String, Collection<Percept>> getAllPercepts(String agent,
-			String... entities) throws PerceiveException,
-			NoEnvironmentException {
+	public Map<String, Collection<Percept>> getAllPercepts(String agent, String... entities)
+			throws PerceiveException, NoEnvironmentException {
 
 		// fail if the environment does not run or paused
 		if (!(state == EnvironmentState.RUNNING || state == EnvironmentState.PAUSED)) {
-			throw new PerceiveException("Environment does not run but is "
-					+ state);
+			throw new PerceiveException("Environment does not run but is " + state);
 		}
 
 		// fail if ther agent is not registered
 		if (registeredAgents.contains(agent) == false) {
-			throw new PerceiveException("Agent \"" + agent
-					+ "\" is not registered.");
+			throw new PerceiveException("Agent \"" + agent + "\" is not registered.");
 		}
 
 		// get the associated entities
@@ -821,8 +784,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 		// fail if there are no associated entities
 		if (associatedEntities == null || associatedEntities.size() == 0) {
-			throw new PerceiveException("Agent \"" + agent
-					+ "\" has no associated entities.");
+			throw new PerceiveException("Agent \"" + agent + "\" has no associated entities.");
 		}
 
 		// return value
@@ -852,9 +814,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 			for (String entity : entities) {
 
 				if (associatedEntities.contains(entity) == false)
-					throw new PerceiveException("Entity \"" + entity
-							+ "\" has not been associated with the agent \""
-							+ agent + "\".");
+					throw new PerceiveException(
+							"Entity \"" + entity + "\" has not been associated with the agent \"" + agent + "\".");
 
 				// get all percepts
 				LinkedList<Percept> all = getAllPerceptsFromEntity(entity);
@@ -884,8 +845,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @return a list of percepts.
 	 * @throws NoEnvironmentException
 	 */
-	protected abstract LinkedList<Percept> getAllPerceptsFromEntity(
-			String entity) throws PerceiveException, NoEnvironmentException;
+	protected abstract LinkedList<Percept> getAllPerceptsFromEntity(String entity)
+			throws PerceiveException, NoEnvironmentException;
 
 	/**
 	 * Returns true if the action is supported by the environment.
@@ -923,8 +884,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @return Percept that is result of the action.
 	 * @throws ActException
 	 */
-	protected abstract Percept performEntityAction(String entity, Action action)
-			throws ActException;
+	protected abstract Percept performEntityAction(String entity, Action action) throws ActException;
 
 	/*
 	 * Misc functionality.
@@ -939,8 +899,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	public String getType(String entity) throws EntityException {
 
 		if (!this.entities.contains(entity))
-			throw new EntityException("Entity \"" + entity
-					+ "\" does not exist!");
+			throw new EntityException("Entity \"" + entity + "\" does not exist!");
 
 		String type = entitiesToTypes.get(entity);
 
@@ -968,8 +927,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 		// fail if entity does exist
 		if (entities.contains(entity))
-			throw new EntityException("Entity \"" + entity
-					+ "\" does already exist");
+			throw new EntityException("Entity \"" + entity + "\" does already exist");
 
 		// add
 		entities.add(entity);
@@ -998,8 +956,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 		// fail if entity does exist
 		if (entities.contains(entity))
-			throw new EntityException("Entity \"" + entity
-					+ "\" does already exist");
+			throw new EntityException("Entity \"" + entity + "\" does already exist");
 
 		// add
 		entities.add(entity);
@@ -1021,13 +978,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @throws PlatformException
 	 *             if the agent does not exist.
 	 */
-	protected void deleteEntity(String entity) throws EntityException,
-			RelationException {
+	protected void deleteEntity(String entity) throws EntityException, RelationException {
 
 		// check if exists
 		if (!entities.contains(entity))
-			throw new EntityException("Entity \"" + entity
-					+ "\" does not exist!");
+			throw new EntityException("Entity \"" + entity + "\" does not exist!");
 
 		LinkedList<String> agents = new LinkedList<String>();
 
@@ -1078,12 +1033,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	public void setType(String entity, String type) throws EntityException {
 
 		if (!entities.contains(entity))
-			throw new EntityException("Entity \"" + entity
-					+ "\" does not exist!");
+			throw new EntityException("Entity \"" + entity + "\" does not exist!");
 
 		if (entitiesToTypes.get(entity) != null)
-			throw new EntityException("Entity \"" + entity
-					+ "\" already has a type!");
+			throw new EntityException("Entity \"" + entity + "\" already has a type!");
 
 		entitiesToTypes.put(entity, type);
 
@@ -1107,8 +1060,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 
 		// TODO is state transition valid?
 		if (isStateTransitionValid(this.state, state) == false)
-			throw new ManagementException("Invalid state transition from "
-					+ this.state.toString() + " to  " + state.toString());
+			throw new ManagementException(
+					"Invalid state transition from " + this.state.toString() + " to  " + state.toString());
 
 		// set the state
 		this.state = state;
@@ -1126,29 +1079,21 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * EnvironmentState, eis.iilang.EnvironmentState)
 	 */
 	@Override
-	public boolean isStateTransitionValid(EnvironmentState oldState,
-			EnvironmentState newState) {
+	public boolean isStateTransitionValid(EnvironmentState oldState, EnvironmentState newState) {
 
-		if (oldState == EnvironmentState.INITIALIZING
-				&& newState == EnvironmentState.INITIALIZING)
+		if (oldState == EnvironmentState.INITIALIZING && newState == EnvironmentState.INITIALIZING)
 			return true;
-		if (oldState == EnvironmentState.INITIALIZING
-				&& newState == EnvironmentState.PAUSED)
+		if (oldState == EnvironmentState.INITIALIZING && newState == EnvironmentState.PAUSED)
 			return true;
-		if (oldState == EnvironmentState.INITIALIZING
-				&& newState == EnvironmentState.KILLED)
+		if (oldState == EnvironmentState.INITIALIZING && newState == EnvironmentState.KILLED)
 			return true;
-		if (oldState == EnvironmentState.PAUSED
-				&& newState == EnvironmentState.RUNNING)
+		if (oldState == EnvironmentState.PAUSED && newState == EnvironmentState.RUNNING)
 			return true;
-		if (oldState == EnvironmentState.RUNNING
-				&& newState == EnvironmentState.PAUSED)
+		if (oldState == EnvironmentState.RUNNING && newState == EnvironmentState.PAUSED)
 			return true;
-		if (oldState == EnvironmentState.PAUSED
-				&& newState == EnvironmentState.KILLED)
+		if (oldState == EnvironmentState.PAUSED && newState == EnvironmentState.KILLED)
 			return true;
-		if (oldState == EnvironmentState.RUNNING
-				&& newState == EnvironmentState.KILLED)
+		if (oldState == EnvironmentState.RUNNING && newState == EnvironmentState.KILLED)
 			return true;
 
 		return false;
@@ -1211,8 +1156,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * @see eis.EnvironmentInterfaceStandard#init(java.util.Map)
 	 */
 	@Override
-	public void init(Map<String, Parameter> parameters)
-			throws ManagementException {
+	public void init(Map<String, Parameter> parameters) throws ManagementException {
 		if (isInitSupported() == false)
 			throw new ManagementException("init is not supported");
 		setState(EnvironmentState.INITIALIZING);
@@ -1224,13 +1168,13 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard,
 	 * Leaves all agent-entity relations as they were.
 	 * 
 	 * @param parameters
+	 *            the init parameters
 	 * @throws ManagementException
 	 *             is thrown either when the initializing is not supported or
 	 *             the parameters are wrong.
 	 */
 	@Override
-	public void reset(Map<String, Parameter> parameters)
-			throws ManagementException {
+	public void reset(Map<String, Parameter> parameters) throws ManagementException {
 		setState(EnvironmentState.INITIALIZING);
 	}
 

@@ -49,10 +49,8 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 * @throws EntityException
 	 *             if the entity could not be added.
 	 */
-	public final <T> void registerEntity(String name, T entity)
-			throws EntityException {
-		this.registerEntity(name, entity, new DefaultActionHandler(entity),
-				new DefaultPerceptHandler(entity));
+	public final <T> void registerEntity(String name, T entity) throws EntityException {
+		this.registerEntity(name, entity, new DefaultActionHandler(entity), new DefaultPerceptHandler(entity));
 	}
 
 	/**
@@ -71,9 +69,8 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 * @throws EntityException
 	 *             if the entity could not be added.
 	 */
-	public final <T> void registerEntity(String name, T entity,
-			ActionHandler actionHandler, PerceptHandler perceptHandler)
-			throws EntityException {
+	public final <T> void registerEntity(String name, T entity, ActionHandler actionHandler,
+			PerceptHandler perceptHandler) throws EntityException {
 		actionHandlers.put(name, actionHandler);
 		perceptHandlers.put(name, perceptHandler);
 
@@ -94,11 +91,8 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 * @throws EntityException
 	 *             if the entity could not be added.
 	 */
-	public final <T> void registerEntity(String name, String type, T entity)
-			throws EntityException {
-		this.registerEntity(name, type, entity,
-				new DefaultActionHandler(entity), new DefaultPerceptHandler(
-						entity));
+	public final <T> void registerEntity(String name, String type, T entity) throws EntityException {
+		this.registerEntity(name, type, entity, new DefaultActionHandler(entity), new DefaultPerceptHandler(entity));
 	}
 
 	/**
@@ -125,9 +119,8 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 *             if the entity could not be added.
 	 */
 
-	public final <T> void registerEntity(String name, String type, T entity,
-			ActionHandler actionHandler, PerceptHandler perceptHandler)
-			throws EntityException {
+	public final <T> void registerEntity(String name, String type, T entity, ActionHandler actionHandler,
+			PerceptHandler perceptHandler) throws EntityException {
 		actionHandlers.put(name, actionHandler);
 		perceptHandlers.put(name, perceptHandler);
 
@@ -136,8 +129,7 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	}
 
 	@Override
-	public final void deleteEntity(String name) throws EntityException,
-			RelationException {
+	public final void deleteEntity(String name) throws EntityException, RelationException {
 		super.deleteEntity(name);
 		entities.remove(name);
 		actionHandlers.remove(name);
@@ -151,6 +143,7 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 *            The class of entity to return.
 	 * @param name
 	 *            The name of the entity.
+	 * @return the entity behind this name
 	 */
 	@SuppressWarnings("unchecked")
 	public final <T> T getEntity(String name) {
@@ -164,8 +157,7 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 		PerceptHandler handler = perceptHandlers.get(name);
 
 		if (handler == null) {
-			throw new PerceiveException("Entity with name " + name
-					+ " has no handler");
+			throw new PerceiveException("Entity with name " + name + " has no handler");
 		}
 
 		return handler.getAllPercepts();
@@ -179,14 +171,12 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	}
 
 	@Override
-	protected final Percept performEntityAction(String name, Action action)
-			throws ActException {
+	protected final Percept performEntityAction(String name, Action action) throws ActException {
 
 		ActionHandler handler = actionHandlers.get(name);
 
 		if (handler == null) {
-			throw new ActException(ActException.FAILURE, "Entity with name "
-					+ name + " has no handler");
+			throw new ActException(ActException.FAILURE, "Entity with name " + name + " has no handler");
 		}
 
 		return handler.performAction(action);
@@ -194,8 +184,7 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	}
 
 	@Override
-	public void reset(Map<String, Parameter> parameters)
-			throws ManagementException {
+	public void reset(Map<String, Parameter> parameters) throws ManagementException {
 		super.reset(parameters);
 		for (PerceptHandler handler : perceptHandlers.values()) {
 			handler.reset();

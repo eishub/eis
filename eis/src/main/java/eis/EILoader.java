@@ -34,17 +34,14 @@ public class EILoader {
 	 * @throws IOException
 	 *             is thrown if loading was not successfull
 	 */
-	public static EnvironmentInterfaceStandard fromJarFile(File file)
-			throws IOException {
+	public static EnvironmentInterfaceStandard fromJarFile(File file) throws IOException {
 
 		// 1. locate file, check for existence, check for being a jar
 		if (file.exists() == false)
-			throw new IOException("\"" + file.getAbsolutePath()
-					+ "\" does not exist.");
+			throw new IOException("\"" + file.getAbsolutePath() + "\" does not exist.");
 
 		if (file.getName().endsWith(".jar") == false)
-			throw new IOException("\"" + file.getAbsolutePath()
-					+ "\" is not a jar-file.");
+			throw new IOException("\"" + file.getAbsolutePath() + "\" is not a jar-file.");
 
 		// 2. read manifest and get main class
 		JarFile jarFile = new JarFile(file);
@@ -55,20 +52,17 @@ public class EILoader {
 			throw new IOException(file + "does not specify a main-class");
 
 		// 3. add the jar file to the classpath
-		URLClassLoader sysloader = (URLClassLoader) ClassLoader
-				.getSystemClassLoader();
+		URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 		Class<URLClassLoader> sysclass = URLClassLoader.class;
 		URL url = file.toURI().toURL();
 
 		try {
-			Method method = sysclass.getDeclaredMethod("addURL",
-					new Class[] { URL.class });
+			Method method = sysclass.getDeclaredMethod("addURL", new Class[] { URL.class });
 			method.setAccessible(true);
 			method.invoke(sysloader, new Object[] { url });
 		} catch (Throwable t) {
 			t.printStackTrace();
-			throw new IOException(
-					"Error, could not add URL to system classloader", t);
+			throw new IOException("Error, could not add URL to system classloader", t);
 		}
 
 		// 4. load the class
@@ -77,8 +71,7 @@ public class EILoader {
 		try {
 			envInterfaceClass = loader.loadClass(mainClass);
 		} catch (ClassNotFoundException e) {
-			throw new IOException("Class \"" + mainClass
-					+ "\" could not be loaded from \"" + file + "\"", e);
+			throw new IOException("Class \"" + mainClass + "\" could not be loaded from \"" + file + "\"", e);
 		}
 
 		// 5. get an instance of the class
@@ -89,16 +82,13 @@ public class EILoader {
 			ei = (EnvironmentInterfaceStandard) (c.newInstance());
 		} catch (Exception e) {
 			System.out.println(e);
-			throw new IOException("Class \"" + mainClass
-					+ "\" could not be loaded from \"" + file + "\"", e);
+			throw new IOException("Class \"" + mainClass + "\" could not be loaded from \"" + file + "\"", e);
 		}
 
 		// check version
 		if (version.equals(ei.requiredVersion()) == false)
-			throw new IOException(
-					"Loaded environment interface version does not match the required one \""
-							+ version + "\" vs. \"" + ei.requiredVersion()
-							+ "\"");
+			throw new IOException("Loaded environment interface version does not match the required one \"" + version
+					+ "\" vs. \"" + ei.requiredVersion() + "\"");
 
 		return ei;
 
@@ -113,19 +103,17 @@ public class EILoader {
 	 * @return given class name, verified as implementing
 	 *         EnvironmentInterfaceStandard
 	 * @throws IOException
+	 *             if class can not be loaded as environment
 	 */
-	public static EnvironmentInterfaceStandard fromClassName(String className)
-			throws IOException {
+	public static EnvironmentInterfaceStandard fromClassName(String className) throws IOException {
 
 		// 4. load the class
-		ClassLoader loader = EnvironmentInterfaceStandard.class
-				.getClassLoader();
+		ClassLoader loader = EnvironmentInterfaceStandard.class.getClassLoader();
 		Class<?> envInterfaceClass = null;
 		try {
 			envInterfaceClass = loader.loadClass(className);
 		} catch (ClassNotFoundException e) {
-			throw new IOException("Class \"" + className
-					+ "\" could not be loaded", e);
+			throw new IOException("Class \"" + className + "\" could not be loaded", e);
 		}
 
 		// 5. get an instance of the class
@@ -136,16 +124,13 @@ public class EILoader {
 			ei = (EnvironmentInterfaceStandard) (c.newInstance());
 		} catch (Exception e) {
 			System.out.println(e);
-			throw new IOException("Class \"" + className
-					+ "\" could not be loaded", e);
+			throw new IOException("Class \"" + className + "\" could not be loaded", e);
 		}
 
 		// check version
 		if (version.equals(ei.requiredVersion()) == false)
-			throw new IOException(
-					"Loaded environment interface version does not match the required one \""
-							+ version + "\" vs. \"" + ei.requiredVersion()
-							+ "\"");
+			throw new IOException("Loaded environment interface version does not match the required one \"" + version
+					+ "\" vs. \"" + ei.requiredVersion() + "\"");
 
 		return ei;
 
@@ -168,8 +153,7 @@ public class EILoader {
 
 		} else {
 
-			EnvironmentInterfaceStandard ei = EILoader.fromJarFile(new File(
-					args[0]));
+			EnvironmentInterfaceStandard ei = EILoader.fromJarFile(new File(args[0]));
 
 		}
 

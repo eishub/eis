@@ -48,7 +48,7 @@ public interface EnvironmentListener {
 	/**
 	 * Handles the event that an entity has been newly created. Announce new
 	 * entities only when the environment is ready to handle
-	 * {@link #getAllPercepts(String, String...)}.
+	 * {@link EnvironmentInterfaceStandard#getAllPercepts(String, String...)}.
 	 * 
 	 * @param entity
 	 *            is the entity that has been created.

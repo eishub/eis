@@ -32,6 +32,7 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	 * Contructs a list of parameters from an array.
 	 * 
 	 * @param parameters
+	 *            the parameters for this list
 	 */
 	public ParameterList(Parameter... parameters) {
 
@@ -46,6 +47,7 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	 * Constructs a list of parameters from a collection.
 	 * 
 	 * @param parameters
+	 *            the parameters for this list
 	 */
 	public ParameterList(Collection<Parameter> parameters) {
 
@@ -66,7 +68,9 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	}
 
 	/**
-	 * Returns the index of an element.
+	 * @param p
+	 *            the element needed
+	 * @return the index of an element
 	 */
 	public int indexOf(Parameter p) {
 
@@ -75,9 +79,8 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	}
 
 	/**
-	 * Returns the size of the list.
 	 * 
-	 * @return
+	 * @return the size of the list
 	 */
 	public int size() {
 

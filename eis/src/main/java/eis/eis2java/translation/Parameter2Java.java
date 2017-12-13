@@ -15,8 +15,6 @@ public interface Parameter2Java<T> {
 	/**
 	 * Translates the {@link Parameter} into an object of type T.
 	 * 
-	 * @param <T>
-	 *            The type of object to translate the parameter to.
 	 * @param parameter
 	 *            The parameter to translate.
 	 * @return The {@link Parameter} that represents a translated object.

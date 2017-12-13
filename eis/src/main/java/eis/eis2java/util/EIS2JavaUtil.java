@@ -11,18 +11,24 @@ import eis.eis2java.annotation.AsPercept;
 import eis.exceptions.EntityException;
 import eis.iilang.Action;
 
+/**
+ * utility class for eis2java conversions
+ *
+ */
 public class EIS2JavaUtil {
 
 	/**
 	 * Processes all {@link AsPercept} annotations for the given class.
+	 * 
+	 * @param clazz
+	 *            the class to process the annotations of
 	 * 
 	 * @return processed annotations
 	 * 
 	 * @throws EntityException
 	 *             Thrown when the annotations are not used properly.
 	 */
-	public static Set<Method> processPerceptAnnotations(Class<?> clazz)
-			throws EntityException {
+	public static Set<Method> processPerceptAnnotations(Class<?> clazz) throws EntityException {
 
 		Set<Method> percepts = new HashSet<Method>();
 
@@ -31,8 +37,7 @@ public class EIS2JavaUtil {
 			if (asPercept != null) {
 
 				if (method.getParameterTypes().length != 0) {
-					throw new EntityException(
-							"Percepts may not have any arguments");
+					throw new EntityException("Percepts may not have any arguments");
 				}
 
 				percepts.add(method);
@@ -47,13 +52,15 @@ public class EIS2JavaUtil {
 	 * Processes all annotations for the given class. The annotations are
 	 * provided as map action names and methods.
 	 * 
+	 * @param clazz
+	 *            the class to get annotations from
+	 * 
 	 * @return processed annotations
 	 * 
 	 * @throws EntityException
 	 *             Thrown when the annotations are not used properly.
 	 */
-	public static Map<String, Method> processActionAnnotations(Class<?> clazz)
-			throws EntityException {
+	public static Map<String, Method> processActionAnnotations(Class<?> clazz) throws EntityException {
 
 		Map<String, Method> actions = new HashMap<String, Method>();
 
@@ -62,9 +69,7 @@ public class EIS2JavaUtil {
 			if (asAction != null) {
 				String name = getNameOfAction(method);
 				if (actions.containsKey(name)) {
-					throw new EntityException(
-							"Found two action definitions with the same name: "
-									+ name);
+					throw new EntityException("Found two action definitions with the same name: " + name);
 				}
 				actions.put(name, method);
 			}
@@ -80,6 +85,7 @@ public class EIS2JavaUtil {
 	 * 
 	 * @param action
 	 *            The action to get the name of.
+	 * @return name of the action, in prolog-signature style
 	 */
 	public static String getNameOfAction(Action action) {
 		return action.getName() + "/" + action.getParameters().size();
@@ -91,8 +97,9 @@ public class EIS2JavaUtil {
 	 * 
 	 * Action names can be used to uniquely identify the action.
 	 * 
-	 * @param action
+	 * @param method
 	 *            The method to get the name of.
+	 * 
 	 * @return the name/number of the action or null when the method does not
 	 *         have the AsAction annotation.
 	 */
@@ -113,6 +120,7 @@ public class EIS2JavaUtil {
 	 * Percept names can not be used to uniquely identify percepts.
 	 * 
 	 * @param method
+	 *            the name of given method
 	 * @return the name of the percept or null when the method does not have the
 	 *         AsPercept annotation.
 	 */

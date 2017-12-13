@@ -66,6 +66,7 @@ public class AllPerceptsModule {
 	 * Calls all percept providers and puts the result in a new batch.
 	 * 
 	 * @throws PerceiveException
+	 *             if percept can not be updated
 	 */
 	public synchronized void updatePercepts() throws PerceiveException {
 
@@ -79,14 +80,11 @@ public class AllPerceptsModule {
 			try {
 				percept = method.invoke(entity);
 			} catch (IllegalArgumentException e) {
-				throw new PerceiveException("Unable to update " + perceptName,
-						e);
+				throw new PerceiveException("Unable to update " + perceptName, e);
 			} catch (IllegalAccessException e) {
-				throw new PerceiveException("Unable to update " + perceptName,
-						e);
+				throw new PerceiveException("Unable to update " + perceptName, e);
 			} catch (InvocationTargetException e) {
-				throw new PerceiveException("Unable to update " + perceptName,
-						e);
+				throw new PerceiveException("Unable to update " + perceptName, e);
 			}
 
 			// Percept is event based, needs special handling.
@@ -99,15 +97,13 @@ public class AllPerceptsModule {
 
 				// Percept provides multiple items, add them independently.
 				if (!annotation.multiplePercepts()) {
-					throw new PerceiveException("Unable to update "
-							+ perceptName
-							+ " event percept must have multiplePercepts.");
+					throw new PerceiveException(
+							"Unable to update " + perceptName + " event percept must have multiplePercepts.");
 				}
 
 				if (!(percept instanceof Collection<?>)) {
-					throw new PerceiveException("Unable to update "
-							+ perceptName
-							+ " return value must be a collection.");
+					throw new PerceiveException(
+							"Unable to update " + perceptName + " return value must be a collection.");
 				}
 
 				events.addAll((Collection<?>) percept);

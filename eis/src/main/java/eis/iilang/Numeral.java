@@ -19,6 +19,7 @@ public class Numeral extends Parameter {
 	 * Contructs a number.
 	 * 
 	 * @param value
+	 *            new number
 	 */
 	public Numeral(Number value) {
 

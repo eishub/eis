@@ -20,6 +20,7 @@ public class TruthValue extends Parameter {
 	 * Contructs a truth-value.
 	 * 
 	 * @param value
+	 *            new value for this
 	 */
 	public TruthValue(String value) {
 
@@ -31,6 +32,7 @@ public class TruthValue extends Parameter {
 	 * Constructs a truth-value from a boolean one.
 	 * 
 	 * @param bool
+	 *            new value for this
 	 */
 	public TruthValue(boolean bool) {
 
@@ -62,7 +64,7 @@ public class TruthValue extends Parameter {
 	/**
 	 * Returns the value.
 	 * 
-	 * @return
+	 * @return the value of this
 	 */
 	public String getValue() {
 
@@ -74,7 +76,7 @@ public class TruthValue extends Parameter {
 	 * Gets the value as a boolean. Not that this only works iff the value
 	 * itself is either true or false.
 	 * 
-	 * @return
+	 * @return the value of this
 	 */
 	public boolean getBooleanValue() {
 

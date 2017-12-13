@@ -32,15 +32,15 @@ import eis.iilang.Percept;
  * <li>loading environment-interfaces from jar-files.</li>
  * </ul>
  * 
- * <h1>Thread Safety</h1>
- * This interface does not pose any requirements on thread safety. Therefore it
- * can not be assumed that an environment behind this interface is thread safe.
+ * <h1>Thread Safety</h1> This interface does not pose any requirements on
+ * thread safety. Therefore it can not be assumed that an environment behind
+ * this interface is thread safe.
  * 
- * <h1>Initialization</h1>
- * Implementors of this must have an empty default constructor, so that an
- * instance of the interface can be created without any additional requirements.
- * Your environment state can stay {@link EnvironmentState#INITIALIZING} and
- * will become usable only after {@link #init(Map)} is called.
+ * <h1>Initialization</h1> Implementors of this must have an empty default
+ * constructor, so that an instance of the interface can be created without any
+ * additional requirements. Your environment state can stay
+ * {@link EnvironmentState#INITIALIZING} and will become usable only after
+ * {@link #init(Map)} is called.
  * 
  * @author tristanbehrens
  * 
@@ -97,7 +97,7 @@ public interface EnvironmentInterfaceStandard {
 	 * 
 	 * @param agent
 	 *            the identifier of the agent.
-	 * @throws PlatformException
+	 * @throws AgentException
 	 *             if the agent has already been registered.
 	 */
 	void registerAgent(String agent) throws AgentException;
@@ -107,7 +107,7 @@ public interface EnvironmentInterfaceStandard {
 	 * 
 	 * @param agent
 	 *            the identifier of the agent.
-	 * @throws AbstractException
+	 * @throws AgentException
 	 *             if the agent has not registered before.
 	 */
 	void unregisterAgent(String agent) throws AgentException;
@@ -133,7 +133,7 @@ public interface EnvironmentInterfaceStandard {
 	 *            the id of the agent.
 	 * @param entity
 	 *            the id of the entity.
-	 * @throws PlatformException
+	 * @throws RelationException
 	 *             if the entity is not free, and if it or the agent does not
 	 *             exist.
 	 */
@@ -146,9 +146,9 @@ public interface EnvironmentInterfaceStandard {
 	 * 
 	 * @param entity
 	 *            the id of the entity to be freed.
-	 * @throws EntityException
+	 * @throws RelationException
 	 *             if the entity can't be freed
-	 * @throws PlatformException
+	 * @throws EntityException
 	 *             is thrown if the entity does not exist, or if it is not
 	 *             associated.
 	 */
@@ -184,8 +184,7 @@ public interface EnvironmentInterfaceStandard {
 	 * @throws EntityException
 	 *             if the entity can't be freed
 	 */
-	void freePair(String agent, String entity) throws RelationException,
-			EntityException;
+	void freePair(String agent, String entity) throws RelationException, EntityException;
 
 	/**
 	 * Returns the entities associated to a given agent.
@@ -195,8 +194,7 @@ public interface EnvironmentInterfaceStandard {
 	 * @return a set of entities.
 	 * @throws AgentException
 	 */
-	Collection<String> getAssociatedEntities(String agent)
-			throws AgentException;
+	Collection<String> getAssociatedEntities(String agent) throws AgentException;
 
 	/**
 	 * Returns the agents associated to a given entity.
@@ -204,10 +202,9 @@ public interface EnvironmentInterfaceStandard {
 	 * @param entity
 	 *            is the entity.
 	 * @return a set of agents.
-	 * @throws AgentException
+	 * @throws EntityException
 	 */
-	Collection<String> getAssociatedAgents(String entity)
-			throws EntityException;
+	Collection<String> getAssociatedAgents(String entity) throws EntityException;
 
 	/**
 	 * Retrieves the list of free entities.
@@ -252,8 +249,7 @@ public interface EnvironmentInterfaceStandard {
 	 * @throws NoEnvironmentException
 	 *             if the interface is not connected to an environment.
 	 */
-	Map<String, Percept> performAction(String agent, Action action,
-			String... entities) throws ActException;
+	Map<String, Percept> performAction(String agent, Action action, String... entities) throws ActException;
 
 	/**
 	 * Gets all percepts.
@@ -275,6 +271,8 @@ public interface EnvironmentInterfaceStandard {
 	 * 
 	 * @param agent
 	 *            the agent that requests the percepts.
+	 * @param entities
+	 *            the eneities that this agent is associated with.
 	 * @return a list of percepts
 	 * @throws PerceiveException
 	 *             if the agent is not registered or if the agents requests
@@ -284,9 +282,8 @@ public interface EnvironmentInterfaceStandard {
 	 *             not by throwing.
 	 * @throws NoEnvironmentException
 	 */
-	Map<String, Collection<Percept>> getAllPercepts(String agent,
-			String... entities) throws PerceiveException,
-			NoEnvironmentException;
+	Map<String, Collection<Percept>> getAllPercepts(String agent, String... entities)
+			throws PerceiveException, NoEnvironmentException;
 
 	/**
 	 * Checks whether a state transition between two states is possible or not.
@@ -298,8 +295,7 @@ public interface EnvironmentInterfaceStandard {
 	 * @return true iff transition valid
 	 */
 	// TODO needs to go to the default implementation
-	boolean isStateTransitionValid(EnvironmentState oldState,
-			EnvironmentState newState);
+	boolean isStateTransitionValid(EnvironmentState oldState, EnvironmentState newState);
 
 	/**
 	 * Initializes the environment(-interface) with a set of key-value-pairs.
@@ -322,9 +318,9 @@ public interface EnvironmentInterfaceStandard {
 	 * <li>set the environment state to {@link EnvironmentState#INITIALIZING}.
 	 * <li>Reset environment to its initial state (initial map for instance)
 	 * <li>Reset all entities to their initial state
-	 * <li>Prepare to send the entities the initial percept (note:
-	 * "initial percepts" is not a contract with EIS but might a contract with
-	 * the specific environment)
+	 * <li>Prepare to send the entities the initial percept (note: "initial
+	 * percepts" is not a contract with EIS but might a contract with the
+	 * specific environment)
 	 * <li>keep all agents attached, do not remove entities or create new ones
 	 * etc.
 	 * </ul>
@@ -399,8 +395,8 @@ public interface EnvironmentInterfaceStandard {
 	boolean isKillSupported();
 
 	/**
-	 * Returns the EIS-runtime-version that is compatible with the implemented
-	 * environment.
+	 * @return the EIS-runtime-version that is compatible with the implemented
+	 *         environment
 	 */
 	String requiredVersion();
 
@@ -410,6 +406,8 @@ public interface EnvironmentInterfaceStandard {
 	 * @param property
 	 *            property to query
 	 * @return String defining the propery, or null if no such property.
+	 * @throws QueryException
+	 *             if property can't be queried
 	 */
 	String queryProperty(String property) throws QueryException;
 
@@ -422,8 +420,9 @@ public interface EnvironmentInterfaceStandard {
 	 *            the property to query
 	 * @return String property value for given entity/property combination, or
 	 *         null if no such property.
+	 * @throws QueryException
+	 *             if query failed
 	 */
-	String queryEntityProperty(String entity, String property)
-			throws QueryException;
+	String queryEntityProperty(String entity, String property) throws QueryException;
 
 }
