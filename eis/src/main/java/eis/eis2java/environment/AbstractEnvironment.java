@@ -46,6 +46,8 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 *            The name of the entity.
 	 * @param entity
 	 *            The entity itself.
+	 * @param <T>
+	 *            the type of the entity
 	 * @throws EntityException
 	 *             if the entity could not be added.
 	 */
@@ -63,6 +65,8 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 *            The entity itself.
 	 * @param actionHandler
 	 *            the associated action handler.
+	 * @param <T>
+	 *            the type of the entity
 	 * 
 	 * @param perceptHandler
 	 *            the associated percept handler.
@@ -81,6 +85,9 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	/**
 	 * Couples a name to an entity and parses it's annotations for percepts and
 	 * actions.
+	 * 
+	 * @param <T>
+	 *            the type of the entity
 	 * 
 	 * @param name
 	 *            The name of the entity.
@@ -112,6 +119,8 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 *            The entity itself.
 	 * @param actionHandler
 	 *            the associated action handler.
+	 * @param <T>
+	 *            the type of the entity
 	 * 
 	 * @param perceptHandler
 	 *            the associated percept handler.

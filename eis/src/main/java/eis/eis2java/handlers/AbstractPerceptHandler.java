@@ -50,8 +50,6 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 * Translates the percept objects and applies filtering as described by
 	 * {@link AsPercept#filter()}.
 	 * 
-	 * @param entity
-	 *            the entity which produced the percepts
 	 * @param method
 	 *            the method which produced the percepts
 	 * @param perceptObjects
@@ -59,6 +57,8 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 *            {@link Percept}s. Each object is converted into one percept.
 	 * @return list of {@link Percept} objects.
 	 * @throws PerceiveException
+	 *             if an attempt to perform an action or to retrieve percepts
+	 *             has failed
 	 */
 	protected final List<Percept> translatePercepts(Method method, List<Object> perceptObjects)
 			throws PerceiveException {
@@ -176,6 +176,8 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 * @return a unpacked version of the percept object. A null perceptObject is
 	 *         translated into an empty list.
 	 * @throws PerceiveException
+	 *             if an attempt to perform an action or to retrieve percepts
+	 *             has failed
 	 */
 	protected final List<Object> unpackPerceptObject(Method method, Object perceptObject) throws PerceiveException {
 		AsPercept annotation = method.getAnnotation(AsPercept.class);
