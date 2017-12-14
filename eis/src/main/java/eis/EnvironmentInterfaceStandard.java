@@ -20,7 +20,7 @@ import eis.iilang.Percept;
 /**
  * This interface is the main-interface of EIS. All environment-interfaces have
  * to implement this interface and its methods.
- * <p/>
+ * <p>
  * Each environment interface should implement these functionalities:
  * <ul>
  * <li>attaching and detaching listeners;</li>
@@ -49,7 +49,7 @@ public interface EnvironmentInterfaceStandard {
 
 	/**
 	 * Attaches an environment-listener.
-	 * <p/>
+	 * <p>
 	 * If the listener is already attached, nothing will happen.
 	 * 
 	 * @param listener
@@ -59,7 +59,7 @@ public interface EnvironmentInterfaceStandard {
 
 	/**
 	 * Detaches an environment-listener.
-	 * <p/>
+	 * <p>
 	 * If the listener is not attached, nothing will happen.
 	 * 
 	 * @param listener
@@ -69,7 +69,7 @@ public interface EnvironmentInterfaceStandard {
 
 	/**
 	 * Attaches an agent-listener.
-	 * <p/>
+	 * <p>
 	 * If the agent has not been registered nothing will happen.
 	 * 
 	 * @param agent
@@ -81,7 +81,7 @@ public interface EnvironmentInterfaceStandard {
 
 	/**
 	 * Detaches an agent-listener.
-	 * <p/>
+	 * <p>
 	 * If the agent has not been registered and/or the listener does not exist
 	 * nothing will happen.
 	 * 
@@ -187,12 +187,11 @@ public interface EnvironmentInterfaceStandard {
 	void freePair(String agent, String entity) throws RelationException, EntityException;
 
 	/**
-	 * Returns the entities associated to a given agent.
-	 * 
 	 * @param agent
 	 *            is the agent.
-	 * @return a set of entities.
+	 * @return the entities associated to a given agent.
 	 * @throws AgentException
+	 *             if agent does not exist
 	 */
 	Collection<String> getAssociatedEntities(String agent) throws AgentException;
 
@@ -203,6 +202,7 @@ public interface EnvironmentInterfaceStandard {
 	 *            is the entity.
 	 * @return a set of agents.
 	 * @throws EntityException
+	 *             if entity does not exist
 	 */
 	Collection<String> getAssociatedAgents(String entity) throws EntityException;
 
@@ -253,12 +253,12 @@ public interface EnvironmentInterfaceStandard {
 
 	/**
 	 * Gets all percepts.
-	 * <p/>
+	 * <p>
 	 * Either returns the percepts of all associated entities of or a subset.
-	 * <p/>
+	 * <p>
 	 * This function should be called only when {@link #getState()} is
 	 * {@link EnvironmentState#RUNNING} or {@link EnvironmentState#PAUSED}.
-	 * <p/>
+	 * <p>
 	 * <em>NOTE</em> In many environments the return value depends on previous
 	 * calls to getAllPercepts. There may be special percepts that are provided
 	 * only the first time getAllPercepts is called. There may be percepts that
@@ -281,6 +281,8 @@ public interface EnvironmentInterfaceStandard {
 	 *             proceed working, that should happen by means of a percept and
 	 *             not by throwing.
 	 * @throws NoEnvironmentException
+	 *             if an attempt to perform an action or to retrieve percepts
+	 *             has failed
 	 */
 	Map<String, Collection<Percept>> getAllPercepts(String agent, String... entities)
 			throws PerceiveException, NoEnvironmentException;
@@ -305,6 +307,7 @@ public interface EnvironmentInterfaceStandard {
 	 * {@link EnvironmentListener#handleNewEntity(String)} for all entities.
 	 * 
 	 * @param parameters
+	 *            the parameters to use to initialize the environment
 	 * @throws ManagementException
 	 *             is thrown either when the initializing is not supported or
 	 *             the parameters are wrong.
@@ -326,6 +329,8 @@ public interface EnvironmentInterfaceStandard {
 	 * </ul>
 	 * 
 	 * @param parameters
+	 *            the parameters to use to initialize the environment
+	 * 
 	 * @throws ManagementException
 	 *             is thrown either when the initializing is not supported or
 	 *             the parameters are wrong.

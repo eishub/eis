@@ -135,7 +135,7 @@ public abstract class IILElement implements Serializable, Cloneable {
 	 *            the visitor to accept
 	 * @param object
 	 *            object to visit ?
-	 * @return
+	 * @return unknown
 	 * @see eis.iilang.IILObjectVisitor
 	 */
 	public abstract Object accept(IILObjectVisitor visitor, Object object);

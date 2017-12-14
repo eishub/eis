@@ -80,6 +80,10 @@ public class ActException extends EnvironmentInterfaceException {
 
 	}
 
+	/**
+	 * @param type
+	 *            the type of error
+	 */
 	public ActException(int type) {
 		super("");
 

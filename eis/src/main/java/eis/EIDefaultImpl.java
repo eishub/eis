@@ -29,7 +29,7 @@ import eis.iilang.Percept;
 /**
  * This class represents the default-implementation for
  * <code>EnvironmentInterfaceStandard</code>.
- * <p/>
+ * <p>
  * This class implements these functionalities of
  * <code>EnvironmentInterfaceStandard</code>:
  * <ul>
@@ -38,7 +38,7 @@ import eis.iilang.Percept;
  * <li>managing the agents-entities-relationship;</li>
  * <li>performing actions and retrieving percepts;</li>
  * </ul>
- * <p/>
+ * <p>
  * It also implements these:
  * <ul>
  * <li>notifying listeners;</li>
@@ -57,7 +57,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 	/**
 	 * This is a list of registered agents.
-	 * <p/>
+	 * <p>
 	 * Only registered agents can act and be associated with entities.
 	 */
 	private LinkedList<String> registeredAgents = null;
@@ -75,7 +75,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	/**
 	 * This collection stores the listeners that are used to notify about
 	 * certain events.
-	 * <p/>
+	 * <p>
 	 * The collection can be changed by invoking the respective methods for
 	 * attaching and detaching listeners.
 	 */
@@ -259,9 +259,12 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * Sends a percept to an agent/several agents via a given array of entities.
 	 * 
 	 * @param percept
+	 *            the percept to send
 	 * @param pEntities
 	 *            an array of entities
 	 * @throws EnvironmentInterfaceException
+	 *             if something unexpected happens when accessing the
+	 *             environment-interface
 	 */
 	protected void notifyAgentsViaEntity(Percept percept, String... pEntities) throws EnvironmentInterfaceException {
 
@@ -307,7 +310,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *            is the free entity.
 	 * @param agents
 	 *            is the list of agents that were associated
-	 * @throws ManagementException
+	 * @throws EntityException
+	 *             if entity unknown or environment paused, etc
 	 */
 	protected void notifyFreeEntity(String entity, Collection<String> agents) throws EntityException {
 
@@ -381,6 +385,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * 
 	 * @param entity
 	 *            is the deleted entity.
+	 * @param agents
+	 *            the entities that were associated
 	 */
 	protected void notifyDeletedEntity(String entity, Collection<String> agents) {
 
@@ -837,52 +843,55 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 	/**
 	 * Gets all percepts of an entity.
-	 * <p/>
+	 * <p>
 	 * This method must be overridden.
 	 * 
 	 * @param entity
 	 *            is the entity whose percepts should be retrieved.
 	 * @return a list of percepts.
+	 * @throws PerceiveException
+	 *             if an attempt to perform an action or to retrieve percepts
+	 *             has failed
 	 * @throws NoEnvironmentException
+	 *             if an attempt to perform an action or to retrieve percepts
+	 *             has failed
 	 */
 	protected abstract LinkedList<Percept> getAllPerceptsFromEntity(String entity)
 			throws PerceiveException, NoEnvironmentException;
 
 	/**
-	 * Returns true if the action is supported by the environment.
-	 * 
 	 * @param action
+	 *            the action to check
 	 * @return true if the action is supported by the environment
 	 */
 	protected abstract boolean isSupportedByEnvironment(Action action);
 
 	/**
-	 * Returns true if the action is supported by the type.
-	 * 
 	 * @param action
+	 *            the action to check
+	 * @param type
+	 *            the type of the action
 	 * @return Returns true if the action is supported by the type
 	 */
 	protected abstract boolean isSupportedByType(Action action, String type);
 
 	/**
-	 * Returns true if the action is supported by the entity.
-	 * 
 	 * @param action
+	 *            the action to check
+	 * @param entity
+	 *            is the entity whose percepts should be retrieved.
 	 * @return true if action supported by entity.
 	 */
 	protected abstract boolean isSupportedByEntity(Action action, String entity);
 
 	/**
 	 * @param action
-	 * @return
-	 */
-	// protected abstract boolean areParametersCorrect(Action action);
-
-	/**
+	 *            the action to check
 	 * @param entity
-	 * @param action
+	 *            is the entity whose percepts should be retrieved.
 	 * @return Percept that is result of the action.
 	 * @throws ActException
+	 *             an attempt to perform an action has failed
 	 */
 	protected abstract Percept performEntityAction(String entity, Action action) throws ActException;
 
@@ -920,7 +929,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * 
 	 * @param entity
 	 *            is the identifier of the entity that is to be added.
-	 * @throws PlatformException
+	 * @throws EntityException
 	 *             is thrown if the entity already exists.
 	 */
 	protected void addEntity(String entity) throws EntityException {
@@ -949,7 +958,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *            is the identifier of the entity that is to be added.
 	 * @param type
 	 *            is the type of the entity.
-	 * @throws PlatformException
+	 * @throws EntityException
 	 *             is thrown if the entity already exists.
 	 */
 	protected void addEntity(String entity, String type) throws EntityException {
@@ -975,8 +984,11 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * 
 	 * @param entity
 	 *            the id of the entity that is to be removed.
-	 * @throws PlatformException
+	 * @throws EntityException
 	 *             if the agent does not exist.
+	 * @throws RelationException
+	 *             if an attempt to manipulate the agents-entities-relation has
+	 *             failed
 	 */
 	protected void deleteEntity(String entity) throws EntityException, RelationException {
 

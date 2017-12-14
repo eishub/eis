@@ -14,38 +14,56 @@ import eis.iilang.Action;
 import eis.iilang.Numeral;
 import eis.iilang.Percept;
 
+/**
+ * test the action handler
+ */
 public abstract class ActionHandlerTest {
 
 	protected ActionHandler handler;
 
-	public abstract ActionHandler getHandler(Object entity)
-			throws EntityException;
+	/**
+	 * @param entity
+	 *            the entity that produces percepts
+	 * @return the action handle rfor this test
+	 * @throws EntityException
+	 *             if something fails
+	 */
+	public abstract ActionHandler getHandler(Object entity) throws EntityException;
 
+	/**
+	 * @return a valid entity
+	 */
 	public abstract ValidActionEntity getValdidEntity();
 
 	protected ValidActionEntity entity;
 
-	public ActionHandlerTest() {
-		super();
-	}
-
+	/**
+	 * @throws Exception
+	 *             if setup fails
+	 */
 	@Before
 	public void setUp() throws Exception {
 		entity = getValdidEntity();
 		handler = getHandler(entity);
 	}
 
+	/**
+	 * 
+	 */
 	@Test
 	public void testIsSupportedByEntityPostive() {
 		assertTrue(handler.isSupportedByEntity(new Action("getX")));
 		assertFalse(handler.isSupportedByEntity(new Action("getY")));
 
-		assertTrue(handler.isSupportedByEntity(new Action("setX",
-				new Numeral(1))));
+		assertTrue(handler.isSupportedByEntity(new Action("setX", new Numeral(1))));
 		assertFalse(handler.isSupportedByEntity(new Action("setX")));
 
 	}
 
+	/**
+	 * @throws ActException
+	 *             obviously
+	 */
 	@Test
 	public void testPerformAction() throws ActException {
 		Percept percept = handler.performAction(new Action("getX"));

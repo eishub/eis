@@ -19,6 +19,7 @@ public abstract class ActionHandler {
 	 * True iff the agent supports the given action.
 	 * 
 	 * @param action
+	 *            the action to be checked
 	 * @return true iff the agent supports the given action.
 	 */
 	public abstract boolean isSupportedByEntity(Action action);

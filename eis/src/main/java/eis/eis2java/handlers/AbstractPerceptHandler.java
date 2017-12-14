@@ -32,6 +32,10 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 */
 	protected final Object entity;
 
+	/**
+	 * @param entity
+	 *            the entity which produced the percepts
+	 */
 	public AbstractPerceptHandler(Object entity) {
 		assert entity != null;
 		this.entity = entity;
@@ -56,8 +60,8 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 * @return list of {@link Percept} objects.
 	 * @throws PerceiveException
 	 */
-	protected final List<Percept> translatePercepts(Method method,
-			List<Object> perceptObjects) throws PerceiveException {
+	protected final List<Percept> translatePercepts(Method method, List<Object> perceptObjects)
+			throws PerceiveException {
 		// the add and delete list based on the perceived objects
 		// list of object that we had last round but not at this moment.
 		List<Object> addList = new ArrayList<Object>();
@@ -105,14 +109,12 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 		for (Object javaObject : addList) {
 			Parameter[] parameters;
 			try {
-				parameters = Translator.getInstance().translate2Parameter(
-						javaObject);
+				parameters = Translator.getInstance().translate2Parameter(javaObject);
 				if (annotation.multipleArguments()) {
 					parameters = extractMultipleParameters(parameters);
 				}
 			} catch (TranslationException e) {
-				throw new PerceiveException("Unable to translate percept "
-						+ perceptName, e);
+				throw new PerceiveException("Unable to translate percept " + perceptName, e);
 			}
 			percepts.add(new Percept(perceptName, parameters));
 		}
@@ -121,17 +123,14 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 		for (Object javaObject : delList) {
 			Parameter[] parameters;
 			try {
-				parameters = Translator.getInstance().translate2Parameter(
-						javaObject);
+				parameters = Translator.getInstance().translate2Parameter(javaObject);
 				if (annotation.multipleArguments()) {
 					parameters = extractMultipleParameters(parameters);
 				}
 			} catch (TranslationException e) {
-				throw new PerceiveException("Unable to translate percept "
-						+ perceptName, e);
+				throw new PerceiveException("Unable to translate percept " + perceptName, e);
 			}
-			percepts.add(new Percept("not", new Function(perceptName,
-					parameters)));
+			percepts.add(new Percept("not", new Function(perceptName, parameters)));
 		}
 
 		previousPercepts.put(method, perceptObjects);
@@ -148,8 +147,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 * @throws PerceiveException
 	 *             if parameters is not the right format.
 	 */
-	private Parameter[] extractMultipleParameters(Parameter[] parameters)
-			throws PerceiveException {
+	private Parameter[] extractMultipleParameters(Parameter[] parameters) throws PerceiveException {
 		if (parameters.length == 1 && parameters[0] instanceof ParameterList) {
 			// special case where the top set is the set of arguments
 			// for function
@@ -160,8 +158,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 			}
 		} else {
 			throw new PerceiveException(
-					"multipleArguments parameter is set and therefore expecting a set but got "
-							+ parameters);
+					"multipleArguments parameter is set and therefore expecting a set but got " + parameters);
 		}
 		return parameters;
 	}
@@ -180,8 +177,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 *         translated into an empty list.
 	 * @throws PerceiveException
 	 */
-	protected final List<Object> unpackPerceptObject(Method method,
-			Object perceptObject) throws PerceiveException {
+	protected final List<Object> unpackPerceptObject(Method method, Object perceptObject) throws PerceiveException {
 		AsPercept annotation = method.getAnnotation(AsPercept.class);
 		String perceptName = annotation.name();
 
@@ -199,8 +195,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 		// collection.
 		if (!(perceptObject instanceof Collection<?>)) {
 			throw new PerceiveException("Unable to perceive " + perceptName
-					+ " because a collection was expected but a "
-					+ perceptObject.getClass() + " was returned instead");
+					+ " because a collection was expected but a " + perceptObject.getClass() + " was returned instead");
 		}
 
 		// The multiple percepts are a collection, put them in a list.

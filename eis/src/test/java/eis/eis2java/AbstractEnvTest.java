@@ -43,7 +43,12 @@ public class AbstractEnvTest {
 
 	}
 
-	// @Test disabled until we can fix #42
+	/**
+	 * @throws EntityException
+	 *             obviously
+	 * @throws ManagementException
+	 *             obviously
+	 */
 	public void testAddEntity() throws EntityException, ManagementException {
 		MyEnv env = new MyEnv();
 		env.doAddEntity();
@@ -52,9 +57,18 @@ public class AbstractEnvTest {
 		assertEquals("entity", env.getEntity("entityname"));
 	}
 
+	/**
+	 * @throws EntityException
+	 *             obviously
+	 * @throws AgentException
+	 *             obviously
+	 * @throws RelationException
+	 *             obviously
+	 * @throws ManagementException
+	 *             obviously
+	 */
 	@Test
-	public void testFreePair() throws EntityException, AgentException,
-			RelationException, ManagementException {
+	public void testFreePair() throws EntityException, AgentException, RelationException, ManagementException {
 		MyEnv env = new MyEnv();
 		env.doAddEntity();
 
