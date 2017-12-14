@@ -94,14 +94,6 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 				addList = perceptObjects;
 			}
 			break;
-		case ON_CHANGE_NEG:
-			addList.addAll(perceptObjects);
-			if (previous != null) {
-				addList.removeAll(previous);
-				delList.addAll(previous);
-				delList.removeAll(perceptObjects);
-			}
-			break;
 		}
 
 		// Translate addList.

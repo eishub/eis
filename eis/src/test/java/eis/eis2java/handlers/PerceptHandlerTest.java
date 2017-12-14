@@ -26,8 +26,7 @@ public abstract class PerceptHandlerTest {
 	protected PerceptHandler handler;
 	protected ValidPerceptEntity entity;
 
-	public abstract PerceptHandler getHandler(Object entity)
-			throws EntityException;
+	public abstract PerceptHandler getHandler(Object entity) throws EntityException;
 
 	public abstract ValidPerceptEntity getValidEntity() throws EntityException;
 
@@ -69,8 +68,6 @@ public abstract class PerceptHandlerTest {
 		assertTrue(percepts.contains(entity.getOnce()));
 		assertTrue(percepts.contains(entity.getOnChange()));
 		assertFalse(percepts.contains(entity.getOnChanged()));
-		assertTrue(percepts.containsAll(entity.getOnChangeNegation()));
-		assertFalse(percepts.containsAll(entity.getOnChangedNegation()));
 		assertTrue(percepts.containsAll(entity.getMultipleAlways()));
 		assertTrue(percepts.containsAll(entity.getMultipleOnChange()));
 
@@ -90,8 +87,6 @@ public abstract class PerceptHandlerTest {
 		assertFalse(percepts.contains(entity.getOnce()));
 		assertFalse(percepts.contains(entity.getOnChange()));
 		assertTrue(percepts.contains(entity.getOnChanged()));
-		assertFalse(percepts.containsAll(entity.getOnChangeNegation()));
-		assertTrue(percepts.containsAll(entity.getOnChangedNegation()));
 		assertTrue(percepts.containsAll(entity.getMultipleAlways()));
 		assertTrue(percepts.containsAll(entity.getMultipleOnChange()));
 		assertTrue(percepts.contains(entity.getMultiArgs()));

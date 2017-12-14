@@ -13,7 +13,6 @@ import eis.eis2java.util.AllPerceptsModule;
 import eis.eis2java.util.AllPerceptsProvider;
 import eis.exceptions.EntityException;
 import eis.exceptions.PerceiveException;
-import eis.iilang.Function;
 import eis.iilang.Identifier;
 import eis.iilang.Numeral;
 import eis.iilang.Percept;
@@ -69,22 +68,6 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 	}
 
 	boolean onChangeNegation = false;
-
-	@AsPercept(filter = Type.ON_CHANGE_NEG, multiplePercepts = false, name = "onChangeNegation")
-	public String onChangeNegation() {
-		onChangeNegation = !onChangeNegation;
-		return onChangeNegation ? "A" : "B";
-	}
-
-	public List<Percept> getOnChangeNegation() {
-		return Arrays.asList(new Percept[] { new Percept("onChangeNegation", new Identifier("A")) });
-	}
-
-	public List<Percept> getOnChangedNegation() {
-		return Arrays.asList(new Percept[] { new Percept("not", new Function("onChangeNegation", new Identifier("A"))),
-				new Percept("onChangeNegation", new Identifier("B")) });
-
-	}
 
 	@AsPercept(filter = Type.ALWAYS, multiplePercepts = true, name = "multipleAlways")
 	public List<String> multipleAlways() {
