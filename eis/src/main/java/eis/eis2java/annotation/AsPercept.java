@@ -42,9 +42,8 @@ import eis.iilang.Percept;
  * 
  * The filter type determines the way percepts are filtered before sending out
  * through EIS:
- * <p>
  * <TABLE border='1'>
- * <thead>
+ * <caption>Filter types</caption> <thead>
  * <tr>
  * <th>filter name</th>
  * <th>full name</th>
@@ -58,7 +57,7 @@ import eis.iilang.Percept;
  * </tr>
  * <tr>
  * <td>ONCE</td>
- * <td>send one time</td> *
+ * <td>send one time</td>
  * <td>send percepts only the first round</td>
  * </tr>
  * <tr>
@@ -89,13 +88,15 @@ import eis.iilang.Percept;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface AsPercept {
-	/** The name of the {@link Percept} when generated */
+	/** @return The name of the {@link Percept} when generated */
 	String name();
 
 	/**
 	 * If defined as true the return value of the annotated function must be of
 	 * type {@link Collection}. The return value will be used to generate
 	 * multiple percepts with the same name.
+	 * 
+	 * @return true iff this returns multiple percepts. Default is false.
 	 */
 	boolean multiplePercepts() default false;
 
@@ -107,10 +108,14 @@ public @interface AsPercept {
 	 * , and each element inside that collection is a {@link Collection} for
 	 * multipleActions.
 	 * 
-	 * @return true iff percept has multiple arguments
+	 * @return true iff percept has multiple arguments. Default is false.
 	 */
 	boolean multipleArguments() default false;
 
+	/**
+	 * 
+	 * @return filter type for this percept. Default is Filter.Type.ALWAYS
+	 */
 	Filter.Type filter() default Filter.Type.ALWAYS;
 
 	/**
@@ -119,6 +124,8 @@ public @interface AsPercept {
 	 * to ensure that all events on each update are stored passed on to the
 	 * environment as a batch. This setting has no effect on the
 	 * {@link DefaultPerceptHandler}.
+	 * 
+	 * @return true iff this returns list of events. Default is false.
 	 * 
 	 */
 	boolean event() default false;

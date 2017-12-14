@@ -19,6 +19,7 @@ public interface EnvironmentListener {
 	 * Handles a new state.
 	 * 
 	 * @param newState
+	 *            the new environment state
 	 */
 	void handleStateChange(EnvironmentState newState);
 

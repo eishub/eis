@@ -20,6 +20,6 @@ import eis.iilang.Action;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface AsAction {
-	/** The name of the action when specified as an {@link Action}. */
+	/** @return The name of the action when specified as an {@link Action}. */
 	String name();
 }
