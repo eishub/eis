@@ -184,7 +184,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 		HashSet<AgentListener> listeners = agentsToAgentListeners.get(agent);
 
-		if (listeners == null || listeners.contains(agent) == false)
+		if (listeners == null || listeners.contains(listener) == false)
 			return;
 
 		listeners.remove(listener);
