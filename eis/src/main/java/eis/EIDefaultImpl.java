@@ -1250,6 +1250,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 	@Override
 	public String requiredVersion() {
-		return "0.5";
+		return "0.6.0";
 	}
 }
