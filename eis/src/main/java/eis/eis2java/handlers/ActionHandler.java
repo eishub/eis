@@ -3,7 +3,6 @@ package eis.eis2java.handlers;
 import eis.eis2java.environment.AbstractEnvironment;
 import eis.exceptions.ActException;
 import eis.iilang.Action;
-import eis.iilang.Percept;
 
 /**
  * The {@link AbstractEnvironment} delegates the actual execution of an action
@@ -29,11 +28,10 @@ public abstract class ActionHandler {
 	 * 
 	 * @param action
 	 *            to execute.
-	 * @return a percept optionally containing the result of the action or null.
 	 * @throws ActException
 	 *             when the action could not be executed.
 	 */
-	public abstract Percept performAction(Action action) throws ActException;
+	public abstract void performAction(Action action) throws ActException;
 
 	/**
 	 * Called when the entity is reset.

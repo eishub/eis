@@ -4,16 +4,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import eis.PerceptUpdate;
 import eis.eis2java.annotation.AsPercept;
 import eis.eis2java.exception.TranslationException;
 import eis.eis2java.translation.Filter;
 import eis.eis2java.translation.Translator;
 import eis.exceptions.PerceiveException;
-import eis.iilang.Function;
 import eis.iilang.Parameter;
 import eis.iilang.ParameterList;
 import eis.iilang.Percept;
@@ -56,10 +55,10 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 *            {@link Percept}s. Each object is converted into one percept.
 	 * @return list of {@link Percept} objects.
 	 * @throws PerceiveException
-	 *             if an attempt to perform an action or to retrieve percepts
-	 *             has failed
+	 *             if an attempt to perform an action or to retrieve percepts has
+	 *             failed
 	 */
-	protected final List<Percept> translatePercepts(Method method, List<Object> perceptObjects)
+	protected final PerceptUpdate translatePercepts(Method method, List<Object> perceptObjects)
 			throws PerceiveException {
 		// the add and delete list based on the perceived objects
 		// list of object that we had last round but not at this moment.
@@ -74,7 +73,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 
 		// Avoid translating objects that don't need to be translated.
 		if (filter == Filter.Type.ONCE && previous != null) {
-			return new ArrayList<>(0);
+			return new PerceptUpdate();
 		}
 
 		if (previous == null) {
@@ -83,6 +82,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 		}
 
 		// do the proper filtering.
+		// FIXME: delList is not filled
 		switch (filter) {
 		case ALWAYS:
 		case ONCE:
@@ -96,7 +96,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 		}
 
 		// Translate addList.
-		List<Percept> percepts = new LinkedList<>();
+		List<Percept> perceptAddList = new ArrayList<>(addList.size());
 		for (Object javaObject : addList) {
 			Parameter[] parameters;
 			try {
@@ -107,10 +107,11 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 			} catch (TranslationException e) {
 				throw new PerceiveException("Unable to translate percept " + perceptName, e);
 			}
-			percepts.add(new Percept(perceptName, parameters));
+			perceptAddList.add(new Percept(perceptName, parameters));
 		}
 
 		// Translate delList.
+		List<Percept> perceptDelList = new ArrayList<>(delList.size());
 		for (Object javaObject : delList) {
 			Parameter[] parameters;
 			try {
@@ -121,16 +122,16 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 			} catch (TranslationException e) {
 				throw new PerceiveException("Unable to translate percept " + perceptName, e);
 			}
-			percepts.add(new Percept("not", new Function(perceptName, parameters)));
+			perceptDelList.add(new Percept(perceptName, parameters));
 		}
 
 		previousPercepts.put(method, perceptObjects);
-		return percepts;
+		return new PerceptUpdate(perceptAddList, perceptDelList);
 	}
 
 	/**
-	 * Handle multiple arguments. The parameter list must be a list containing
-	 * just one {@link ParameterList}. Returns a list with all elements in that
+	 * Handle multiple arguments. The parameter list must be a list containing just
+	 * one {@link ParameterList}. Returns a list with all elements in that
 	 * {@link ParameterList}.
 	 * 
 	 * @param parameters
@@ -155,10 +156,10 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	}
 
 	/**
-	 * Depending on {@link AsPercept#multiplePercepts()} a perceptObject is
-	 * either a collection that contains multiple percept objects or a single
-	 * percept. This method unpacks either case into a list of percept objects.
-	 * The {@link AsPercept#multipleArguments()} aspect is not handled here.
+	 * Depending on {@link AsPercept#multiplePercepts()} a perceptObject is either a
+	 * collection that contains multiple percept objects or a single percept. This
+	 * method unpacks either case into a list of percept objects. The
+	 * {@link AsPercept#multipleArguments()} aspect is not handled here.
 	 * 
 	 * @param method
 	 *            that generated the percept object
@@ -167,8 +168,8 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 * @return a unpacked version of the percept object. A null perceptObject is
 	 *         translated into an empty list.
 	 * @throws PerceiveException
-	 *             if an attempt to perform an action or to retrieve percepts
-	 *             has failed
+	 *             if an attempt to perform an action or to retrieve percepts has
+	 *             failed
 	 */
 	protected final List<Object> unpackPerceptObject(Method method, Object perceptObject) throws PerceiveException {
 		AsPercept annotation = method.getAnnotation(AsPercept.class);

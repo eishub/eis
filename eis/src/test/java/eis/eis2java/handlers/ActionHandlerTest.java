@@ -1,6 +1,5 @@
 package eis.eis2java.handlers;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -12,13 +11,11 @@ import eis.exceptions.ActException;
 import eis.exceptions.EntityException;
 import eis.iilang.Action;
 import eis.iilang.Numeral;
-import eis.iilang.Percept;
 
 /**
  * test the action handler
  */
 public abstract class ActionHandlerTest {
-
 	protected ActionHandler handler;
 
 	/**
@@ -57,7 +54,6 @@ public abstract class ActionHandlerTest {
 
 		assertTrue(handler.isSupportedByEntity(new Action("setX", new Numeral(1))));
 		assertFalse(handler.isSupportedByEntity(new Action("setX")));
-
 	}
 
 	/**
@@ -66,14 +62,10 @@ public abstract class ActionHandlerTest {
 	 */
 	@Test
 	public void testPerformAction() throws ActException {
-		Percept percept = handler.performAction(new Action("getX"));
-		assertEquals(new Percept("getX", new Numeral(0)), percept);
+		handler.performAction(new Action("getX"));
 
-		percept = handler.performAction(new Action("setX", new Numeral(1)));
-		assertEquals(null, percept);
+		handler.performAction(new Action("setX", new Numeral(1)));
 
-		percept = handler.performAction(new Action("getX"));
-		assertEquals(new Percept("getX", new Numeral(1)), percept);
+		handler.performAction(new Action("getX"));
 	}
-
 }

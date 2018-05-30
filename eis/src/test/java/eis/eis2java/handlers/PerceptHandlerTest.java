@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import eis.PerceptUpdate;
 import eis.eis2java.entity.ValidPerceptEntity;
 import eis.exceptions.EntityException;
 import eis.exceptions.PerceiveException;
@@ -42,10 +43,10 @@ public abstract class PerceptHandlerTest {
 
 	@Test
 	public void testGetAllPercepts() throws PerceiveException {
-		List<Percept> percepts = handler.getAllPercepts();
+		PerceptUpdate percepts = handler.getPercepts();
 		assertAllPerceptsReceived(percepts);
 
-		percepts = handler.getAllPercepts();
+		percepts = handler.getPercepts();
 		assertPartialPerceptsReceived(percepts);
 
 		// Check, third time we should still get same percepts?
@@ -53,9 +54,8 @@ public abstract class PerceptHandlerTest {
 		// assertPartialPerceptsReceived(percepts);
 
 		handler.reset();
-		percepts = handler.getAllPercepts();
+		percepts = handler.getPercepts();
 		assertAllPerceptsReceived(percepts);
-
 	}
 
 	/**
@@ -63,17 +63,17 @@ public abstract class PerceptHandlerTest {
 	 * 
 	 * @param percepts
 	 */
-	private void assertAllPerceptsReceived(List<Percept> percepts) {
-		assertTrue(percepts.contains(entity.getAlways()));
-		assertTrue(percepts.contains(entity.getOnce()));
-		assertTrue(percepts.contains(entity.getOnChange()));
-		assertFalse(percepts.contains(entity.getOnChanged()));
-		assertTrue(percepts.containsAll(entity.getMultipleAlways()));
-		assertTrue(percepts.containsAll(entity.getMultipleOnChange()));
+	private void assertAllPerceptsReceived(PerceptUpdate percepts) {
+		List<Percept> addList = percepts.getAddList(); // FIXME: deleteList??
+		assertTrue(addList.contains(entity.getAlways()));
+		assertTrue(addList.contains(entity.getOnce()));
+		assertTrue(addList.contains(entity.getOnChange()));
+		assertFalse(addList.contains(entity.getOnChanged()));
+		assertTrue(addList.containsAll(entity.getMultipleAlways()));
+		assertTrue(addList.containsAll(entity.getMultipleOnChange()));
 
-		assertTrue(percepts.contains(entity.getMultiArgs()));
-		assertTrue(percepts.containsAll(entity.getMultipleMultiArgs()));
-
+		assertTrue(addList.contains(entity.getMultiArgs()));
+		assertTrue(addList.containsAll(entity.getMultipleMultiArgs()));
 	}
 
 	/**
@@ -82,15 +82,15 @@ public abstract class PerceptHandlerTest {
 	 * 
 	 * @param percepts
 	 */
-	private void assertPartialPerceptsReceived(List<Percept> percepts) {
-		assertTrue(percepts.contains(entity.getAlways()));
-		assertFalse(percepts.contains(entity.getOnce()));
-		assertFalse(percepts.contains(entity.getOnChange()));
-		assertTrue(percepts.contains(entity.getOnChanged()));
-		assertTrue(percepts.containsAll(entity.getMultipleAlways()));
-		assertTrue(percepts.containsAll(entity.getMultipleOnChange()));
-		assertTrue(percepts.contains(entity.getMultiArgs()));
-		assertTrue(percepts.containsAll(entity.getMultipleMultiArgs()));
-
+	private void assertPartialPerceptsReceived(PerceptUpdate percepts) {
+		List<Percept> addList = percepts.getAddList(); // FIXME: deleteList??
+		assertTrue(addList.contains(entity.getAlways()));
+		assertFalse(addList.contains(entity.getOnce()));
+		assertFalse(addList.contains(entity.getOnChange()));
+		assertTrue(addList.contains(entity.getOnChanged()));
+		assertTrue(addList.containsAll(entity.getMultipleAlways()));
+		assertTrue(addList.containsAll(entity.getMultipleOnChange()));
+		assertTrue(addList.contains(entity.getMultiArgs()));
+		assertTrue(addList.containsAll(entity.getMultipleMultiArgs()));
 	}
 }

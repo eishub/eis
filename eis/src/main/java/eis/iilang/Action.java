@@ -90,11 +90,7 @@ public class Action extends DataContainer {
 
 	@Override
 	public Object clone() {
-		Action ret = new Action(this.name, this.getClonedParameters());
-
-		ret.setSource(this.source);
-
-		return ret;
+		return new Action(this.name, this.getClonedParameters());
 	}
 
 	@Override

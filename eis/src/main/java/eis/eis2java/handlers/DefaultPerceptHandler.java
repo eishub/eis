@@ -4,15 +4,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
+import eis.PerceptUpdate;
 import eis.eis2java.annotation.AsPercept;
 import eis.eis2java.translation.Filter;
 import eis.eis2java.util.EIS2JavaUtil;
 import eis.exceptions.EntityException;
 import eis.exceptions.PerceiveException;
-import eis.iilang.Percept;
 
 /**
  * Default {@link PerceptHandler} for EIS2Java. When called the
@@ -41,11 +40,11 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 	 * .lang.Object)
 	 */
 	@Override
-	public final List<Percept> getAllPercepts() throws PerceiveException {
-		List<Percept> percepts = new LinkedList<>();
+	public final PerceptUpdate getPercepts() throws PerceiveException {
+		PerceptUpdate percepts = new PerceptUpdate();
 
 		for (Method method : perceptMethods) {
-			percepts.addAll(getPercepts(method));
+			percepts.merge(getPercepts(method));
 		}
 
 		return percepts;
@@ -64,7 +63,7 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 	 * @throws PerceiveException
 	 *             If the percepts couldn't be retrieved.
 	 */
-	private List<Percept> getPercepts(Method method) throws PerceiveException {
+	private PerceptUpdate getPercepts(Method method) throws PerceiveException {
 		// list of new objects for the percepts
 		List<Object> perceptObjects = new ArrayList<>(0);
 
@@ -76,8 +75,7 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 			perceptObjects = getPerceptObjects(method);
 		}
 
-		List<Percept> percepts = translatePercepts(method, perceptObjects);
-		return percepts;
+		return translatePercepts(method, perceptObjects);
 	}
 
 	/**

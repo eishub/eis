@@ -107,11 +107,7 @@ public class Percept extends DataContainer {
 
 	@Override
 	public Object clone() {
-		Percept ret = new Percept(this.name, this.getClonedParameters());
-
-		ret.source = this.source;
-
-		return ret;
+		return new Percept(this.name, this.getClonedParameters());
 	}
 
 	@Override

@@ -1,6 +1,5 @@
-import java.util.LinkedList;
-
 import eis.EIDefaultImpl;
+import eis.PerceptUpdate;
 import eis.exceptions.ActException;
 import eis.exceptions.EntityException;
 import eis.exceptions.ManagementException;
@@ -8,7 +7,6 @@ import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.iilang.Action;
 import eis.iilang.EnvironmentState;
-import eis.iilang.Percept;
 
 /**
  * A test environment implementing EIDefaultImpl
@@ -24,7 +22,7 @@ public class TestEnvironmentInterface extends EIDefaultImpl {
 	}
 
 	@Override
-	protected LinkedList<Percept> getAllPerceptsFromEntity(String entity)
+	protected PerceptUpdate getPerceptsForEntity(String entity)
 			throws PerceiveException, NoEnvironmentException {
 		// TODO Auto-generated method stub
 		return null;
@@ -49,10 +47,9 @@ public class TestEnvironmentInterface extends EIDefaultImpl {
 	}
 
 	@Override
-	protected Percept performEntityAction(String entity, Action action)
+	protected void performEntityAction(Action action, String entity)
 			throws ActException {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -64,5 +61,4 @@ public class TestEnvironmentInterface extends EIDefaultImpl {
 	public void doAddEntity() throws EntityException {
 		addEntity("entityname", "entity");
 	}
-
 }

@@ -25,12 +25,6 @@ public abstract class DataContainer extends IILElement {
 	/** A list of parameters. */
 	protected List<Parameter> params = null;
 
-	/** Time of creation */
-	protected long timeStamp = System.currentTimeMillis();
-
-	/** Source of the data-container */
-	protected String source = null;
-
 	protected DataContainer() {
 	}
 
@@ -137,25 +131,6 @@ public abstract class DataContainer extends IILElement {
 			parameters[a] = container.params.get(a);
 
 		return new Percept(container.getName(), parameters);
-	}
-
-	/**
-	 * Sets the source of the data-container.
-	 * 
-	 * @param source
-	 *            is the source of the data-container.
-	 */
-	public void setSource(String source) {
-		this.source = source;
-	}
-
-	/**
-	 * Returns the source of the data-container.
-	 * 
-	 * @return the source of the data-container.
-	 */
-	public String getSource() {
-		return source;
 	}
 
 	/*

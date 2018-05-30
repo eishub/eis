@@ -54,7 +54,7 @@ public class DefaultActionHandler extends ActionHandler {
 	 * .lang.Object, eis.iilang.Action)
 	 */
 	@Override
-	public final Percept performAction(Action action) throws ActException {
+	public final void performAction(Action action) throws ActException {
 		String actionName = EIS2JavaUtil.getNameOfAction(action);
 		Method actionMethod = actionMethods.get(actionName);
 		if (actionMethod == null) {
@@ -64,7 +64,7 @@ public class DefaultActionHandler extends ActionHandler {
 
 		// workaround/fix for an EIS issue. #1986.
 		try {
-			return performAction(entity, actionMethod, action);
+			performAction(entity, actionMethod, action);
 		} catch (Exception e) {
 			if (e instanceof ActException) {
 				throw (ActException) e;
