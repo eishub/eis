@@ -29,8 +29,7 @@ public class EIS2JavaUtil {
 	 *             Thrown when the annotations are not used properly.
 	 */
 	public static Set<Method> processPerceptAnnotations(Class<?> clazz) throws EntityException {
-
-		Set<Method> percepts = new HashSet<Method>();
+		Set<Method> percepts = new HashSet<>();
 
 		for (Method method : clazz.getMethods()) {
 			AsPercept asPercept = method.getAnnotation(AsPercept.class);
@@ -61,8 +60,7 @@ public class EIS2JavaUtil {
 	 *             Thrown when the annotations are not used properly.
 	 */
 	public static Map<String, Method> processActionAnnotations(Class<?> clazz) throws EntityException {
-
-		Map<String, Method> actions = new HashMap<String, Method>();
+		Map<String, Method> actions = new HashMap<>();
 
 		for (Method method : clazz.getMethods()) {
 			AsAction asAction = method.getAnnotation(AsAction.class);
@@ -75,8 +73,8 @@ public class EIS2JavaUtil {
 			}
 
 		}
+		
 		return actions;
-
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package eis.iilang;
 
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A percept. A percept consists of a name and some parameters.
@@ -9,7 +9,6 @@ import java.util.LinkedList;
  *
  */
 public class Percept extends DataContainer {
-
 	/**
 	 * 
 	 */
@@ -45,34 +44,29 @@ public class Percept extends DataContainer {
 	 * @param parameters
 	 *            the parameters.
 	 */
-	public Percept(String name, LinkedList<Parameter> parameters) {
+	public Percept(String name, List<Parameter> parameters) {
 		super(name, parameters);
 	}
 
 	@Override
 	protected String toXML(int depth) {
-
 		String xml = "";
 
 		xml += indent(depth) + "<percept name=\"" + name + "\">" + "\n";
 
 		for (Parameter p : params) {
-
 			xml += indent(depth + 1) + "<perceptParameter>" + "\n";
 			xml += p.toXML(depth + 2);
 			xml += indent(depth + 1) + "</perceptParameter>" + "\n";
-
 		}
 
 		xml += indent(depth) + "</percept>" + "\n";
 
 		return xml;
-
 	}
 
 	@Override
 	public String toProlog() {
-
 		String ret = "";
 
 		ret += name;
@@ -80,7 +74,7 @@ public class Percept extends DataContainer {
 		if (params.isEmpty() == false) {
 			ret += "(";
 
-			ret += params.getFirst().toProlog();
+			ret += params.get(0).toProlog();
 
 			for (int a = 1; a < params.size(); a++) {
 				Parameter p = params.get(a);
@@ -91,7 +85,6 @@ public class Percept extends DataContainer {
 		}
 
 		return ret;
-
 	}
 
 	/*
@@ -114,18 +107,15 @@ public class Percept extends DataContainer {
 
 	@Override
 	public Object clone() {
-
 		Percept ret = new Percept(this.name, this.getClonedParameters());
 
 		ret.source = this.source;
 
 		return ret;
-
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-
 		if (obj == null)
 			return false;
 		if (obj == this)
@@ -135,21 +125,15 @@ public class Percept extends DataContainer {
 			return false;
 
 		return super.equals(obj);
-
 	}
 
 	@Override
 	public Object accept(IILObjectVisitor visitor, Object object) {
-
 		return visitor.visit(this, object);
-
 	}
 
 	@Override
 	public void accept(IILVisitor visitor) {
-
 		visitor.visit(this);
-
 	}
-
 }

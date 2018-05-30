@@ -47,15 +47,11 @@ public final class AllPerceptPerceptHandler extends AbstractPerceptHandler {
 	}
 
 	@Override
-	public final LinkedList<Percept> getAllPercepts() throws PerceiveException {
-
-		LinkedList<Percept> percepts = new LinkedList<Percept>();
-		Map<Method, Object> batchPerceptObjects;
-
-		batchPerceptObjects = allPercepProvider.getAllPercepts();
+	public final List<Percept> getAllPercepts() throws PerceiveException {
+		Map<Method, Object> batchPerceptObjects = allPercepProvider.getAllPercepts();
+		List<Percept> percepts = new LinkedList<>();
 
 		for (Entry<Method, Object> entry : batchPerceptObjects.entrySet()) {
-
 			Method method = (Method) entry.getKey();
 			Object perceptObject = entry.getValue();
 
@@ -68,5 +64,4 @@ public final class AllPerceptPerceptHandler extends AbstractPerceptHandler {
 
 		return percepts;
 	}
-
 }

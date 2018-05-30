@@ -1,7 +1,9 @@
 package eis;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -49,7 +51,6 @@ import eis.iilang.Percept;
  * 
  */
 public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Serializable {
-
 	/**
 	 * 
 	 */
@@ -60,17 +61,17 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * <p>
 	 * Only registered agents can act and be associated with entities.
 	 */
-	private LinkedList<String> registeredAgents = null;
+	private List<String> registeredAgents = null;
 
 	/**
 	 * This is a list of entities.
 	 */
-	private LinkedList<String> entities = null;
+	private List<String> entities = null;
 
 	/**
 	 * This map stores the agents-entities-relation.
 	 */
-	private ConcurrentHashMap<String, HashSet<String>> agentsToEntities = null;
+	private Map<String, Set<String>> agentsToEntities = null;
 
 	/**
 	 * This collection stores the listeners that are used to notify about
@@ -84,12 +85,12 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	/**
 	 * Stores for each agent (represented by a string) a set of listeners.
 	 */
-	private ConcurrentHashMap<String, HashSet<AgentListener>> agentsToAgentListeners = null;
+	private Map<String, Set<AgentListener>> agentsToAgentListeners = null;
 
 	/**
 	 * Stores for each entity its respective type.
 	 */
-	private HashMap<String, String> entitiesToTypes = null;
+	private Map<String, String> entitiesToTypes = null;
 
 	/**
 	 * The state of the environment-interface
@@ -100,17 +101,15 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * Instantiates the class.
 	 */
 	public EIDefaultImpl() {
+		environmentListeners = new Vector<>();
+		agentsToAgentListeners = new ConcurrentHashMap<>();
 
-		environmentListeners = new Vector<EnvironmentListener>();
-		agentsToAgentListeners = new ConcurrentHashMap<String, HashSet<AgentListener>>();
-
-		registeredAgents = new LinkedList<String>();
-		entities = new LinkedList<String>();
-		agentsToEntities = new ConcurrentHashMap<String, HashSet<String>>();
-		entitiesToTypes = new HashMap<String, String>();
+		registeredAgents = new LinkedList<>();
+		entities = new LinkedList<>();
+		agentsToEntities = new ConcurrentHashMap<>();
+		entitiesToTypes = new HashMap<>();
 
 		state = EnvironmentState.INITIALIZING;
-
 	}
 
 	/*
@@ -125,10 +124,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public void attachEnvironmentListener(EnvironmentListener listener) {
-
 		if (environmentListeners.contains(listener) == false)
 			environmentListeners.add(listener);
-
 	}
 
 	/*
@@ -139,10 +136,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public void detachEnvironmentListener(EnvironmentListener listener) {
-
 		if (environmentListeners.contains(listener) == true)
 			environmentListeners.remove(listener);
-
 	}
 
 	/*
@@ -154,19 +149,17 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public void attachAgentListener(String agent, AgentListener listener) {
-
 		if (registeredAgents.contains(agent) == false)
 			return;
 
-		HashSet<AgentListener> listeners = agentsToAgentListeners.get(agent);
+		Set<AgentListener> listeners = agentsToAgentListeners.get(agent);
 
 		if (listeners == null)
-			listeners = new HashSet<AgentListener>();
+			listeners = new HashSet<>();
 
 		listeners.add(listener);
 
 		agentsToAgentListeners.put(agent, listeners);
-
 	}
 
 	/*
@@ -178,11 +171,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public void detachAgentListener(String agent, AgentListener listener) {
-
 		if (registeredAgents.contains(agent) == false)
 			return;
 
-		HashSet<AgentListener> listeners = agentsToAgentListeners.get(agent);
+		Set<AgentListener> listeners = agentsToAgentListeners.get(agent);
 
 		if (listeners == null || listeners.contains(listener) == false)
 			return;
@@ -190,7 +182,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 		listeners.remove(listener);
 
 		// agentsToAgentListeners.put(agent,listeners);
-
 	}
 
 	/**
@@ -207,7 +198,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *             registered.
 	 */
 	protected void notifyAgents(Percept percept, String... agents) throws EnvironmentInterfaceException {
-
 		// no listeners, no notification
 		// BUG
 		// if (agentsListeners.isEmpty())
@@ -215,20 +205,15 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 		// send to all registered agents
 		if (agents == null) {
-
 			for (String agent : registeredAgents) {
-
-				HashSet<AgentListener> agentListeners = agentsToAgentListeners.get(agent);
+				Set<AgentListener> agentListeners = agentsToAgentListeners.get(agent);
 
 				if (agentListeners == null)
 					continue;
 
 				for (AgentListener listener : agentListeners) {
-
 					listener.handlePercept(agent, percept);
-
 				}
-
 			}
 
 			return;
@@ -236,23 +221,18 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 		// send to specified agents
 		for (String agent : agents) {
-
 			if (!registeredAgents.contains(agent))
 				throw new EnvironmentInterfaceException("Agent " + agent + " has not registered to the environment.");
 
-			HashSet<AgentListener> agentListeners = agentsToAgentListeners.get(agent);
+			Set<AgentListener> agentListeners = agentsToAgentListeners.get(agent);
 
 			if (agentListeners == null)
 				continue;
 
 			for (AgentListener listener : agentListeners) {
-
 				listener.handlePercept(agent, percept);
-
 			}
-
 		}
-
 	}
 
 	/**
@@ -267,7 +247,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *             environment-interface
 	 */
 	protected void notifyAgentsViaEntity(Percept percept, String... pEntities) throws EnvironmentInterfaceException {
-
 		// check
 		for (String entity : pEntities)
 			if (this.entities.contains(entity) == false)
@@ -275,31 +254,22 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 		// use all entities
 		if (pEntities.length == 0) {
-
 			for (String entity : entities) {
-				for (Entry<String, HashSet<String>> entry : agentsToEntities.entrySet()) {
-
+				for (Entry<String, Set<String>> entry : agentsToEntities.entrySet()) {
 					if (entry.getValue().contains(entity))
 						this.notifyAgents(percept, entry.getKey());
-
 				}
 			}
-
 		}
 		// use given array
 		else {
-
 			for (String entity : pEntities) {
-				for (Entry<String, HashSet<String>> entry : agentsToEntities.entrySet()) {
-
+				for (Entry<String, Set<String>> entry : agentsToEntities.entrySet()) {
 					if (entry.getValue().contains(entity))
 						this.notifyAgents(percept, entry.getKey());
-
 				}
 			}
-
 		}
-
 	}
 
 	/**
@@ -314,17 +284,13 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *             if entity unknown or environment paused, etc
 	 */
 	protected void notifyFreeEntity(String entity, Collection<String> agents) throws EntityException {
-
 		if (!isPausedOrRunning()) {
 			throw new EntityException("entity can't be freed: environment is not running or paused, but " + state);
 		}
 
 		for (EnvironmentListener listener : environmentListeners) {
-
 			listener.handleFreeEntity(entity, agents);
-
 		}
-
 	}
 
 	/**
@@ -368,16 +334,12 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *             if environment not paused or running.
 	 */
 	protected void notifyNewEntity(String entity) throws EntityException {
-
 		if (!isPausedOrRunning()) {
 			throw new EntityException("can't create new entity: environment is not paused or running but " + state);
 		}
 		for (EnvironmentListener listener : environmentListeners) {
-
 			listener.handleNewEntity(entity);
-
 		}
-
 	}
 
 	/**
@@ -389,13 +351,9 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *            the entities that were associated
 	 */
 	protected void notifyDeletedEntity(String entity, Collection<String> agents) {
-
 		for (EnvironmentListener listener : environmentListeners) {
-
 			listener.handleDeletedEntity(entity, agents);
-
 		}
-
 	}
 
 	/*
@@ -409,12 +367,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public void registerAgent(String agent) throws AgentException {
-
 		if (registeredAgents.contains(agent))
 			throw new AgentException("Agent " + agent + " has already registered to the environment.");
 
 		registeredAgents.add(agent);
-
 	}
 
 	/*
@@ -424,7 +380,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public void unregisterAgent(String agent) throws AgentException {
-
 		// fail if agents is not registered
 		if (!registeredAgents.contains(agent))
 			throw new AgentException("Agent " + agent + " has not registered to the environment.");
@@ -437,7 +392,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 		// finally remove from registered list
 		registeredAgents.remove(agent);
-
 	}
 
 	/*
@@ -450,11 +404,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * @see eis.EnvironmentInterfaceStandard#getAgents()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
-	public LinkedList<String> getAgents() {
-
-		return (LinkedList<String>) registeredAgents.clone();
-
+	public List<String> getAgents() {
+		return Collections.unmodifiableList(registeredAgents);
 	}
 
 	/*
@@ -463,11 +414,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * @see eis.EnvironmentInterfaceStandard#getEntities()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
-	public LinkedList<String> getEntities() {
-
-		return (LinkedList<String>) entities.clone();
-
+	public List<String> getEntities() {
+		return Collections.unmodifiableList(entities);
 	}
 
 	/*
@@ -482,7 +430,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public void associateEntity(String agent, String entity) throws RelationException {
-
 		// check if exists
 		if (!entities.contains(entity))
 			throw new RelationException("Entity \"" + entity + "\" does not exist!");
@@ -491,14 +438,12 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 			throw new RelationException("Agent \"" + agent + "\" has not been registered!");
 
 		// associate
-		HashSet<String> ens = agentsToEntities.get(agent);
+		Set<String> ens = agentsToEntities.get(agent);
 		if (ens == null) {
-
-			ens = new HashSet<String>();
+			ens = new HashSet<>();
 		}
 		ens.add(entity);
 		agentsToEntities.put(agent, ens);
-
 	}
 
 	/*
@@ -508,22 +453,19 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public void freeEntity(String entity) throws RelationException, EntityException {
-
 		// check if exists
 		if (!entities.contains(entity))
 			throw new EntityException("Entity \"" + entity + "\" does not exist!");
 
-		LinkedList<String> agents = new LinkedList<String>();
+		List<String> agents = new LinkedList<>();
 
 		// find the association and remove
 		boolean associated = false;
-		for (Entry<String, HashSet<String>> entry : agentsToEntities.entrySet()) {
-
+		for (Entry<String, Set<String>> entry : agentsToEntities.entrySet()) {
 			String agent = entry.getKey();
-			HashSet<String> ens = entry.getValue();
+			Set<String> ens = entry.getValue();
 
 			if (ens.contains(entity)) {
-
 				ens.remove(entity);
 
 				agentsToEntities.put(agent, ens);
@@ -535,7 +477,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 				break;
 			}
-
 		}
 
 		// fail if entity has not been associated
@@ -544,7 +485,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 		// notify
 		notifyFreeEntity(entity, agents);
-
 	}
 
 	/*
@@ -554,7 +494,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public void freeAgent(String agent) throws RelationException, EntityException {
-
 		// check if exists
 		if (!registeredAgents.contains(agent))
 			throw new RelationException("Agent \"" + agent + "\" does not exist!");
@@ -562,15 +501,15 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 		if (!agentsToEntities.containsKey(agent)) {
 			return;
 		}
-		HashSet<String> ens = agentsToEntities.get(agent);
+		
+		Set<String> ens = agentsToEntities.get(agent);
 
-		LinkedList<String> agents = new LinkedList<String>();
+		List<String> agents = new ArrayList<>(1);
 		agents.add(agent);
 
 		notifyIfFree(ens, agents);
 
 		agentsToEntities.remove(agent);
-
 	}
 
 	/*
@@ -581,7 +520,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public void freePair(String agent, String entity) throws RelationException, EntityException {
-
 		// check if exists
 		if (!registeredAgents.contains(agent))
 			throw new RelationException("Agent \"" + agent + "\" does not exist!");
@@ -590,7 +528,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 		if (!entities.contains(entity))
 			throw new RelationException("Entity \"" + entity + "\" does not exist!");
 
-		HashSet<String> ens = agentsToEntities.get(agent);
+		Set<String> ens = agentsToEntities.get(agent);
 
 		if (ens == null || ens.contains(entity) == false)
 			throw new RelationException("Agent \"" + agent + " is not associated with entity \"" + entity + "\"!");
@@ -599,11 +537,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 		ens.remove(entity);
 		agentsToEntities.put(agent, ens);
 
-		LinkedList<String> agents = new LinkedList<String>();
+		List<String> agents = new ArrayList<>(1);
 		agents.add(agent);
 
 		notifyIfFree(ens, agents);
-
 	}
 
 	/*
@@ -613,18 +550,16 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * eis.EnvironmentInterfaceStandard#getAssociatedEntities(java.lang.String)
 	 */
 	@Override
-	public HashSet<String> getAssociatedEntities(String agent) throws AgentException {
-
+	public Set<String> getAssociatedEntities(String agent) throws AgentException {
 		if (registeredAgents.contains(agent) == false)
 			throw new AgentException("Agent \"" + agent + "\" has not been registered.");
 
-		HashSet<String> ret = this.agentsToEntities.get(agent);
+		Set<String> ret = this.agentsToEntities.get(agent);
 
 		if (ret == null)
-			ret = new HashSet<String>();
+			ret = new HashSet<>(0);
 
 		return ret;
-
 	}
 
 	/*
@@ -634,30 +569,26 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * eis.EnvironmentInterfaceStandard#getAssociatedAgents(java.lang.String)
 	 */
 	@Override
-	public HashSet<String> getAssociatedAgents(String entity) throws EntityException {
-
+	public Set<String> getAssociatedAgents(String entity) throws EntityException {
 		if (entities.contains(entity) == false)
 			throw new EntityException("Entity \"" + entity + "\" has not been registered.");
 
-		HashSet<String> ret = new HashSet<String>();
+		Set<String> ret = new HashSet<>();
 
-		for (Entry<String, HashSet<String>> entry : agentsToEntities.entrySet()) {
-
+		for (Entry<String, Set<String>> entry : agentsToEntities.entrySet()) {
 			if (entry.getValue().contains(entity))
 				ret.add(entry.getKey());
-
 		}
 
 		return ret;
-
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public LinkedList<String> getFreeEntities() {
-		LinkedList<String> free = getEntities();
+	public List<String> getFreeEntities() {
+		List<String> free = new ArrayList<>(this.entities);
 		for (String agent : agentsToEntities.keySet()) {
 			free.removeAll(agentsToEntities.get(agent));
 		}
@@ -670,7 +601,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	@Override
 	public final Map<String, Percept> performAction(String agent, Action action, String... entities)
 			throws ActException {
-
 		// fail if the environment does not run
 		if (state != EnvironmentState.RUNNING) {
 			throw new ActException("Environment does not run but is " + state);
@@ -681,32 +611,25 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 			throw new ActException(ActException.NOTREGISTERED);
 
 		// get the associated entities
-		HashSet<String> associatedEntities = agentsToEntities.get(agent);
+		Set<String> associatedEntities = agentsToEntities.get(agent);
 
 		// 2. no associated entity/ies -> trivial reject
 		if (associatedEntities == null || associatedEntities.size() == 0)
 			throw new ActException(ActException.NOENTITIES);
 
 		// entities that should perform the action
-		HashSet<String> targetEntities = null;
+		Set<String> targetEntities = null;
 		if (entities.length == 0) {
-
 			targetEntities = associatedEntities;
-
 		} else {
-
-			targetEntities = new HashSet<String>();
-
+			targetEntities = new HashSet<>(entities.length);
 			for (String entity : entities) {
-
 				// 3. provided wrong entity
 				if (associatedEntities.contains(entity) == false)
 					throw new ActException(ActException.WRONGENTITY);
 
 				targetEntities.add(entity);
-
 			}
-
 		}
 
 		// 4. action could be not supported by the environment
@@ -715,7 +638,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 		// 5. action could be not supported by the type of the entities
 		for (String entity : entities) {
-
 			String type;
 			try {
 				type = getType(entity);
@@ -726,32 +648,19 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 			if (isSupportedByType(action, type) == false)
 				throw new ActException(ActException.NOTSUPPORTEDBYTYPE);
-
 		}
 
 		// 6. action could be not supported by the entities themselves
 		for (String entity : entities) {
-
-			String type;
-			try {
-				type = getType(entity);
-			} catch (EntityException e) {
-				e.printStackTrace();
-				continue;
-			}
-
 			if (isSupportedByEntity(action, entity) == false)
 				throw new ActException(ActException.NOTSUPPORTEDBYENTITY);
-
 		}
 
-		Map<String, Percept> ret = new HashMap<String, Percept>();
+		Map<String, Percept> ret = new HashMap<>();
 
 		// 6. action could be not supported by the entities themselves
 		for (String entity : targetEntities) {
-
 			// TODO how is ensured that this method is called? ambiguity?
-
 			try {
 				Percept p = this.performEntityAction(entity, action);
 				if (p != null)
@@ -760,21 +669,17 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 				if (!(e instanceof ActException)) {
 					throw new ActException(ActException.FAILURE, "failure performing action", e);
 				}
-
 				// exception was ok, rethrow
 				throw (ActException) e;
 			}
-
 		}
 
 		return ret;
-
 	}
 
 	@Override
 	public Map<String, Collection<Percept>> getAllPercepts(String agent, String... entities)
 			throws PerceiveException, NoEnvironmentException {
-
 		// fail if the environment does not run or paused
 		if (!(state == EnvironmentState.RUNNING || state == EnvironmentState.PAUSED)) {
 			throw new PerceiveException("Environment does not run but is " + state);
@@ -786,7 +691,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 		}
 
 		// get the associated entities
-		HashSet<String> associatedEntities = agentsToEntities.get(agent);
+		Set<String> associatedEntities = agentsToEntities.get(agent);
 
 		// fail if there are no associated entities
 		if (associatedEntities == null || associatedEntities.size() == 0) {
@@ -794,15 +699,13 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 		}
 
 		// return value
-		Map<String, Collection<Percept>> ret = new HashMap<String, Collection<Percept>>();
+		Map<String, Collection<Percept>> ret = new HashMap<>();
 
 		// gather all percepts
 		if (entities.length == 0) {
-
 			for (String entity : associatedEntities) {
-
 				// get all percepts
-				LinkedList<Percept> all = getAllPerceptsFromEntity(entity);
+				List<Percept> all = getAllPerceptsFromEntity(entity);
 
 				// add annonation
 				for (Percept p : all)
@@ -810,21 +713,17 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 				// done
 				ret.put(entity, all);
-
 			}
-
 		}
 		// only from specified entities
 		else {
-
 			for (String entity : entities) {
-
 				if (associatedEntities.contains(entity) == false)
 					throw new PerceiveException(
 							"Entity \"" + entity + "\" has not been associated with the agent \"" + agent + "\".");
 
 				// get all percepts
-				LinkedList<Percept> all = getAllPerceptsFromEntity(entity);
+				List<Percept> all = getAllPerceptsFromEntity(entity);
 
 				// add annonation
 				for (Percept p : all)
@@ -832,13 +731,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 				// done
 				ret.put(entity, all);
-
 			}
-
 		}
 
 		return ret;
-
 	}
 
 	/**
@@ -856,7 +752,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *             if an attempt to perform an action or to retrieve percepts
 	 *             has failed
 	 */
-	protected abstract LinkedList<Percept> getAllPerceptsFromEntity(String entity)
+	protected abstract List<Percept> getAllPerceptsFromEntity(String entity)
 			throws PerceiveException, NoEnvironmentException;
 
 	/**
@@ -906,7 +802,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public String getType(String entity) throws EntityException {
-
 		if (!this.entities.contains(entity))
 			throw new EntityException("Entity \"" + entity + "\" does not exist!");
 
@@ -916,7 +811,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 			type = "unknown";
 
 		return type;
-
 	}
 
 	/**
@@ -933,7 +827,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *             is thrown if the entity already exists.
 	 */
 	protected void addEntity(String entity) throws EntityException {
-
 		// fail if entity does exist
 		if (entities.contains(entity))
 			throw new EntityException("Entity \"" + entity + "\" does already exist");
@@ -943,7 +836,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 		// notify
 		notifyNewEntity(entity);
-
 	}
 
 	/**
@@ -962,7 +854,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *             is thrown if the entity already exists.
 	 */
 	protected void addEntity(String entity, String type) throws EntityException {
-
 		// fail if entity does exist
 		if (entities.contains(entity))
 			throw new EntityException("Entity \"" + entity + "\" does already exist");
@@ -975,7 +866,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 		// notify
 		notifyNewEntity(entity);
-
 	}
 
 	/**
@@ -991,22 +881,19 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *             failed
 	 */
 	protected void deleteEntity(String entity) throws EntityException, RelationException {
-
 		// check if exists
 		if (!entities.contains(entity))
 			throw new EntityException("Entity \"" + entity + "\" does not exist!");
 
-		LinkedList<String> agents = new LinkedList<String>();
+		List<String> agents = new LinkedList<>();
 
 		// find the association and remove
 		// boolean associated = false;
-		for (Entry<String, HashSet<String>> entry : agentsToEntities.entrySet()) {
-
+		for (Entry<String, Set<String>> entry : agentsToEntities.entrySet()) {
 			String agent = entry.getKey();
-			HashSet<String> ens = entry.getValue();
+			Set<String> ens = entry.getValue();
 
 			if (ens.contains(entity)) {
-
 				ens.remove(entity);
 
 				agentsToEntities.put(agent, ens);
@@ -1018,7 +905,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 				break;
 			}
-
 		}
 
 		// finally delete
@@ -1028,7 +914,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 		// notify
 		notifyDeletedEntity(entity, agents);
-
 	}
 
 	/**
@@ -1043,7 +928,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *             type.
 	 */
 	public void setType(String entity, String type) throws EntityException {
-
 		if (!entities.contains(entity))
 			throw new EntityException("Entity \"" + entity + "\" does not exist!");
 
@@ -1051,7 +935,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 			throw new EntityException("Entity \"" + entity + "\" already has a type!");
 
 		entitiesToTypes.put(entity, type);
-
 	}
 
 	/*
@@ -1069,7 +952,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 *             if thrown if the state transition is not valid
 	 */
 	protected void setState(EnvironmentState state) throws ManagementException {
-
 		// TODO is state transition valid?
 		if (isStateTransitionValid(this.state, state) == false)
 			throw new ManagementException(
@@ -1081,7 +963,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 		// notify listeners
 		for (EnvironmentListener listener : environmentListeners)
 			listener.handleStateChange(state);
-
 	}
 
 	/*
@@ -1092,7 +973,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public boolean isStateTransitionValid(EnvironmentState oldState, EnvironmentState newState) {
-
 		if (oldState == EnvironmentState.INITIALIZING && newState == EnvironmentState.INITIALIZING)
 			return true;
 		if (oldState == EnvironmentState.INITIALIZING && newState == EnvironmentState.PAUSED)
@@ -1109,7 +989,6 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 			return true;
 
 		return false;
-
 	}
 
 	/*
@@ -1243,9 +1122,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 */
 	@Override
 	public String queryEntityProperty(String entity, String property) {
-
 		return null;
-
 	}
 
 	@Override

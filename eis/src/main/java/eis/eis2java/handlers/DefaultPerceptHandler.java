@@ -41,9 +41,8 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 	 * .lang.Object)
 	 */
 	@Override
-	public final LinkedList<Percept> getAllPercepts() throws PerceiveException {
-
-		LinkedList<Percept> percepts = new LinkedList<Percept>();
+	public final List<Percept> getAllPercepts() throws PerceiveException {
+		List<Percept> percepts = new LinkedList<>();
 
 		for (Method method : perceptMethods) {
 			percepts.addAll(getPercepts(method));
@@ -66,9 +65,8 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 	 *             If the percepts couldn't be retrieved.
 	 */
 	private List<Percept> getPercepts(Method method) throws PerceiveException {
-
 		// list of new objects for the percepts
-		List<Object> perceptObjects = new ArrayList<Object>();
+		List<Object> perceptObjects = new ArrayList<>(0);
 
 		// Optimization, don't call methods for once percepts if they have been
 		// called before.
@@ -95,7 +93,6 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 	 */
 	private List<Object> getPerceptObjects(Method method)
 			throws PerceiveException {
-
 		AsPercept annotation = method.getAnnotation(AsPercept.class);
 		String perceptName = annotation.name();
 
@@ -112,5 +109,4 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 
 		return unpackPerceptObject(method, returnValue);
 	}
-
 }

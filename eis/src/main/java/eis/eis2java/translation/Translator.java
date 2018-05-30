@@ -44,8 +44,8 @@ public class Translator {
 
 	private Translator() {
 		// Non-instantiable outside of class.
-		java2ParameterTranslators = new HashMap<Class<?>, Java2Parameter<?>>();
-		parameter2JavaTranslators = new HashMap<Class<?>, Parameter2Java<?>>();
+		java2ParameterTranslators = new HashMap<>();
+		parameter2JavaTranslators = new HashMap<>();
 
 		NumberTranslator numberTranslator = new NumberTranslator();
 		registerJava2ParameterTranslator(numberTranslator);

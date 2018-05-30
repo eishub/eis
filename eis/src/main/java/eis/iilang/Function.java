@@ -1,6 +1,8 @@
 package eis.iilang;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Represents a function over parameters. It consits of a name and a list of
@@ -9,7 +11,6 @@ import java.util.LinkedList;
  * @author tristanbehrens
  */
 public class Function extends Parameter {
-
 	/**
 	 * 
 	 */
@@ -19,7 +20,7 @@ public class Function extends Parameter {
 	private String name = null;
 
 	/** A list of parameters. */
-	private LinkedList<Parameter> params = new LinkedList<Parameter>();
+	private List<Parameter> params = null;
 
 	/**
 	 * Instantiates a function.
@@ -30,12 +31,8 @@ public class Function extends Parameter {
 	 *            the parameters.
 	 */
 	public Function(String name, Parameter... parameters) {
-
 		setName(name);
-
-		for (Parameter p : parameters)
-			this.params.add(p);
-
+		this.params = Arrays.asList(parameters);
 	}
 
 	/**
@@ -46,12 +43,9 @@ public class Function extends Parameter {
 	 * @param parameters
 	 *            the parameters.
 	 */
-	public Function(String name, LinkedList<Parameter> parameters) {
-
+	public Function(String name, List<Parameter> parameters) {
 		setName(name);
-
 		this.params = parameters;
-
 	}
 
 	/**
@@ -60,9 +54,7 @@ public class Function extends Parameter {
 	 * @return the name of the function.
 	 */
 	public String getName() {
-
 		return name;
-
 	}
 
 	/**
@@ -72,10 +64,8 @@ public class Function extends Parameter {
 	 *            the name of the function
 	 */
 	public void setName(String name) {
-
 		assert Character.isLowerCase(name.charAt(0)) : name + " should start with a lowercase letter";
 		this.name = name;
-
 	}
 
 	/**
@@ -83,10 +73,8 @@ public class Function extends Parameter {
 	 * 
 	 * @return the parameters of the function.
 	 */
-	public LinkedList<Parameter> getParameters() {
-
+	public List<Parameter> getParameters() {
 		return params;
-
 	}
 
 	/**
@@ -95,10 +83,8 @@ public class Function extends Parameter {
 	 * @param parameters
 	 *            the new parameters
 	 */
-	public void setParameters(LinkedList<Parameter> parameters) {
-
+	public void setParameters(List<Parameter> parameters) {
 		this.params = parameters;
-
 	}
 
 	/**
@@ -106,14 +92,11 @@ public class Function extends Parameter {
 	 * 
 	 * @return the parameters of the function
 	 */
-	public LinkedList<Parameter> getClonedParameters() {
-
-		LinkedList<Parameter> ret = new LinkedList<Parameter>();
+	public List<Parameter> getClonedParameters() {
+		List<Parameter> ret = new ArrayList<>(params.size());
 
 		for (Parameter p : params) {
-
 			ret.add((Parameter) p.clone());
-
 		}
 
 		return ret;
@@ -122,32 +105,27 @@ public class Function extends Parameter {
 
 	@Override
 	protected String toXML(int depth) {
-
 		String xml = "";
 
 		xml += indent(depth) + "<function name=\"" + name + "\">" + "\n";
 
 		for (Parameter p : params) {
-
 			xml += p.toXML(depth + 1);
-
 		}
 
 		xml += indent(depth) + "</function>" + "\n";
 
 		return xml;
-
 	}
 
 	@Override
 	public String toProlog() {
-
 		String ret = name;
 
 		if (params.size() > 0) {
 			ret += "(";
 
-			ret += params.getFirst().toProlog();
+			ret += params.get(0).toProlog();
 
 			for (int a = 1; a < params.size(); a++)
 				ret += "," + params.get(a).toProlog();
@@ -156,14 +134,11 @@ public class Function extends Parameter {
 		}
 
 		return ret;
-
 	}
 
 	@Override
 	public Object clone() {
-
 		return new Function(this.name, this.getClonedParameters());
-
 	}
 
 	@Override
@@ -199,16 +174,11 @@ public class Function extends Parameter {
 
 	@Override
 	public Object accept(IILObjectVisitor visitor, Object object) {
-
 		return visitor.visit(this, object);
-
 	}
 
 	@Override
 	public void accept(IILVisitor visitor) {
-
 		visitor.visit(this);
-
 	}
-
 }
