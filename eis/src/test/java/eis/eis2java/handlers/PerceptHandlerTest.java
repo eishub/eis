@@ -3,7 +3,7 @@ package eis.eis2java.handlers;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -42,7 +42,7 @@ public abstract class PerceptHandlerTest {
 
 	@Test
 	public void testGetAllPercepts() throws PerceiveException {
-		LinkedList<Percept> percepts = handler.getAllPercepts();
+		List<Percept> percepts = handler.getAllPercepts();
 		assertAllPerceptsReceived(percepts);
 
 		percepts = handler.getAllPercepts();
@@ -63,7 +63,7 @@ public abstract class PerceptHandlerTest {
 	 * 
 	 * @param percepts
 	 */
-	private void assertAllPerceptsReceived(LinkedList<Percept> percepts) {
+	private void assertAllPerceptsReceived(List<Percept> percepts) {
 		assertTrue(percepts.contains(entity.getAlways()));
 		assertTrue(percepts.contains(entity.getOnce()));
 		assertTrue(percepts.contains(entity.getOnChange()));
@@ -82,7 +82,7 @@ public abstract class PerceptHandlerTest {
 	 * 
 	 * @param percepts
 	 */
-	private void assertPartialPerceptsReceived(LinkedList<Percept> percepts) {
+	private void assertPartialPerceptsReceived(List<Percept> percepts) {
 		assertTrue(percepts.contains(entity.getAlways()));
 		assertFalse(percepts.contains(entity.getOnce()));
 		assertFalse(percepts.contains(entity.getOnChange()));

@@ -26,7 +26,6 @@ import eis.iilang.Percept;
  * 
  */
 public abstract class AbstractPerceptHandler extends PerceptHandler {
-
 	/**
 	 * The entity associated with this handler.
 	 */
@@ -44,7 +43,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	/**
 	 * map of previous percepts that we got for each method.
 	 */
-	protected final Map<Method, List<Object>> previousPercepts = new HashMap<Method, List<Object>>();
+	protected final Map<Method, List<Object>> previousPercepts = new HashMap<>();
 
 	/**
 	 * Translates the percept objects and applies filtering as described by
@@ -64,8 +63,8 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 			throws PerceiveException {
 		// the add and delete list based on the perceived objects
 		// list of object that we had last round but not at this moment.
-		List<Object> addList = new ArrayList<Object>();
-		List<Object> delList = new ArrayList<Object>();
+		List<Object> addList = new ArrayList<>(0);
+		List<Object> delList = new ArrayList<>(0);
 
 		AsPercept annotation = method.getAnnotation(AsPercept.class);
 		Filter.Type filter = annotation.filter();
@@ -75,11 +74,11 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 
 		// Avoid translating objects that don't need to be translated.
 		if (filter == Filter.Type.ONCE && previous != null) {
-			return new ArrayList<Percept>();
+			return new ArrayList<>(0);
 		}
 
 		if (previous == null) {
-			previous = new LinkedList<Object>();
+			previous = new ArrayList<>(1);
 			previousPercepts.put(method, previous);
 		}
 
@@ -97,7 +96,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 		}
 
 		// Translate addList.
-		List<Percept> percepts = new ArrayList<Percept>();
+		List<Percept> percepts = new LinkedList<>();
 		for (Object javaObject : addList) {
 			Parameter[] parameters;
 			try {
@@ -177,7 +176,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 
 		if (!annotation.multiplePercepts()) {
 			// This is percept does not provide multiples.
-			List<Object> unpacked = new ArrayList<Object>(1);
+			List<Object> unpacked = new ArrayList<>(1);
 			if (perceptObject != null) {
 				unpacked.add(perceptObject);
 			}
@@ -194,7 +193,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 
 		// The multiple percepts are a collection, put them in a list.
 		Collection<?> javaCollection = (Collection<?>) perceptObject;
-		ArrayList<Object> unpacked = new ArrayList<Object>(javaCollection);
+		List<Object> unpacked = new ArrayList<>(javaCollection);
 
 		return unpacked;
 	}

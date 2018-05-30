@@ -31,7 +31,6 @@ import eis.exceptions.PerceiveException;
  * 
  */
 public class AllPerceptsModule {
-
 	/**
 	 * Methods that provide the percepts.
 	 */
@@ -40,12 +39,12 @@ public class AllPerceptsModule {
 	/**
 	 * Percepts pulled from bot.
 	 */
-	private final Map<Method, Object> perceptBatch = new HashMap<Method, Object>();
+	private final Map<Method, Object> perceptBatch = new HashMap<>();
 
 	/**
 	 * Event percepts pulled from bot.
 	 */
-	private final Map<Method, List<Object>> eventPerceptBatch = new HashMap<Method, List<Object>>();
+	private final Map<Method, List<Object>> eventPerceptBatch = new HashMap<>();
 
 	/**
 	 * Entity which we pull percepts from.
@@ -53,13 +52,11 @@ public class AllPerceptsModule {
 	private final Object entity;
 
 	public AllPerceptsModule(Object entity) throws EntityException {
-
 		this.entity = entity;
 
 		// Setup percept providers.
 		Class<?> clazz = entity.getClass();
 		perceptProviders = EIS2JavaUtil.processPerceptAnnotations(clazz);
-
 	}
 
 	/**
@@ -69,7 +66,6 @@ public class AllPerceptsModule {
 	 *             if percept can not be updated
 	 */
 	public synchronized void updatePercepts() throws PerceiveException {
-
 		perceptBatch.clear();
 
 		for (Method method : perceptProviders) {
@@ -90,7 +86,7 @@ public class AllPerceptsModule {
 			// Percept is event based, needs special handling.
 			if (annotation.event()) {
 				if (!eventPerceptBatch.containsKey(method)) {
-					eventPerceptBatch.put(method, new ArrayList<Object>());
+					eventPerceptBatch.put(method, new ArrayList<>(0));
 				}
 
 				List<Object> events = eventPerceptBatch.get(method);
@@ -107,7 +103,6 @@ public class AllPerceptsModule {
 				}
 
 				events.addAll((Collection<?>) percept);
-
 			}
 			// Regular percept
 			else {
@@ -122,6 +117,6 @@ public class AllPerceptsModule {
 		// We can clear outstanding events. They'll be exported now.
 		eventPerceptBatch.clear();
 		// Copy precept batch, we don't want to modify this one any more.
-		return new HashMap<Method, Object>(perceptBatch);
+		return new HashMap<>(perceptBatch);
 	}
 }

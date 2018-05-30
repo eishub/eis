@@ -1,8 +1,9 @@
 package eis.iilang;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A list of parameters.
@@ -11,21 +12,18 @@ import java.util.LinkedList;
  * 
  */
 public class ParameterList extends Parameter implements Iterable<Parameter> {
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5330751271570276475L;
 	/** The list of parameters. */
-	private LinkedList<Parameter> list = null;
+	private List<Parameter> list = null;
 
 	/**
 	 * Constructs an empty list of parameters.
 	 */
 	public ParameterList() {
-
-		this.list = new LinkedList<Parameter>();
-
+		this.list = new ArrayList<>(0);
 	}
 
 	/**
@@ -35,12 +33,7 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	 *            the parameters for this list
 	 */
 	public ParameterList(Parameter... parameters) {
-
-		this();
-
-		for (Parameter param : parameters)
-			list.addLast(param);
-
+		this.list = Arrays.asList(parameters);
 	}
 
 	/**
@@ -49,22 +42,15 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	 * @param parameters
 	 *            the parameters for this list
 	 */
-	public ParameterList(Collection<Parameter> parameters) {
-
-		this();
-
-		for (Parameter param : parameters)
-			list.addLast(param);
-
+	public ParameterList(List<Parameter> parameters) {
+		this.list = parameters;
 	}
 
 	/**
 	 * Returns an iterator.
 	 */
 	public Iterator<Parameter> iterator() {
-
 		return list.iterator();
-
 	}
 
 	/**
@@ -73,9 +59,7 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	 * @return the index of an element
 	 */
 	public int indexOf(Parameter p) {
-
 		return list.indexOf(p);
-
 	}
 
 	/**
@@ -83,9 +67,7 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	 * @return the size of the list
 	 */
 	public int size() {
-
 		return list.size();
-
 	}
 
 	/**
@@ -105,65 +87,50 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	 * @return true if empty, false otherwise
 	 */
 	public boolean isEmpty() {
-
 		return list.isEmpty();
-
 	}
 
 	@Override
 	protected String toXML(int depth) {
-
 		String xml = "";
 
 		xml += indent(depth) + "<parameterList>" + "\n";
 
 		for (Parameter p : list) {
-
 			xml += p.toXML(depth + 1);
-
 		}
 
 		xml += indent(depth) + "</parameterList>" + "\n";
 
 		return xml;
-
 	}
 
 	public void add(Parameter parameter) {
-
 		list.add(parameter);
-
 	}
 
 	@Override
 	public String toProlog() {
-
 		String ret = "";
 
 		ret += "[";
 		if (list.isEmpty() == false) {
-
-			ret += list.getFirst().toProlog();
+			ret += list.get(0).toProlog();
 
 			for (int a = 1; a < list.size(); a++)
 				ret += "," + list.get(a).toProlog();
-
 		}
 		ret += "]";
 
 		return ret;
-
 	}
 
 	@Override
 	public Object clone() {
-
 		ParameterList ret = new ParameterList();
 
 		for (Parameter p : list) {
-
 			ret.add((Parameter) p.clone());
-
 		}
 
 		return ret;
@@ -194,16 +161,11 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 
 	@Override
 	public Object accept(IILObjectVisitor visitor, Object object) {
-
 		return visitor.visit(this, object);
-
 	}
 
 	@Override
 	public void accept(IILVisitor visitor) {
-
 		visitor.visit(this);
-
 	}
-
 }

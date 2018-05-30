@@ -1,6 +1,6 @@
 package eis.eis2java.handlers;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import eis.eis2java.annotation.AsPercept;
 import eis.eis2java.environment.AbstractEnvironment;
@@ -24,7 +24,7 @@ public abstract class PerceptHandler {
 	 * @throws PerceiveException
 	 *             if percepts can not be fetched
 	 */
-	public abstract LinkedList<Percept> getAllPercepts() throws PerceiveException;
+	public abstract List<Percept> getAllPercepts() throws PerceiveException;
 
 	/**
 	 * Called when the entity is reset.

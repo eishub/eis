@@ -2,7 +2,7 @@ package eis.eis2java.handlers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import eis.eis2java.exception.TranslationException;
@@ -94,7 +94,7 @@ public class DefaultActionHandler extends ActionHandler {
 
 		Class<?>[] parameterTypes = method.getParameterTypes();
 
-		LinkedList<Parameter> parameters = action.getParameters();
+		List<Parameter> parameters = action.getParameters();
 		Object[] arguments = new Object[parameters.size()];
 
 		// Doing it the hard way because LinkedList.get(index) sucks!

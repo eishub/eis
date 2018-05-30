@@ -18,7 +18,6 @@ import java.util.jar.Manifest;
  *
  */
 public class EILoader {
-
 	private static String version = "0.6.0";
 
 	/**
@@ -35,7 +34,6 @@ public class EILoader {
 	 *             is thrown if loading was not successfull
 	 */
 	public static EnvironmentInterfaceStandard fromJarFile(File file) throws IOException {
-
 		// 1. locate file, check for existence, check for being a jar
 		if (file.exists() == false)
 			throw new IOException("\"" + file.getAbsolutePath() + "\" does not exist.");
@@ -91,7 +89,6 @@ public class EILoader {
 					+ "\" vs. \"" + ei.requiredVersion() + "\"");
 
 		return ei;
-
 	}
 
 	/**
@@ -106,7 +103,6 @@ public class EILoader {
 	 *             if class can not be loaded as environment
 	 */
 	public static EnvironmentInterfaceStandard fromClassName(String className) throws IOException {
-
 		// 4. load the class
 		ClassLoader loader = EnvironmentInterfaceStandard.class.getClassLoader();
 		Class<?> envInterfaceClass = null;
@@ -133,7 +129,6 @@ public class EILoader {
 					+ "\" vs. \"" + ei.requiredVersion() + "\"");
 
 		return ei;
-
 	}
 
 	/**
@@ -146,17 +141,10 @@ public class EILoader {
 	 *             thrown if the file could not be loaded
 	 */
 	public static void main(String[] args) throws IOException {
-
 		if (args.length == 0) {
-
 			System.out.println("You have to provide a filename.");
-
 		} else {
-
-			EnvironmentInterfaceStandard ei = EILoader.fromJarFile(new File(args[0]));
-
+			EILoader.fromJarFile(new File(args[0]));
 		}
-
 	}
-
 }

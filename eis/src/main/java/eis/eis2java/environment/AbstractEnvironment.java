@@ -1,7 +1,7 @@
 package eis.eis2java.environment;
 
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import eis.EIDefaultImpl;
@@ -32,11 +32,11 @@ import eis.iilang.Percept;
 public abstract class AbstractEnvironment extends EIDefaultImpl {
 	private static final long serialVersionUID = 1L;
 	/** Map of entity names to objects representing those entities */
-	private final Map<String, Object> entities = new HashMap<String, Object>();
+	private final Map<String, Object> entities = new HashMap<>();
 	/** Maps an entity to an action handler */
-	private final Map<String, PerceptHandler> perceptHandlers = new HashMap<String, PerceptHandler>();
+	private final Map<String, PerceptHandler> perceptHandlers = new HashMap<>();
 	/** Maps a Class to a map of action names and methods */
-	private final Map<String, ActionHandler> actionHandlers = new HashMap<String, ActionHandler>();
+	private final Map<String, ActionHandler> actionHandlers = new HashMap<>();
 
 	/**
 	 * Couples a name to an entity and parses it's annotations for percepts and
@@ -160,9 +160,8 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	}
 
 	@Override
-	protected final LinkedList<Percept> getAllPerceptsFromEntity(String name)
+	protected final List<Percept> getAllPerceptsFromEntity(String name)
 			throws PerceiveException, NoEnvironmentException {
-
 		PerceptHandler handler = perceptHandlers.get(name);
 
 		if (handler == null) {
@@ -181,7 +180,6 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 
 	@Override
 	protected final Percept performEntityAction(String name, Action action) throws ActException {
-
 		ActionHandler handler = actionHandlers.get(name);
 
 		if (handler == null) {
@@ -189,7 +187,6 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 		}
 
 		return handler.performAction(action);
-
 	}
 
 	@Override

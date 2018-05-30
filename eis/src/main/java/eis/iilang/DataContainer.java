@@ -1,6 +1,9 @@
 package eis.iilang;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A superclass for actions, events, et cetera. Consists of a name and a
@@ -11,7 +14,6 @@ import java.util.LinkedList;
  * 
  */
 public abstract class DataContainer extends IILElement {
-
 	/**
 	 * 
 	 */
@@ -21,7 +23,7 @@ public abstract class DataContainer extends IILElement {
 	protected String name = null;
 
 	/** A list of parameters. */
-	protected LinkedList<Parameter> params = new LinkedList<Parameter>();
+	protected List<Parameter> params = null;
 
 	/** Time of creation */
 	protected long timeStamp = System.currentTimeMillis();
@@ -41,12 +43,8 @@ public abstract class DataContainer extends IILElement {
 	 *            the parameter list
 	 */
 	public DataContainer(String name, Parameter... parameters) {
-
 		setName(name);
-
-		for (Parameter p : parameters)
-			this.params.add(p);
-
+		this.params = Arrays.asList(parameters);
 	}
 
 	/**
@@ -57,12 +55,9 @@ public abstract class DataContainer extends IILElement {
 	 * @param parameters
 	 *            the parameter list
 	 */
-	public DataContainer(String name, LinkedList<Parameter> parameters) {
-
+	public DataContainer(String name, List<Parameter> parameters) {
 		setName(name);
-
 		this.params = parameters;
-
 	}
 
 	/**
@@ -71,9 +66,7 @@ public abstract class DataContainer extends IILElement {
 	 * @return the name of the data-container
 	 */
 	public String getName() {
-
 		return name;
-
 	}
 
 	/**
@@ -83,10 +76,8 @@ public abstract class DataContainer extends IILElement {
 	 *            the name of the data-container.
 	 */
 	public void setName(String name) {
-
 		assert Character.isLowerCase(name.charAt(0)) : name + " should start with a lowercase letter";
 		this.name = name;
-
 	}
 
 	/**
@@ -94,10 +85,8 @@ public abstract class DataContainer extends IILElement {
 	 * 
 	 * @return the parameters of the data-container
 	 */
-	public LinkedList<Parameter> getParameters() {
-
-		return params;
-
+	public List<Parameter> getParameters() {
+		return Collections.unmodifiableList(params);
 	}
 
 	/**
@@ -105,18 +94,13 @@ public abstract class DataContainer extends IILElement {
 	 * 
 	 * @return the parameters of the data-container
 	 */
-	public LinkedList<Parameter> getClonedParameters() {
-
-		LinkedList<Parameter> ret = new LinkedList<Parameter>();
-
+	public List<Parameter> getClonedParameters() {
+		List<Parameter> ret = new ArrayList<>(params.size());
 		for (Parameter p : params) {
-
 			ret.add((Parameter) p.clone());
-
 		}
 
 		return ret;
-
 	}
 
 	/**
@@ -125,10 +109,8 @@ public abstract class DataContainer extends IILElement {
 	 * @param params
 	 *            the parameters of the data-container
 	 */
-	public void setParameters(LinkedList<Parameter> params) {
-
+	public void setParameters(List<Parameter> params) {
 		this.params = params;
-
 	}
 
 	/**
@@ -138,9 +120,7 @@ public abstract class DataContainer extends IILElement {
 	 *            the new data-container
 	 */
 	public void addParameter(Parameter p) {
-
 		params.add(p);
-
 	}
 
 	/**
@@ -151,14 +131,12 @@ public abstract class DataContainer extends IILElement {
 	 * @return the percept
 	 */
 	public static Percept toPercept(DataContainer container) {
-
 		Parameter[] parameters = new Parameter[container.params.size()];
 
 		for (int a = 0; a < parameters.length; a++)
 			parameters[a] = container.params.get(a);
 
 		return new Percept(container.getName(), parameters);
-
 	}
 
 	/**
@@ -168,9 +146,7 @@ public abstract class DataContainer extends IILElement {
 	 *            is the source of the data-container.
 	 */
 	public void setSource(String source) {
-
 		this.source = source;
-
 	}
 
 	/**
@@ -179,9 +155,7 @@ public abstract class DataContainer extends IILElement {
 	 * @return the source of the data-container.
 	 */
 	public String getSource() {
-
 		return source;
-
 	}
 
 	/*
@@ -200,7 +174,6 @@ public abstract class DataContainer extends IILElement {
 
 	@Override
 	public boolean equals(Object obj) {
-
 		if (obj == null)
 			return false;
 		if (obj == this)
@@ -218,13 +191,10 @@ public abstract class DataContainer extends IILElement {
 			return false;
 
 		for (int a = 0; a < params.size(); a++) {
-
 			if (dc.params.get(a).equals(params.get(a)) == false)
 				return false;
-
 		}
 
 		return true;
 	}
-
 }
