@@ -95,13 +95,12 @@ public class Action extends DataContainer {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null)
-			return false;
-		if (obj == this)
+		if (this == obj) {
 			return true;
-
-		if (!(obj instanceof Action))
+		}
+		if (obj == null || !(obj instanceof Action)) {
 			return false;
+		}
 
 		return super.equals(obj);
 	}

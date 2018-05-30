@@ -25,9 +25,6 @@ public abstract class DataContainer extends IILElement {
 	/** A list of parameters. */
 	protected List<Parameter> params = null;
 
-	protected DataContainer() {
-	}
-
 	/**
 	 * Contructs an DataContainer.
 	 * 
@@ -37,8 +34,7 @@ public abstract class DataContainer extends IILElement {
 	 *            the parameter list
 	 */
 	public DataContainer(String name, Parameter... parameters) {
-		setName(name);
-		this.params = Arrays.asList(parameters);
+		this(name, Arrays.asList(parameters));
 	}
 
 	/**
@@ -50,7 +46,7 @@ public abstract class DataContainer extends IILElement {
 	 *            the parameter list
 	 */
 	public DataContainer(String name, List<Parameter> parameters) {
-		setName(name);
+		this.name = name;
 		this.params = parameters;
 	}
 
@@ -61,17 +57,6 @@ public abstract class DataContainer extends IILElement {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * Sets the name.
-	 * 
-	 * @param name
-	 *            the name of the data-container.
-	 */
-	public void setName(String name) {
-		assert Character.isLowerCase(name.charAt(0)) : name + " should start with a lowercase letter";
-		this.name = name;
 	}
 
 	/**
@@ -97,47 +82,6 @@ public abstract class DataContainer extends IILElement {
 		return ret;
 	}
 
-	/**
-	 * Sets the parameters.
-	 * 
-	 * @param params
-	 *            the parameters of the data-container
-	 */
-	public void setParameters(List<Parameter> params) {
-		this.params = params;
-	}
-
-	/**
-	 * Adds a parameter to the data-container.
-	 * 
-	 * @param p
-	 *            the new data-container
-	 */
-	public void addParameter(Parameter p) {
-		params.add(p);
-	}
-
-	/**
-	 * Converts a data container to a percept.
-	 * 
-	 * @param container
-	 *            the container convert to a percept
-	 * @return the percept
-	 */
-	public static Percept toPercept(DataContainer container) {
-		Parameter[] parameters = new Parameter[container.params.size()];
-
-		for (int a = 0; a < parameters.length; a++)
-			parameters[a] = container.params.get(a);
-
-		return new Percept(container.getName(), parameters);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -149,27 +93,27 @@ public abstract class DataContainer extends IILElement {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null)
-			return false;
-		if (obj == this)
+		if (this == obj) {
 			return true;
-
-		if (!(obj instanceof DataContainer))
-			return false;
-
-		DataContainer dc = (DataContainer) obj;
-
-		if (dc.name.equals(name) == false)
-			return false;
-
-		if (dc.params.size() != params.size())
-			return false;
-
-		for (int a = 0; a < params.size(); a++) {
-			if (dc.params.get(a).equals(params.get(a)) == false)
-				return false;
 		}
-
+		if (obj == null|| !(obj instanceof DataContainer)) {
+			return false;
+		}
+		DataContainer other = (DataContainer) obj;
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
+		if (params == null) {
+			if (other.params != null) {
+				return false;
+			}
+		} else if (!params.equals(other.params)) {
+			return false;
+		}
 		return true;
 	}
 }

@@ -9,7 +9,6 @@ import java.io.Serializable;
  * 
  */
 public abstract class IILElement implements Serializable, Cloneable {
-
 	/**
 	 * 
 	 */
@@ -23,12 +22,10 @@ public abstract class IILElement implements Serializable, Cloneable {
 	 */
 	@Deprecated
 	public final String toString() {
-
 		if (toProlog)
 			return toProlog();
 
 		return toXML();
-
 	}
 
 	/**
@@ -50,14 +47,12 @@ public abstract class IILElement implements Serializable, Cloneable {
 	 */
 	@Deprecated
 	public final String toXMLWithHeader() {
-
 		String xml = "";
 
 		xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n";
 		xml += toXML(0);
 
 		return xml;
-
 	}
 
 	/**
@@ -68,9 +63,7 @@ public abstract class IILElement implements Serializable, Cloneable {
 	 */
 	@Deprecated
 	public final String toXML() {
-
 		return toXML(0);
-
 	}
 
 	/**
@@ -90,14 +83,12 @@ public abstract class IILElement implements Serializable, Cloneable {
 	 * @return the string-representation with indentation
 	 */
 	protected String indent(int depth) {
-
 		String ret = "";
 
 		for (int a = 0; a < depth; a++)
 			ret += "  ";
 
 		return ret;
-
 	}
 
 	/**
@@ -139,5 +130,4 @@ public abstract class IILElement implements Serializable, Cloneable {
 	 * @see eis.iilang.IILObjectVisitor
 	 */
 	public abstract Object accept(IILObjectVisitor visitor, Object object);
-
 }

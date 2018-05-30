@@ -3,7 +3,6 @@ package eis.iilang;
 import eis.EnvironmentInterfaceStandard;
 
 public enum EnvironmentState {
-
 	/**
 	 * The environment is not ready for use.
 	 */
@@ -23,6 +22,5 @@ public enum EnvironmentState {
 	/**
 	 * The environment was taken down after running.
 	 */
-	KILLED
-
+	KILLED;
 }

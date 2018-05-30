@@ -7,13 +7,11 @@ package eis.iilang;
  *
  */
 public class XMLVisitor implements IILObjectVisitor {
-
 	private static String indent = "  ";
 	private static String newline = "\n";
 
 	@Override
 	public Object visit(Action element, Object object) {
-
 		String ret = "";
 
 		ret += object.toString() + "<action name=\"" + element.name + "\">" + newline;
@@ -25,7 +23,6 @@ public class XMLVisitor implements IILObjectVisitor {
 		ret += object.toString() + "</action>";
 
 		return ret;
-
 	}
 
 	@Override
@@ -36,7 +33,6 @@ public class XMLVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(Function element, Object object) {
-
 		String ret = "";
 
 		ret += object.toString() + "<function name=\"" + element.getName() + "\">" + newline;
@@ -46,14 +42,11 @@ public class XMLVisitor implements IILObjectVisitor {
 		ret += object.toString() + "</function>" + newline;
 
 		return ret;
-
 	}
 
 	@Override
 	public Object visit(Identifier element, Object object) {
-
 		return object.toString() + "<identifier value=\"" + element.getValue() + "\"/>" + newline;
-
 	}
 
 	@Override
@@ -64,9 +57,7 @@ public class XMLVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(Numeral element, Object object) {
-
 		return object.toString() + "<number value=\"" + element.getValue() + "\"/>" + newline;
-
 	}
 
 	@Override
@@ -90,7 +81,6 @@ public class XMLVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(Percept element, Object object) {
-
 		String ret = "";
 
 		ret += object.toString() + "<percept name=\"" + element.name + "\">" + newline;
@@ -102,14 +92,11 @@ public class XMLVisitor implements IILObjectVisitor {
 		ret += object.toString() + "</percept>" + newline;
 
 		return ret;
-
 	}
 
 	@Override
 	public Object visit(TruthValue element, Object object) {
-
 		return object.toString() + "<truthvalue value=\"" + element.getValue() + "\"/>" + newline;
-
 	}
 
 	/**
@@ -121,10 +108,7 @@ public class XMLVisitor implements IILObjectVisitor {
 	 * @return result of calling {@link IILElement#accept(IILVisitor)}
 	 */
 	public static String staticVisit(IILElement element) {
-
 		IILObjectVisitor visitor = (IILObjectVisitor) new XMLVisitor();
 		return (String) element.accept(visitor, "");
-
 	}
-
 }

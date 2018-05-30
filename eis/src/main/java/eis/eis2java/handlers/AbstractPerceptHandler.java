@@ -42,7 +42,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	/**
 	 * map of previous percepts that we got for each method.
 	 */
-	protected final Map<Method, List<Object>> previousPercepts = new HashMap<>();
+	protected final Map<Method, List<Percept>> previousPercepts = new HashMap<>();
 
 	/**
 	 * Translates the percept objects and applies filtering as described by
@@ -60,73 +60,60 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 */
 	protected final PerceptUpdate translatePercepts(Method method, List<Object> perceptObjects)
 			throws PerceiveException {
-		// the add and delete list based on the perceived objects
-		// list of object that we had last round but not at this moment.
-		List<Object> addList = new ArrayList<>(0);
-		List<Object> delList = new ArrayList<>(0);
-
 		AsPercept annotation = method.getAnnotation(AsPercept.class);
 		Filter.Type filter = annotation.filter();
 		String perceptName = annotation.name();
 
-		List<Object> previous = previousPercepts.get(method);
+		List<Percept> previous = previousPercepts.get(method);
 
 		// Avoid translating objects that don't need to be translated.
 		if (filter == Filter.Type.ONCE && previous != null) {
-			return new PerceptUpdate();
+			PerceptUpdate returned = new PerceptUpdate(new ArrayList<>(0), previous);
+			previousPercepts.put(method, new ArrayList<>(0));
+			return returned;
 		}
 
 		if (previous == null) {
-			previous = new ArrayList<>(1);
-			previousPercepts.put(method, previous);
+			previous = new ArrayList<>(0);
+		}
+
+		// Translate objects.
+		List<Percept> percepts = new ArrayList<>(perceptObjects.size());
+		for (Object javaObject : perceptObjects) {
+			Parameter[] parameters;
+			try {
+				parameters = Translator.getInstance().translate2Parameter(javaObject);
+				if (annotation.multipleArguments()) {
+					parameters = extractMultipleParameters(parameters);
+				}
+			} catch (TranslationException e) {
+				throw new PerceiveException("Unable to translate percept " + perceptName, e);
+			}
+			percepts.add(new Percept(perceptName, parameters));
 		}
 
 		// do the proper filtering.
-		// FIXME: delList is not filled
+		List<Percept> addList = new ArrayList<>(0);
+		List<Percept> delList = new ArrayList<>(0);
 		switch (filter) {
-		case ALWAYS:
 		case ONCE:
-			addList = perceptObjects;
+			addList = percepts;
 			break;
-		case ON_CHANGE:
-			if (!perceptObjects.equals(previous)) {
-				addList = perceptObjects;
+		case ALWAYS:
+			addList = percepts;
+			addList.removeAll(previous);
+			delList = previous;
+			delList.removeAll(percepts);
+			break;
+		case ON_CHANGE: // FIXME: how to do this?!
+			if (!percepts.equals(previous)) {
+				addList = percepts;
 			}
 			break;
 		}
 
-		// Translate addList.
-		List<Percept> perceptAddList = new ArrayList<>(addList.size());
-		for (Object javaObject : addList) {
-			Parameter[] parameters;
-			try {
-				parameters = Translator.getInstance().translate2Parameter(javaObject);
-				if (annotation.multipleArguments()) {
-					parameters = extractMultipleParameters(parameters);
-				}
-			} catch (TranslationException e) {
-				throw new PerceiveException("Unable to translate percept " + perceptName, e);
-			}
-			perceptAddList.add(new Percept(perceptName, parameters));
-		}
-
-		// Translate delList.
-		List<Percept> perceptDelList = new ArrayList<>(delList.size());
-		for (Object javaObject : delList) {
-			Parameter[] parameters;
-			try {
-				parameters = Translator.getInstance().translate2Parameter(javaObject);
-				if (annotation.multipleArguments()) {
-					parameters = extractMultipleParameters(parameters);
-				}
-			} catch (TranslationException e) {
-				throw new PerceiveException("Unable to translate percept " + perceptName, e);
-			}
-			perceptDelList.add(new Percept(perceptName, parameters));
-		}
-
-		previousPercepts.put(method, perceptObjects);
-		return new PerceptUpdate(perceptAddList, perceptDelList);
+		previousPercepts.put(method, percepts);
+		return new PerceptUpdate(addList, delList);
 	}
 
 	/**
@@ -171,6 +158,7 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 *             if an attempt to perform an action or to retrieve percepts has
 	 *             failed
 	 */
+	@SuppressWarnings("unchecked")
 	protected final List<Object> unpackPerceptObject(Method method, Object perceptObject) throws PerceiveException {
 		AsPercept annotation = method.getAnnotation(AsPercept.class);
 		String perceptName = annotation.name();
@@ -194,9 +182,12 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 
 		// The multiple percepts are a collection, put them in a list.
 		Collection<?> javaCollection = (Collection<?>) perceptObject;
-		List<Object> unpacked = new ArrayList<>(javaCollection);
-
-		return unpacked;
+		if (javaCollection instanceof List<?>) {
+			return (List<Object>) javaCollection;
+		} else {
+			List<Object> unpacked = new ArrayList<>(javaCollection);
+			return unpacked;
+		}
 	}
 
 	@Override

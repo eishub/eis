@@ -9,7 +9,6 @@ package eis.iilang;
  *
  */
 public interface IILVisitor {
-
 	public Object visit(Action element);
 	public Object visit(DataContainer element);
 	public Object visit(Function element);
@@ -20,5 +19,4 @@ public interface IILVisitor {
 	public Object visit(ParameterList element);
 	public Object visit(Percept element);
 	public Object visit(TruthValue element);
-	
 }

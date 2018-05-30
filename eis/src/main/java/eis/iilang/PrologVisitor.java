@@ -10,7 +10,6 @@ public class PrologVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(Action element, Object object) {
-
 		String ret = "";
 
 		ret += element.name + "(";
@@ -22,7 +21,6 @@ public class PrologVisitor implements IILObjectVisitor {
 		ret += ")";
 
 		return ret;
-
 	}
 
 	@Override
@@ -32,7 +30,6 @@ public class PrologVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(Function element, Object object) {
-
 		String ret = "";
 
 		ret += element.getName() + "(";
@@ -53,9 +50,7 @@ public class PrologVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(Identifier element, Object object) {
-
 		return element.getValue();
-
 	}
 
 	@Override
@@ -65,9 +60,7 @@ public class PrologVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(Numeral element, Object object) {
-
 		return element.getValue();
-
 	}
 
 	@Override
@@ -77,7 +70,6 @@ public class PrologVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(ParameterList element, Object object) {
-
 		String ret = "";
 
 		ret += "[";
@@ -89,12 +81,10 @@ public class PrologVisitor implements IILObjectVisitor {
 		ret += "]";
 
 		return ret;
-
 	}
 
 	@Override
 	public Object visit(Percept element, Object object) {
-
 		String ret = "";
 
 		ret += element.name + "(";
@@ -106,14 +96,11 @@ public class PrologVisitor implements IILObjectVisitor {
 		ret += ")";
 
 		return ret;
-
 	}
 
 	@Override
 	public Object visit(TruthValue element, Object object) {
-
 		return element.getValue();
-
 	}
 
 	/**
@@ -126,9 +113,7 @@ public class PrologVisitor implements IILObjectVisitor {
 	 *         {@link IILElement#accept(IILObjectVisitor, Object)}
 	 */
 	public static String staticVisit(IILElement element) {
-
 		PrologVisitor visitor = new PrologVisitor();
 		return (String) element.accept(visitor, "");
-
 	}
 }

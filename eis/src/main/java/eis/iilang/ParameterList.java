@@ -16,6 +16,7 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	 * 
 	 */
 	private static final long serialVersionUID = 5330751271570276475L;
+	
 	/** The list of parameters. */
 	private List<Parameter> list = null;
 
@@ -138,24 +139,25 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((list == null) ? 0 : list.hashCode());
-		return result;
+		return ((list == null) ? 0 : list.hashCode());
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!(obj instanceof ParameterList))
+		}
+		if (obj == null || !(obj instanceof ParameterList)) {
 			return false;
+		}
 		ParameterList other = (ParameterList) obj;
 		if (list == null) {
-			if (other.list != null)
+			if (other.list != null) {
 				return false;
-		} else if (!list.equals(other.list))
+			}
+		} else if (!list.equals(other.list)) {
 			return false;
+		}
 		return true;
 	}
 

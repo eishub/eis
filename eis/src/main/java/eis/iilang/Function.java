@@ -2,10 +2,11 @@ package eis.iilang;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents a function over parameters. It consits of a name and a list of
+ * Represents a function over parameters. It consists of a name and a list of
  * parameters.
  * 
  * @author tristanbehrens
@@ -31,8 +32,7 @@ public class Function extends Parameter {
 	 *            the parameters.
 	 */
 	public Function(String name, Parameter... parameters) {
-		setName(name);
-		this.params = Arrays.asList(parameters);
+		this(name, Arrays.asList(parameters));
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class Function extends Parameter {
 	 *            the parameters.
 	 */
 	public Function(String name, List<Parameter> parameters) {
-		setName(name);
+		this.name = name;
 		this.params = parameters;
 	}
 
@@ -58,33 +58,12 @@ public class Function extends Parameter {
 	}
 
 	/**
-	 * Sets the name of the function
-	 * 
-	 * @param name
-	 *            the name of the function
-	 */
-	public void setName(String name) {
-		assert Character.isLowerCase(name.charAt(0)) : name + " should start with a lowercase letter";
-		this.name = name;
-	}
-
-	/**
 	 * Returns the parameters of the function.
 	 * 
 	 * @return the parameters of the function.
 	 */
 	public List<Parameter> getParameters() {
-		return params;
-	}
-
-	/**
-	 * Sets the parameters.
-	 * 
-	 * @param parameters
-	 *            the new parameters
-	 */
-	public void setParameters(List<Parameter> parameters) {
-		this.params = parameters;
+		return Collections.unmodifiableList(params);
 	}
 
 	/**
@@ -138,7 +117,7 @@ public class Function extends Parameter {
 
 	@Override
 	public Object clone() {
-		return new Function(this.name, this.getClonedParameters());
+		return new Function(this.name, getClonedParameters());
 	}
 
 	@Override
@@ -152,23 +131,27 @@ public class Function extends Parameter {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null || !(obj instanceof Function)) {
 			return false;
-		if (!(obj instanceof Function))
-			return false;
+		}
 		Function other = (Function) obj;
 		if (name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!name.equals(other.name)) {
 			return false;
+		}
 		if (params == null) {
-			if (other.params != null)
+			if (other.params != null) {
 				return false;
-		} else if (!params.equals(other.params))
+			}
+		} else if (!params.equals(other.params)) {
 			return false;
+		}
 		return true;
 	}
 
