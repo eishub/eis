@@ -26,6 +26,10 @@ public class PerceptUpdate {
 	public List<Percept> getDeleteList() {
 		return Collections.unmodifiableList(this.dellist);
 	}
+	
+	public boolean isEmpty() {
+		return (this.addlist.isEmpty() && this.dellist.isEmpty());
+	}
 
 	public void merge(PerceptUpdate other) {
 		this.addlist.addAll(other.addlist);
