@@ -163,10 +163,9 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 		return Collections.emptyList();
 	}
 
-	public Map<Method, Object> getAllPercepts() throws PerceiveException {
+	public Map<Method, Object> getPercepts() throws PerceiveException {
 		percepts.updatePercepts();
-		return percepts.getAllPercepts();
+		return percepts.getPercepts();
 
 	}
-
 }

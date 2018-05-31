@@ -13,7 +13,7 @@ public enum EnvironmentState {
 	RUNNING,
 	/**
 	 * The environment is operational but currently not running.
-	 * {@link EnvironmentInterfaceStandard#getAllPercepts(String, String...)}
+	 * {@link EnvironmentInterfaceStandard#getPercepts(String, String...)}
 	 * should be working but
 	 * {@link EnvironmentInterfaceStandard#performAction(String, Action, String...)}
 	 * may fail.

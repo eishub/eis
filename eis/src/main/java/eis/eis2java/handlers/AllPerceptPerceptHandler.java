@@ -47,7 +47,7 @@ public final class AllPerceptPerceptHandler extends AbstractPerceptHandler {
 
 	@Override
 	public final PerceptUpdate getPercepts() throws PerceiveException {
-		Map<Method, Object> batchPerceptObjects = allPerceptProvider.getAllPercepts();
+		Map<Method, Object> batchPerceptObjects = allPerceptProvider.getPercepts();
 		PerceptUpdate percepts = new PerceptUpdate();
 
 		for (Entry<Method, Object> entry : batchPerceptObjects.entrySet()) {

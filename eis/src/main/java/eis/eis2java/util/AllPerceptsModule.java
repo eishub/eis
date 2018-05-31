@@ -17,7 +17,7 @@ import eis.exceptions.PerceiveException;
 /**
  * A module that prepares a batch of percepts. Percepts are gathered based on
  * {@link AsPercept} annotations. A batch can be collected using
- * {@link AllPerceptsModule#getAllPercepts()}.
+ * {@link AllPerceptsModule#getPercepts()}.
  * 
  * This class simplifies the implementation of the {@link AllPerceptsProvider}
  * by providing the functionality normally provided by the
@@ -113,7 +113,7 @@ public class AllPerceptsModule {
 		perceptBatch.putAll(eventPerceptBatch);
 	}
 
-	public synchronized Map<Method, Object> getAllPercepts() {
+	public synchronized Map<Method, Object> getPercepts() {
 		// We can clear outstanding events. They'll be exported now.
 		eventPerceptBatch.clear();
 		// Copy precept batch, we don't want to modify this one any more.

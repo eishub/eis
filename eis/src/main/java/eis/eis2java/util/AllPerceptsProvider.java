@@ -32,6 +32,6 @@ public interface AllPerceptsProvider {
 	 * @throws PerceiveException
 	 *             if percept failed
 	 */
-	public Map<Method, Object> getAllPercepts() throws PerceiveException;
+	public Map<Method, Object> getPercepts() throws PerceiveException;
 
 }

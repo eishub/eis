@@ -27,7 +27,7 @@ public interface EnvironmentListener {
 	 * Handles the event that an entity has been freed. This assumes that the
 	 * entity was already there and thus that the environment was ready to
 	 * handle
-	 * {@link EnvironmentInterfaceStandard#getAllPercepts(String, String...)}
+	 * {@link EnvironmentInterfaceStandard#getPercepts(String, String...)}
 	 * 
 	 * @param entity
 	 *            is the entity that has been freed
@@ -49,7 +49,7 @@ public interface EnvironmentListener {
 	/**
 	 * Handles the event that an entity has been newly created. Announce new
 	 * entities only when the environment is ready to handle
-	 * {@link EnvironmentInterfaceStandard#getAllPercepts(String, String...)}.
+	 * {@link EnvironmentInterfaceStandard#getPercepts(String, String...)}.
 	 * 
 	 * @param entity
 	 *            is the entity that has been created.

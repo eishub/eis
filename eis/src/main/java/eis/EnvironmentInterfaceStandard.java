@@ -254,13 +254,13 @@ public interface EnvironmentInterfaceStandard {
 	 * {@link EnvironmentState#RUNNING} or {@link EnvironmentState#PAUSED}.
 	 * <p>
 	 * <em>NOTE</em> In many environments the return value depends on previous
-	 * calls to getAllPercepts. There may be special percepts that are provided
-	 * only the first time getAllPercepts is called. There may be percepts that
+	 * calls to getPercepts. There may be special percepts that are provided
+	 * only the first time getPercepts is called. There may be percepts that
 	 * are sent only once. There may percepts that are sent if they were not
 	 * sent the previous time already. The exact behaviour is to be defined in
 	 * environment's documentation. Both {@link EIDefaultImpl} and
 	 * {@link AbstractEnvironment} implements such a more detailed version of
-	 * getAllPercepts.
+	 * getPercepts.
 	 * 
 	 * 
 	 * @param agent
@@ -278,7 +278,7 @@ public interface EnvironmentInterfaceStandard {
 	 *             if an attempt to perform an action or to retrieve percepts
 	 *             has failed
 	 */
-	Map<String, PerceptUpdate> getAllPercepts(String agent, String... entities)
+	Map<String, PerceptUpdate> getPercepts(String agent, String... entities)
 			throws PerceiveException, NoEnvironmentException;
 
 	/**

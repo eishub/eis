@@ -671,7 +671,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	}
 
 	@Override
-	public Map<String, PerceptUpdate> getAllPercepts(String agent, String... entities)
+	public Map<String, PerceptUpdate> getPercepts(String agent, String... entities)
 			throws PerceiveException, NoEnvironmentException {
 		// fail if the environment does not run or paused
 		if (!(state == EnvironmentState.RUNNING || state == EnvironmentState.PAUSED)) {
@@ -795,8 +795,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * Adds an entity to the environment.
 	 * <p>
 	 * Your environment must be able to handle
-	 * {@link #getAllPercepts(String, String...)} and
-	 * {@link #getAllPerceptsFromEntity(String)} when this is called.
+	 * {@link #getPercepts(String, String...)} and
+	 * {@link #getPerceptsForEntity(String)} when this is called.
 	 * 
 	 * 
 	 * @param entity
@@ -820,8 +820,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * Adds an entity to the environment.
 	 * <p>
 	 * Your environment must be able to handle
-	 * {@link #getAllPercepts(String, String...)} and
-	 * {@link #getAllPerceptsFromEntity(String)} when this is called.
+	 * {@link #getPercepts(String, String...)} and
+	 * {@link #getPerceptsForEntity(String)} when this is called.
 	 * 
 	 * 
 	 * @param entity

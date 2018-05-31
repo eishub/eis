@@ -106,8 +106,8 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 * actions using the specified handlers.
 	 * <p>
 	 * Your environment must be able to handle
-	 * {@link #getAllPercepts(String, String...)} and
-	 * {@link #getAllPerceptsFromEntity(String)} when this is called.
+	 * {@link #getPercepts(String, String...)} and
+	 * {@link #getPerceptsForEntity(String)} when this is called.
 	 * 
 	 * 
 	 * @param name

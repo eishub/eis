@@ -36,8 +36,7 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * nl.tudelft.goal.EIS2Java.environment.PerceptHandler#getAllPercepts(java
-	 * .lang.Object)
+	 * nl.tudelft.goal.EIS2Java.environment.PerceptHandler#getPercepts(java.lang.Object)
 	 */
 	@Override
 	public final PerceptUpdate getPercepts() throws PerceiveException {
