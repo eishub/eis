@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,10 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 	 * map of previous percepts that we got for each method.
 	 */
 	protected final Map<Method, List<Percept>> previousPercepts = new HashMap<>();
+	/**
+	 * a shadow copy for on-change percepts only
+	 */
+	protected final Map<Method, List<Percept>> shadow = new HashMap<>();
 
 	/**
 	 * Translates the percept objects and applies filtering as described by
@@ -106,8 +111,20 @@ public abstract class AbstractPerceptHandler extends PerceptHandler {
 			delList.removeAll(percepts);
 			break;
 		case ON_CHANGE: // FIXME: how to do this?!
-			if (!percepts.equals(previous)) {
-				addList = percepts;
+			addList = percepts;
+			List<Percept> shadow = this.shadow.get(method);
+			if(shadow == null) {
+				this.shadow.put(method, percepts);
+			} else {
+				addList.removeAll(previous);
+				Iterator<Percept> iterator = shadow.iterator();
+				while(iterator.hasNext()) {
+					Percept next = iterator.next();
+					if(!addList.contains(next)) {
+						delList.add(next);
+						iterator.remove();
+					}
+				}
 			}
 			break;
 		}
