@@ -23,11 +23,8 @@ import eis.iilang.Percept;
  * Base implementation for environments that want to work with automated percept
  * and action discovery in EIS2Java.
  * 
- * 
- * 
  * @author Lennard de Rijk
- * @author M.P. Korstanje * 11-02-2011: MP - Implemented synchronization feature
- *         to work with asynchronous entities.
+ * @author M.P. Korstanje
  */
 public abstract class AbstractEnvironment extends EIDefaultImpl {
 	private static final long serialVersionUID = 1L;
@@ -52,7 +49,7 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 *             if the entity could not be added.
 	 */
 	public final <T> void registerEntity(String name, T entity) throws EntityException {
-		this.registerEntity(name, entity, new DefaultActionHandler(entity), new DefaultPerceptHandler(entity));
+		registerEntity(name, entity, new DefaultActionHandler(entity), new DefaultPerceptHandler(entity));
 	}
 
 	/**
@@ -99,7 +96,7 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 *             if the entity could not be added.
 	 */
 	public final <T> void registerEntity(String name, String type, T entity) throws EntityException {
-		this.registerEntity(name, type, entity, new DefaultActionHandler(entity), new DefaultPerceptHandler(entity));
+		registerEntity(name, type, entity, new DefaultActionHandler(entity), new DefaultPerceptHandler(entity));
 	}
 
 	/**
@@ -163,7 +160,6 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	protected final List<Percept> getAllPerceptsFromEntity(String name)
 			throws PerceiveException, NoEnvironmentException {
 		PerceptHandler handler = perceptHandlers.get(name);
-
 		if (handler == null) {
 			throw new PerceiveException("Entity with name " + name + " has no handler");
 		}
@@ -173,19 +169,17 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 
 	@Override
 	protected final boolean isSupportedByEntity(Action action, String name) {
-		Object entity = getEntity(name);
-		ActionHandler handler = actionHandlers.get(entity);
+		ActionHandler handler = actionHandlers.get(name);
 		return handler.isSupportedByEntity(action);
 	}
 
 	@Override
 	protected final Percept performEntityAction(String name, Action action) throws ActException {
 		ActionHandler handler = actionHandlers.get(name);
-
 		if (handler == null) {
 			throw new ActException(ActException.FAILURE, "Entity with name " + name + " has no handler");
 		}
-
+		
 		return handler.performAction(action);
 	}
 
