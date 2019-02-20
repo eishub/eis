@@ -13,7 +13,7 @@ Any agent platform that supports the EIS interface can connect to any environmen
 The apleis folder contains the source code of the EIS glue code framework. It defines an interface that needs to be implemented for an environment to allow agents to connect to that environment.
 
 # Releases
-See [here](https://github.com/eishub/eis/releases) for available releases of the EIS interface. Releases can also be found in eishub's maven repository [here](https://github.com/eishub/mvn-repo/tree/master/apleis).
+See [here](https://github.com/eishub/eis/releases) for available releases of the EIS interface. Releases can also be found in eishub's maven repository [here](https://github.com/eishub/mvn-repo/tree/master/eishub/eis).
 
 # Code Fragments
 The folders eis-remote and examples contain possibly useful code fragments for connecting to an environment remotely (using RMI) and for other tasks, such as enabling your agent platform to support EIS.
@@ -30,13 +30,12 @@ See [eishub](https://github.com/eishub/) for environments that implement the env
 	<id>eishub-mvn-repo</id>
 	<url>https://raw.github.com/eishub/mvn-repo/master</url>
 </repository>
-
 ```
 
 ```
 <dependency>
 	<groupId>eishub</groupId>
 	<artifactId>eis</artifactId>
-	<version>0.5.0</version>
+	<version>0.6.0</version>
 </dependency>
 ```

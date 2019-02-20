@@ -18,20 +18,17 @@ import java.util.jar.Manifest;
  *
  */
 public class EILoader {
-	private static String version = "0.6.0";
+	public static String version = "0.6.2";
 
 	/**
 	 * Loads an environment-interface from a jar-file. Firstly, the jar-file is
-	 * added to the classpath. Secondly, the main-class is determined by
-	 * inspecting the manifest. And finally, an instance of that very main-class
-	 * is created and returned.
+	 * added to the classpath. Secondly, the main-class is determined by inspecting
+	 * the manifest. And finally, an instance of that very main-class is created and
+	 * returned.
 	 * 
-	 * @param file
-	 *            the file to be loaded
-	 * @return an instance of the environment-interface contained in the
-	 *         jar-file
-	 * @throws IOException
-	 *             is thrown if loading was not successfull
+	 * @param file the file to be loaded
+	 * @return an instance of the environment-interface contained in the jar-file
+	 * @throws IOException is thrown if loading was not successfull
 	 */
 	public static EnvironmentInterfaceStandard fromJarFile(File file) throws IOException {
 		// 1. locate file, check for existence, check for being a jar
@@ -92,15 +89,13 @@ public class EILoader {
 	}
 
 	/**
-	 * Instantiates an environment-interface from a given class-name. Assumes
-	 * that all required classes are already in the classpath.
+	 * Instantiates an environment-interface from a given class-name. Assumes that
+	 * all required classes are already in the classpath.
 	 * 
-	 * @param className
-	 *            the className to load
+	 * @param className the className to load
 	 * @return given class name, verified as implementing
 	 *         EnvironmentInterfaceStandard
-	 * @throws IOException
-	 *             if class can not be loaded as environment
+	 * @throws IOException if class can not be loaded as environment
 	 */
 	public static EnvironmentInterfaceStandard fromClassName(String className) throws IOException {
 		// 4. load the class
@@ -134,11 +129,9 @@ public class EILoader {
 	/**
 	 * Loads an environment-interface.
 	 * 
-	 * @param args
-	 *            the first string has to be a path to a jar-file containing an
-	 *            environment-interface
-	 * @throws IOException
-	 *             thrown if the file could not be loaded
+	 * @param args the first string has to be a path to a jar-file containing an
+	 *             environment-interface
+	 * @throws IOException thrown if the file could not be loaded
 	 */
 	public static void main(String[] args) throws IOException {
 		if (args.length == 0) {
