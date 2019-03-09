@@ -18,7 +18,7 @@ import java.util.jar.Manifest;
  *
  */
 public class EILoader {
-	public static String version = "0.6.1";
+	public static String version = "0.6.2";
 
 	/**
 	 * Loads an environment-interface from a jar-file. Firstly, the jar-file is
