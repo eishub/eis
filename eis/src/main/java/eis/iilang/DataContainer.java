@@ -43,8 +43,7 @@ public abstract class DataContainer extends IILElement {
 	 *            the parameter list
 	 */
 	public DataContainer(String name, Parameter... parameters) {
-		setName(name);
-		this.params = Arrays.asList(parameters);
+		this(name, new ArrayList<>(Arrays.asList(parameters)));
 	}
 
 	/**

@@ -20,20 +20,13 @@ public class ParameterList extends Parameter implements Iterable<Parameter> {
 	private List<Parameter> list = null;
 
 	/**
-	 * Constructs an empty list of parameters.
-	 */
-	public ParameterList() {
-		this.list = new ArrayList<>(0);
-	}
-
-	/**
 	 * Contructs a list of parameters from an array.
 	 * 
 	 * @param parameters
 	 *            the parameters for this list
 	 */
 	public ParameterList(Parameter... parameters) {
-		this.list = Arrays.asList(parameters);
+		this(new ArrayList<>(Arrays.asList(parameters)));
 	}
 
 	/**
