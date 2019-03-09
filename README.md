@@ -20,7 +20,7 @@ The folders eis-remote and examples contain possibly useful code fragments for c
 
 # Environments that Implement EIS
 
-See [eishub](https://github.com/eishub/) for environments that implement the environment interface, ranging from toy environments such as the blocks world, to commercial games such as Unreal Tournament.
+See [eishub](https://github.com/eishub/) for environments that implement the environment interface, ranging from toy environments such as the blocks world, to commercial games such as StarCraft: Brood War.
 
 
 # Dependency information
@@ -36,6 +36,6 @@ See [eishub](https://github.com/eishub/) for environments that implement the env
 <dependency>
 	<groupId>eishub</groupId>
 	<artifactId>eis</artifactId>
-	<version>0.6.0</version>
+	<version>0.6.1</version>
 </dependency>
 ```
