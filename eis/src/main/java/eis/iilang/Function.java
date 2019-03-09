@@ -32,7 +32,7 @@ public class Function extends Parameter {
 	 *            the parameters.
 	 */
 	public Function(String name, Parameter... parameters) {
-		this(name, Arrays.asList(parameters));
+		this(name, new ArrayList<>(Arrays.asList(parameters)));
 	}
 
 	/**
