@@ -76,14 +76,13 @@ public abstract class PerceptHandlerTest {
 	 */
 	private void assertPartialPerceptsReceived(final PerceptUpdate percepts) {
 		final List<Percept> addList = percepts.getAddList(); // FIXME: deleteList??
-		System.out.println(addList + "," + this.entity.getAlways());
-		assertTrue(addList.contains(this.entity.getAlways()));
+		assertFalse(addList.contains(this.entity.getAlways()));
 		assertFalse(addList.contains(this.entity.getOnce()));
 		assertFalse(addList.contains(this.entity.getOnChange()));
 		assertTrue(addList.contains(this.entity.getOnChanged()));
-		assertTrue(addList.containsAll(this.entity.getMultipleAlways()));
-		assertTrue(addList.containsAll(this.entity.getMultipleOnChange()));
-		assertTrue(addList.contains(this.entity.getMultiArgs()));
-		assertTrue(addList.containsAll(this.entity.getMultipleMultiArgs()));
+		assertFalse(addList.containsAll(this.entity.getMultipleAlways()));
+		assertFalse(addList.containsAll(this.entity.getMultipleOnChange()));
+		assertFalse(addList.contains(this.entity.getMultiArgs()));
+		assertFalse(addList.containsAll(this.entity.getMultipleMultiArgs()));
 	}
 }
