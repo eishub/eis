@@ -17,7 +17,6 @@ public class PrologVisitor implements IILObjectVisitor {
 		ret += ")";
 
 		return ret;
-
 	}
 
 	@Override
@@ -73,7 +72,6 @@ public class PrologVisitor implements IILObjectVisitor {
 		ret += "]";
 
 		return ret;
-
 	}
 
 	@Override
@@ -88,7 +86,6 @@ public class PrologVisitor implements IILObjectVisitor {
 		ret += ")";
 
 		return ret;
-
 	}
 
 	@Override

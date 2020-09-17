@@ -26,5 +26,5 @@ public interface AllPerceptsProvider {
 	 * @return a previously prepared batch of percepts.
 	 * @throws PerceiveException if percept failed
 	 */
-	Map<Method, Object> getAllPercepts() throws PerceiveException;
+	Map<Method, Object> getPercepts() throws PerceiveException;
 }

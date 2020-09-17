@@ -1,6 +1,5 @@
 package eis.eis2java.handlers;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -12,21 +11,17 @@ import eis.exceptions.ActException;
 import eis.exceptions.EntityException;
 import eis.iilang.Action;
 import eis.iilang.Numeral;
-import eis.iilang.Percept;
 
 /**
  * test the action handler
  */
 public abstract class ActionHandlerTest {
-
 	protected ActionHandler handler;
 
 	/**
-	 * @param entity
-	 *            the entity that produces percepts
-	 * @return the action handle rfor this test
-	 * @throws EntityException
-	 *             if something fails
+	 * @param entity the entity that produces percepts
+	 * @return the action handle for this test
+	 * @throws EntityException if something fails
 	 */
 	public abstract ActionHandler getHandler(Object entity) throws EntityException;
 
@@ -38,42 +33,33 @@ public abstract class ActionHandlerTest {
 	protected ValidActionEntity entity;
 
 	/**
-	 * @throws Exception
-	 *             if setup fails
+	 * @throws Exception if setup fails
 	 */
 	@Before
 	public void setUp() throws Exception {
-		entity = getValdidEntity();
-		handler = getHandler(entity);
+		this.entity = getValdidEntity();
+		this.handler = getHandler(this.entity);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void testIsSupportedByEntityPostive() {
-		assertTrue(handler.isSupportedByEntity(new Action("getX")));
-		assertFalse(handler.isSupportedByEntity(new Action("getY")));
+		assertTrue(this.handler.isSupportedByEntity(new Action("getX")));
+		assertFalse(this.handler.isSupportedByEntity(new Action("getY")));
 
-		assertTrue(handler.isSupportedByEntity(new Action("setX", new Numeral(1))));
-		assertFalse(handler.isSupportedByEntity(new Action("setX")));
-
+		assertTrue(this.handler.isSupportedByEntity(new Action("setX", new Numeral(1))));
+		assertFalse(this.handler.isSupportedByEntity(new Action("setX")));
 	}
 
 	/**
-	 * @throws ActException
-	 *             obviously
+	 * @throws ActException obviously
 	 */
 	@Test
 	public void testPerformAction() throws ActException {
-		Percept percept = handler.performAction(new Action("getX"));
-		assertEquals(new Percept("getX", new Numeral(0)), percept);
-
-		percept = handler.performAction(new Action("setX", new Numeral(1)));
-		assertEquals(null, percept);
-
-		percept = handler.performAction(new Action("getX"));
-		assertEquals(new Percept("getX", new Numeral(1)), percept);
+		this.handler.performAction(new Action("getX"));
+		this.handler.performAction(new Action("setX", new Numeral(1)));
+		this.handler.performAction(new Action("getX"));
 	}
-
 }

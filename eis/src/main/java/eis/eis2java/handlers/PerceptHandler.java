@@ -1,11 +1,9 @@
 package eis.eis2java.handlers;
 
-import java.util.List;
-
+import eis.PerceptUpdate;
 import eis.eis2java.annotation.AsPercept;
 import eis.eis2java.environment.AbstractEnvironment;
 import eis.exceptions.PerceiveException;
-import eis.iilang.Percept;
 
 /**
  * The {@link AbstractEnvironment} delegates the actual collection of percepts
@@ -19,7 +17,7 @@ public interface PerceptHandler {
 	 * @return a list of the collected percepts
 	 * @throws PerceiveException if percepts can not be fetched
 	 */
-	List<Percept> getAllPercepts() throws PerceiveException;
+	PerceptUpdate getPercepts() throws PerceiveException;
 
 	/**
 	 * Called when the entity is reset.

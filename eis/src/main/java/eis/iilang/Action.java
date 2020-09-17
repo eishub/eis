@@ -72,19 +72,14 @@ public class Action extends DataContainer {
 
 	@Override
 	public Object clone() {
-		final Action ret = new Action(this.name, getClonedParameters());
-		ret.setSource(this.source);
-
-		return ret;
+		return new Action(this.name, getClonedParameters());
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		} else if (obj == this) {
+		if (this == obj) {
 			return true;
-		} else if (!(obj instanceof Action)) {
+		} else if (obj == null || !(obj instanceof Action)) {
 			return false;
 		} else {
 			return super.equals(obj);

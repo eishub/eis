@@ -17,7 +17,7 @@ public class Filter {
 		ALWAYS,
 		/**
 		 * Return the percepts only the first time
-		 * {@link AbstractEnvironment#getAllPercepts(String, String...)} is called.
+		 * {@link AbstractEnvironment#getPercepts(String, String...)} is called.
 		 */
 		ONCE,
 		/**

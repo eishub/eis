@@ -69,19 +69,14 @@ public class Percept extends DataContainer {
 
 	@Override
 	public Object clone() {
-		final Percept ret = new Percept(this.name, getClonedParameters());
-		ret.source = this.source;
-
-		return ret;
+		return new Percept(this.name, getClonedParameters());
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		} else if (obj == this) {
+		if (this == obj) {
 			return true;
-		} else if (!(obj instanceof Percept)) {
+		} else if (obj == null || !(obj instanceof Percept)) {
 			return false;
 		} else {
 			return super.equals(obj);

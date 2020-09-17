@@ -25,7 +25,7 @@ public class TruthValue extends Parameter {
 	 * @param bool new value for this
 	 */
 	public TruthValue(final boolean bool) {
-		if (bool) {
+		if (bool == true) {
 			this.value = "true";
 		} else {
 			this.value = "false";
@@ -74,17 +74,14 @@ public class TruthValue extends Parameter {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
-		return result;
+		return ((this.value == null) ? 0 : this.value.hashCode());
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
-		} else if (!(obj instanceof TruthValue)) {
+		} else if (obj == null || !(obj instanceof TruthValue)) {
 			return false;
 		}
 

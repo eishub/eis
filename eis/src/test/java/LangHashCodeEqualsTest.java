@@ -1,11 +1,11 @@
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,13 +16,12 @@ import eis.iilang.Numeral;
 import eis.iilang.Percept;
 
 public class LangHashCodeEqualsTest {
-
 	private static final String ACTION = "action";
 	private static final String PERCEPT = "percept";
 	private static final String FUN = "fun";
 	private static final int NUM = 42;
 	private static final String LITT = "fourtyTwo";
-	
+
 	Percept perceptB;
 	Action actionB;
 	Function functionB;
@@ -35,76 +34,66 @@ public class LangHashCodeEqualsTest {
 	Numeral numeralA;
 	Identifier identifierA;
 
-	
 	@Before
 	public void setUp() throws Exception {
-		numeralB = new Numeral(NUM);
-		identifierB = new Identifier(LITT);
-		functionB = new Function(FUN, identifierB, numeralB);
-		perceptB = new Percept(PERCEPT, functionB, identifierB, numeralB);
-		actionB = new Action(ACTION, functionB, identifierB, numeralB);
+		this.numeralB = new Numeral(NUM);
+		this.identifierB = new Identifier(LITT);
+		this.functionB = new Function(FUN, this.identifierB, this.numeralB);
+		this.perceptB = new Percept(PERCEPT, this.functionB, this.identifierB, this.numeralB);
+		this.actionB = new Action(ACTION, this.functionB, this.identifierB, this.numeralB);
 
-		numeralA = new Numeral(NUM);
-		identifierA = new Identifier(LITT);
-		functionA = new Function(FUN, identifierA, numeralA);
-		perceptA = new Percept(PERCEPT, functionA, identifierA, numeralA);
-		actionA = new Action(ACTION, functionA, identifierA, numeralA);
+		this.numeralA = new Numeral(NUM);
+		this.identifierA = new Identifier(LITT);
+		this.functionA = new Function(FUN, this.identifierA, this.numeralA);
+		this.perceptA = new Percept(PERCEPT, this.functionA, this.identifierA, this.numeralA);
+		this.actionA = new Action(ACTION, this.functionA, this.identifierA, this.numeralA);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		perceptB = null;
-		actionB = null;
-		functionB = null;
-		numeralB = null;
-		identifierB = null;
+		this.perceptB = null;
+		this.actionB = null;
+		this.functionB = null;
+		this.numeralB = null;
+		this.identifierB = null;
 
-		perceptA = null;
-		actionA = null;
-		functionA = null;
-		numeralA = null;
-		identifierA = null;
-
+		this.perceptA = null;
+		this.actionA = null;
+		this.functionA = null;
+		this.numeralA = null;
+		this.identifierA = null;
 	}
 
 	@Test
 	public void testEquals() {
-		
-		// If equals is correctly implemented the following should pass.
-		assertEquals(identifierA, identifierB);
-		assertEquals(numeralA, numeralB);
-		assertEquals(functionA, functionB);
-		assertEquals(actionA, actionB);
-		assertEquals(perceptA, perceptB);
-
+		assertEquals(this.identifierA, this.identifierB);
+		assertEquals(this.numeralA, this.numeralB);
+		assertEquals(this.functionA, this.functionB);
+		assertEquals(this.actionA, this.actionB);
+		assertEquals(this.perceptA, this.perceptB);
 	}
-	
+
 	@Test
 	public void testHashCode() {
-		//If hash code is correctly implemented the following should pass
-		assertEquals(identifierA.hashCode(),identifierB.hashCode());
-		assertEquals(numeralA.hashCode(), numeralB.hashCode());
-		assertEquals(functionA.hashCode(),functionB.hashCode());
-		assertEquals(actionA.hashCode(),actionB.hashCode());
-		assertEquals(perceptA.hashCode(),perceptB.hashCode());
-	}
-		
-	
-	@Test
-	public void testSet(){
-		
-		Set<Percept> perceptSet = new HashSet<Percept>();
-		//Add two percepts to set
-		perceptSet.add(perceptA);
-		perceptSet.add(perceptB);
-		
-		//Set should contain both percepts.
-		Assert.assertTrue(perceptSet.contains(perceptA));
-		Assert.assertTrue(perceptSet.contains(perceptB));
-		
-		//But because percepts are eqaul, size should be 1.
-		Assert.assertTrue(perceptSet.size() == 1);
-		
+		assertEquals(this.identifierA.hashCode(), this.identifierB.hashCode());
+		assertEquals(this.numeralA.hashCode(), this.numeralB.hashCode());
+		assertEquals(this.functionA.hashCode(), this.functionB.hashCode());
+		assertEquals(this.actionA.hashCode(), this.actionB.hashCode());
+		assertEquals(this.perceptA.hashCode(), this.perceptB.hashCode());
 	}
 
+	@Test
+	public void testSet() {
+		final Set<Percept> perceptSet = new HashSet<>(2);
+		// Add two percepts to set
+		perceptSet.add(this.perceptA);
+		perceptSet.add(this.perceptB);
+
+		// Set should contain both percepts.
+		assertTrue(perceptSet.contains(this.perceptA));
+		assertTrue(perceptSet.contains(this.perceptB));
+
+		// But because percepts are eqaul, size should be 1.
+		assertEquals(1, perceptSet.size());
+	}
 }

@@ -581,7 +581,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * Acting/perceiving functionality.
 	 */
 	@Override
-	public final Map<String, Percept> performAction(final String agent, final Action action, final String... entities)
+	public final void performAction(final String agent, final Action action, final String... entities)
 			throws ActException {
 		// fail if the environment does not run
 		if (this.state != EnvironmentState.RUNNING) {
@@ -641,14 +641,9 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 		}
 
 		// 6. action could be not supported by the entities themselves
-		final Map<String, Percept> ret = new HashMap<>();
 		for (final String entity : targetEntities) {
-			// TODO how is ensured that this method is called? ambiguity?
 			try {
-				final Percept p = performEntityAction(entity, action);
-				if (p != null) {
-					ret.put(entity, p);
-				}
+				performEntityAction(action, entity);
 			} catch (final Exception e) {
 				if (!(e instanceof ActException)) {
 					throw new ActException(ActException.FAILURE, "failure performing action", e);
@@ -657,12 +652,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 				throw (ActException) e;
 			}
 		}
-
-		return ret;
 	}
 
 	@Override
-	public Map<String, Collection<Percept>> getAllPercepts(final String agent, final String... entities)
+	public Map<String, PerceptUpdate> getPercepts(final String agent, final String... entities)
 			throws PerceiveException, NoEnvironmentException {
 		// fail if the environment does not run or paused
 		if (!(this.state == EnvironmentState.RUNNING || this.state == EnvironmentState.PAUSED)) {
@@ -680,16 +673,13 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 			throw new PerceiveException("Agent \"" + agent + "\" has no associated entities.");
 		}
 
-		final Map<String, Collection<Percept>> ret = new HashMap<>();
-		if (entities.length == 0) {// gather all percepts
+		// return value
+		final Map<String, PerceptUpdate> ret = new HashMap<>();
+
+		// gather all percepts
+		if (entities.length == 0) {
 			for (final String entity : associatedEntities) {
-				// get all percepts
-				final List<Percept> all = getAllPerceptsFromEntity(entity);
-				// add annonation
-				for (final Percept p : all) {
-					p.setSource(entity);
-				}
-				// done
+				final PerceptUpdate all = getPerceptsForEntity(entity);
 				ret.put(entity, all);
 			}
 		} else { // only from specified entities
@@ -699,13 +689,7 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 							"Entity \"" + entity + "\" has not been associated with the agent \"" + agent + "\".");
 				}
 
-				// get all percepts
-				final List<Percept> all = getAllPerceptsFromEntity(entity);
-				// add annonation
-				for (final Percept p : all) {
-					p.setSource(entity);
-				}
-				// done
+				final PerceptUpdate all = getPerceptsForEntity(entity);
 				ret.put(entity, all);
 			}
 		}
@@ -714,18 +698,18 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	}
 
 	/**
-	 * Gets all percepts of an entity.
+	 * Gets the percepts of an entity.
 	 * <p>
 	 * This method must be overridden.
 	 *
 	 * @param entity is the entity whose percepts should be retrieved.
-	 * @return a list of percepts.
+	 * @return a PerceptUpdate.
 	 * @throws PerceiveException      if an attempt to perform an action or to
 	 *                                retrieve percepts has failed
 	 * @throws NoEnvironmentException if an attempt to perform an action or to
 	 *                                retrieve percepts has failed
 	 */
-	protected abstract List<Percept> getAllPerceptsFromEntity(String entity)
+	protected abstract PerceptUpdate getPerceptsForEntity(String entity)
 			throws PerceiveException, NoEnvironmentException;
 
 	/**
@@ -750,11 +734,10 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 
 	/**
 	 * @param action the action to check
-	 * @param entity is the entity whose percepts should be retrieved.
-	 * @return Percept that is result of the action.
+	 * @param entity is the entity for which the action should be performed
 	 * @throws ActException an attempt to perform an action has failed
 	 */
-	protected abstract Percept performEntityAction(String entity, Action action) throws ActException;
+	protected abstract void performEntityAction(Action action, String entity) throws ActException;
 
 	/*
 	 * Misc functionality.
@@ -779,9 +762,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * Adds an entity to the environment.
 	 * <p>
 	 * Your environment must be able to handle
-	 * {@link #getAllPercepts(String, String...)} and
-	 * {@link #getAllPerceptsFromEntity(String)} when this is called.
-	 *
+	 * {@link #getPercepts(String, String...)} and
+	 * {@link #getPerceptsForEntity(String)} when this is called.
 	 *
 	 * @param entity is the identifier of the entity that is to be added.
 	 * @throws EntityException is thrown if the entity already exists.
@@ -802,9 +784,8 @@ public abstract class EIDefaultImpl implements EnvironmentInterfaceStandard, Ser
 	 * Adds an entity to the environment.
 	 * <p>
 	 * Your environment must be able to handle
-	 * {@link #getAllPercepts(String, String...)} and
-	 * {@link #getAllPerceptsFromEntity(String)} when this is called.
-	 *
+	 * {@link #getPercepts(String, String...)} and
+	 * {@link #getPerceptsForEntity(String)} when this is called.
 	 *
 	 * @param entity is the identifier of the entity that is to be added.
 	 * @param type   is the type of the entity.

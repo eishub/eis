@@ -17,13 +17,6 @@ public abstract class DataContainer extends IILElement {
 	protected String name = null;
 	/** A list of parameters. */
 	protected List<Parameter> params = null;
-	/** Time of creation */
-	protected long timeStamp = System.currentTimeMillis();
-	/** Source of the data-container */
-	protected String source = null;
-
-	protected DataContainer() {
-	}
 
 	/**
 	 * Constructs a DataContainer.
@@ -42,7 +35,7 @@ public abstract class DataContainer extends IILElement {
 	 * @param parameters the parameter list
 	 */
 	public DataContainer(final String name, final List<Parameter> parameters) {
-		setName(name);
+		this.name = name;
 		this.params = parameters;
 	}
 
@@ -53,16 +46,6 @@ public abstract class DataContainer extends IILElement {
 	 */
 	public String getName() {
 		return this.name;
-	}
-
-	/**
-	 * Sets the name.
-	 *
-	 * @param name the name of the data-container.
-	 */
-	public void setName(final String name) {
-		assert Character.isLowerCase(name.charAt(0)) : name + " should start with a lowercase letter";
-		this.name = name;
 	}
 
 	/**
@@ -88,62 +71,6 @@ public abstract class DataContainer extends IILElement {
 		return ret;
 	}
 
-	/**
-	 * Sets the parameters.
-	 *
-	 * @param params the parameters of the data-container
-	 */
-	public void setParameters(final List<Parameter> params) {
-		this.params = params;
-	}
-
-	/**
-	 * Adds a parameter to the data-container.
-	 *
-	 * @param p the new data-container
-	 */
-	public void addParameter(final Parameter p) {
-		this.params.add(p);
-	}
-
-	/**
-	 * Converts a data container to a percept.
-	 *
-	 * @param container the container convert to a percept
-	 * @return the percept
-	 */
-	public static Percept toPercept(final DataContainer container) {
-		final Parameter[] parameters = new Parameter[container.params.size()];
-		for (int a = 0; a < parameters.length; a++) {
-			parameters[a] = container.params.get(a);
-		}
-
-		return new Percept(container.getName(), parameters);
-	}
-
-	/**
-	 * Sets the source of the data-container.
-	 *
-	 * @param source is the source of the data-container.
-	 */
-	public void setSource(final String source) {
-		this.source = source;
-	}
-
-	/**
-	 * Returns the source of the data-container.
-	 *
-	 * @return the source of the data-container.
-	 */
-	public String getSource() {
-		return this.source;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -155,25 +82,27 @@ public abstract class DataContainer extends IILElement {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		} else if (obj == this) {
+		if (this == obj) {
 			return true;
-		} else if (!(obj instanceof DataContainer)) {
+		} else if (obj == null || !(obj instanceof DataContainer)) {
 			return false;
 		}
 
-		final DataContainer dc = (DataContainer) obj;
-		if (dc.name.equals(this.name) == false) {
-			return false;
-		} else if (dc.params.size() != this.params.size()) {
-			return false;
-		}
-
-		for (int a = 0; a < this.params.size(); a++) {
-			if (dc.params.get(a).equals(this.params.get(a)) == false) {
+		final DataContainer other = (DataContainer) obj;
+		if (this.name == null) {
+			if (other.name != null) {
 				return false;
 			}
+		} else if (!this.name.equals(other.name)) {
+			return false;
+		}
+
+		if (this.params == null) {
+			if (other.params != null) {
+				return false;
+			}
+		} else if (!this.params.equals(other.params)) {
+			return false;
 		}
 
 		return true;

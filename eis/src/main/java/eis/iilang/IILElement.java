@@ -79,7 +79,6 @@ public abstract class IILElement implements Serializable, Cloneable {
 		}
 
 		return ret;
-
 	}
 
 	/**

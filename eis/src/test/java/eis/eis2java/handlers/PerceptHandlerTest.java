@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import eis.PerceptUpdate;
 import eis.eis2java.entity.ValidPerceptEntity;
 import eis.exceptions.EntityException;
 import eis.exceptions.PerceiveException;
@@ -17,12 +18,8 @@ import eis.iilang.Percept;
 /**
  * Generic test procedure for percept handlers (
  * {@link AllPerceptPerceptHandler} and {@link DefaultPerceptHandler}).
- * 
- * @author Lennard de Rijk
- * 
  */
 public abstract class PerceptHandlerTest {
-
 	protected PerceptHandler handler;
 	protected ValidPerceptEntity entity;
 
@@ -32,8 +29,8 @@ public abstract class PerceptHandlerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		entity = getValidEntity();
-		handler = getHandler(entity);
+		this.entity = getValidEntity();
+		this.handler = getHandler(this.entity);
 	}
 
 	@After
@@ -42,55 +39,51 @@ public abstract class PerceptHandlerTest {
 
 	@Test
 	public void testGetAllPercepts() throws PerceiveException {
-		List<Percept> percepts = handler.getAllPercepts();
+		PerceptUpdate percepts = this.handler.getPercepts();
 		assertAllPerceptsReceived(percepts);
 
-		percepts = handler.getAllPercepts();
+		percepts = this.handler.getPercepts();
 		assertPartialPerceptsReceived(percepts);
 
-		// Check, third time we should still get same percepts?
-		// percepts = handler.getAllPercepts();
-		// assertPartialPerceptsReceived(percepts);
-
-		handler.reset();
-		percepts = handler.getAllPercepts();
+		this.handler.reset();
+		percepts = this.handler.getPercepts();
 		assertAllPerceptsReceived(percepts);
-
 	}
 
 	/**
 	 * Check that all percepts have been received
-	 * 
+	 *
 	 * @param percepts
 	 */
-	private void assertAllPerceptsReceived(List<Percept> percepts) {
-		assertTrue(percepts.contains(entity.getAlways()));
-		assertTrue(percepts.contains(entity.getOnce()));
-		assertTrue(percepts.contains(entity.getOnChange()));
-		assertFalse(percepts.contains(entity.getOnChanged()));
-		assertTrue(percepts.containsAll(entity.getMultipleAlways()));
-		assertTrue(percepts.containsAll(entity.getMultipleOnChange()));
+	private void assertAllPerceptsReceived(final PerceptUpdate percepts) {
+		final List<Percept> addList = percepts.getAddList(); // FIXME: deleteList??
+		assertTrue(addList.contains(this.entity.getAlways()));
+		assertTrue(addList.contains(this.entity.getOnce()));
+		assertTrue(addList.contains(this.entity.getOnChange()));
+		assertFalse(addList.contains(this.entity.getOnChanged()));
+		assertTrue(addList.containsAll(this.entity.getMultipleAlways()));
+		assertTrue(addList.containsAll(this.entity.getMultipleOnChange()));
 
-		assertTrue(percepts.contains(entity.getMultiArgs()));
-		assertTrue(percepts.containsAll(entity.getMultipleMultiArgs()));
-
+		assertTrue(addList.contains(this.entity.getMultiArgs()));
+		assertTrue(addList.containsAll(this.entity.getMultipleMultiArgs()));
 	}
 
 	/**
-	 * Check that only part of percepts were received, since this is not the
-	 * first call to getAllPercepts.
-	 * 
+	 * Check that only part of percepts were received, since this is not the first
+	 * call to getAllPercepts.
+	 *
 	 * @param percepts
 	 */
-	private void assertPartialPerceptsReceived(List<Percept> percepts) {
-		assertTrue(percepts.contains(entity.getAlways()));
-		assertFalse(percepts.contains(entity.getOnce()));
-		assertFalse(percepts.contains(entity.getOnChange()));
-		assertTrue(percepts.contains(entity.getOnChanged()));
-		assertTrue(percepts.containsAll(entity.getMultipleAlways()));
-		assertTrue(percepts.containsAll(entity.getMultipleOnChange()));
-		assertTrue(percepts.contains(entity.getMultiArgs()));
-		assertTrue(percepts.containsAll(entity.getMultipleMultiArgs()));
-
+	private void assertPartialPerceptsReceived(final PerceptUpdate percepts) {
+		final List<Percept> addList = percepts.getAddList(); // FIXME: deleteList??
+		System.out.println(addList + "," + this.entity.getAlways());
+		assertTrue(addList.contains(this.entity.getAlways()));
+		assertFalse(addList.contains(this.entity.getOnce()));
+		assertFalse(addList.contains(this.entity.getOnChange()));
+		assertTrue(addList.contains(this.entity.getOnChanged()));
+		assertTrue(addList.containsAll(this.entity.getMultipleAlways()));
+		assertTrue(addList.containsAll(this.entity.getMultipleOnChange()));
+		assertTrue(addList.contains(this.entity.getMultiArgs()));
+		assertTrue(addList.containsAll(this.entity.getMultipleMultiArgs()));
 	}
 }

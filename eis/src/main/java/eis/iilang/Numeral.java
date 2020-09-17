@@ -21,7 +21,6 @@ public class Numeral extends Parameter {
 	@Override
 	protected String toXML(final int depth) {
 		return indent(depth) + "<number value=\"" + this.value + "\"/>" + "\n";
-
 	}
 
 	@Override
@@ -40,10 +39,7 @@ public class Numeral extends Parameter {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
-		return result;
+		return ((this.value == null) ? 0 : this.value.hashCode());
 	}
 
 	@Override

@@ -14,43 +14,35 @@ import eis.iilang.EnvironmentState;
 
 /**
  * Unit tests for AbstractEnv
- * 
- * @author W.Pasman 5nov14
- *
  */
 public class AbstractEnvTest {
-
 	@SuppressWarnings("serial")
 	class MyEnv extends AbstractEnvironment {
-
 		public MyEnv() throws ManagementException {
 			setState(EnvironmentState.PAUSED);
 		}
 
 		@Override
-		protected boolean isSupportedByEnvironment(Action action) {
+		protected boolean isSupportedByEnvironment(final Action action) {
 			return true;
 		}
 
 		@Override
-		protected boolean isSupportedByType(Action action, String type) {
+		protected boolean isSupportedByType(final Action action, final String type) {
 			return true;
 		}
 
 		public void doAddEntity() throws EntityException {
 			addEntity("entityname", "entity");
 		}
-
 	}
 
 	/**
-	 * @throws EntityException
-	 *             obviously
-	 * @throws ManagementException
-	 *             obviously
+	 * @throws EntityException     obviously
+	 * @throws ManagementException obviously
 	 */
 	public void testAddEntity() throws EntityException, ManagementException {
-		MyEnv env = new MyEnv();
+		final MyEnv env = new MyEnv();
 		env.doAddEntity();
 
 		assertEquals(1, env.getEntities().size());
@@ -58,18 +50,14 @@ public class AbstractEnvTest {
 	}
 
 	/**
-	 * @throws EntityException
-	 *             obviously
-	 * @throws AgentException
-	 *             obviously
-	 * @throws RelationException
-	 *             obviously
-	 * @throws ManagementException
-	 *             obviously
+	 * @throws EntityException     obviously
+	 * @throws AgentException      obviously
+	 * @throws RelationException   obviously
+	 * @throws ManagementException obviously
 	 */
 	@Test
 	public void testFreePair() throws EntityException, AgentException, RelationException, ManagementException {
-		MyEnv env = new MyEnv();
+		final MyEnv env = new MyEnv();
 		env.doAddEntity();
 
 		assertEquals(1, env.getEntities().size());

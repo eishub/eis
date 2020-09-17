@@ -15,7 +15,6 @@ import eis.exceptions.RelationException;
 import eis.iilang.Action;
 import eis.iilang.EnvironmentState;
 import eis.iilang.Parameter;
-import eis.iilang.Percept;
 
 /**
  * This interface is the main-interface of EIS. All environment-interfaces have
@@ -200,9 +199,6 @@ public interface EnvironmentInterfaceStandard {
 	 *                 method that is called.
 	 * @param entities is an array of entities through which an agent is supposed to
 	 *                 act. If the array is empty, all entities are used.
-	 * @return a map of action-results. Keys are the entity name that gave the
-	 *         result percept. Only add items if the percept is not null. If an
-	 *         action has a null result, just do not add the result to the map.
 	 * @throws ActException           is thrown if the agent has not been
 	 *                                registered, if the agent has no associated
 	 *                                entities, if at least one of the given
@@ -215,7 +211,7 @@ public interface EnvironmentInterfaceStandard {
 	 * @throws NoEnvironmentException if the interface is not connected to an
 	 *                                environment.
 	 */
-	Map<String, Percept> performAction(String agent, Action action, String... entities) throws ActException;
+	void performAction(String agent, Action action, String... entities) throws ActException;
 
 	/**
 	 * Gets all percepts.
@@ -226,16 +222,16 @@ public interface EnvironmentInterfaceStandard {
 	 * {@link EnvironmentState#RUNNING} or {@link EnvironmentState#PAUSED}.
 	 * <p>
 	 * <em>NOTE</em> In many environments the return value depends on previous calls
-	 * to getAllPercepts. There may be special percepts that are provided only the
-	 * first time getAllPercepts is called. There may be percepts that are sent only
+	 * to getPercepts. There may be special percepts that are provided only the
+	 * first time getPercepts is called. There may be percepts that are sent only
 	 * once. There may percepts that are sent if they were not sent the previous
 	 * time already. The exact behaviour is to be defined in environment's
 	 * documentation. Both {@link EIDefaultImpl} and {@link AbstractEnvironment}
-	 * implements such a more detailed version of getAllPercepts.
+	 * implements such a more detailed version of getPercepts.
 	 *
 	 *
 	 * @param agent    the agent that requests the percepts.
-	 * @param entities the eneities that this agent is associated with.
+	 * @param entities the entities that this agent is associated with.
 	 * @return a list of percepts
 	 * @throws PerceiveException      if the agent is not registered or if the
 	 *                                agents requests percepts from an entity that
@@ -246,7 +242,7 @@ public interface EnvironmentInterfaceStandard {
 	 * @throws NoEnvironmentException if an attempt to perform an action or to
 	 *                                retrieve percepts has failed
 	 */
-	Map<String, Collection<Percept>> getAllPercepts(String agent, String... entities)
+	Map<String, PerceptUpdate> getPercepts(String agent, String... entities)
 			throws PerceiveException, NoEnvironmentException;
 
 	/**

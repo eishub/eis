@@ -9,15 +9,11 @@ import eis.exceptions.RelationException;
 
 /**
  * Unit tests for EIDefaultImpl
- * 
- * @author W.Pasman 5nov14
- *
  */
 public class EIDefaultImplTest {
-
 	@Test
 	public void testAddEntity() throws EntityException, ManagementException {
-		TestEnvironmentInterface env = new TestEnvironmentInterface();
+		final TestEnvironmentInterface env = new TestEnvironmentInterface();
 		env.doAddEntity();
 
 		assertEquals(1, env.getEntities().size());
@@ -25,9 +21,8 @@ public class EIDefaultImplTest {
 	}
 
 	@Test
-	public void testFreePair() throws EntityException, AgentException,
-			RelationException, ManagementException {
-		TestEnvironmentInterface env = new TestEnvironmentInterface();
+	public void testFreePair() throws EntityException, AgentException, RelationException, ManagementException {
+		final TestEnvironmentInterface env = new TestEnvironmentInterface();
 		env.doAddEntity();
 
 		assertEquals(1, env.getEntities().size());
@@ -45,6 +40,5 @@ public class EIDefaultImplTest {
 
 		// and that the association was deleted
 		assertEquals(0, env.getAssociatedEntities("agentname").size());
-
 	}
 }

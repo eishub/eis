@@ -1,17 +1,16 @@
 package eis.eis2java.handlers;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import eis.PerceptUpdate;
 import eis.eis2java.environment.AbstractEnvironment;
 import eis.eis2java.util.AllPerceptsModule;
 import eis.eis2java.util.AllPerceptsProvider;
 import eis.exceptions.EntityException;
 import eis.exceptions.PerceiveException;
-import eis.iilang.Percept;
 
 /**
  * The {@link AllPerceptPerceptHandler} assumes the agent can not provide all
@@ -34,24 +33,25 @@ import eis.iilang.Percept;
  */
 public final class AllPerceptPerceptHandler extends AbstractPerceptHandler {
 	/** Maps a Class to a map of percept method */
-	private final AllPerceptsProvider allPercepProvider;
+	private final AllPerceptsProvider allPerceptProvider;
 
 	public AllPerceptPerceptHandler(final AllPerceptsProvider entity) throws EntityException {
 		super(entity);
-		this.allPercepProvider = entity;
+		this.allPerceptProvider = entity;
 	}
 
 	@Override
-	public List<Percept> getAllPercepts() throws PerceiveException {
-		final Map<Method, Object> batchPerceptObjects = this.allPercepProvider.getAllPercepts();
-		final List<Percept> percepts = new LinkedList<>();
+	public PerceptUpdate getPercepts() throws PerceiveException {
+		final Map<Method, Object> batchPerceptObjects = this.allPerceptProvider.getPercepts();
+		final PerceptUpdate percepts = new PerceptUpdate();
 
 		for (final Entry<Method, Object> entry : batchPerceptObjects.entrySet()) {
 			final Method method = entry.getKey();
 			final Object perceptObject = entry.getValue();
+
 			final List<Object> perceptObjects = unpackPerceptObject(method, perceptObject);
-			final List<Percept> translatedPercepts = translatePercepts(method, perceptObjects);
-			percepts.addAll(translatedPercepts);
+			final PerceptUpdate translatedPercepts = translatePercepts(method, perceptObjects);
+			percepts.merge(translatedPercepts);
 		}
 
 		return percepts;

@@ -1,4 +1,5 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
@@ -13,106 +14,81 @@ public class LangEqualsTest {
 
 	@Test
 	public void test1() {
+		final Percept p1 = new Percept("blueBall");
+		final Percept p2 = new Percept("blueBall");
+		final Percept p3 = new Percept("redBall");
 
-		Percept p1 = new Percept("blueBall");
-		Percept p2 = new Percept("blueBall");
-		Percept p3 = new Percept("redBall");
-		
-		assertTrue( p1.equals(p2));
-		assertFalse( p2.equals(p3));
-		assertFalse( p1.equals("blueBall"));
-		
+		assertEquals(p1, p2);
+		assertFalse(p2.equals(p3));
 	}
 
 	@Test
 	public void test2() {
+		final Percept p1 = new Percept("ball", new Identifier("blue"));
+		final Percept p2 = new Percept("ball", new Identifier("blue"));
+		final Percept p3 = new Percept("ball", new Identifier("red"));
 
-		Percept p1 = new Percept("ball", new Identifier("blue"));
-		Percept p2 = new Percept("ball", new Identifier("blue"));
-		Percept p3 = new Percept("ball", new Identifier("red"));
-		
-		assertTrue( p1.equals(p2));
-		assertFalse( p2.equals(p3));
-		assertFalse( p1.equals("blueBall"));
-		
+		assertEquals(p1, p2);
+		assertFalse(p2.equals(p3));
 	}
 
 	@Test
 	public void test3() {
+		final Percept p1 = new Percept("ball", new Identifier("blue"), new Identifier("rubber"));
+		final Percept p2 = new Percept("ball", new Identifier("blue"), new Identifier("rubber"));
+		final Percept p3 = new Percept("ball", new Identifier("red"));
 
-		Percept p1 = new Percept("ball", new Identifier("blue"), new Identifier("rubber"));
-		Percept p2 = new Percept("ball", new Identifier("blue"), new Identifier("rubber"));
-		Percept p3 = new Percept("ball", new Identifier("red"));
-		
-		assertTrue( p1.equals(p2));
-		assertFalse( p2.equals(p3));
-		assertFalse( p1.equals("blueBall"));
-		
+		assertEquals(p1, p2);
+		assertFalse(p2.equals(p3));
 	}
 
 	@Test
 	public void test4() {
+		final Action p1 = new Action("kickBall");
+		final Action p2 = new Action("kickBall");
+		final Action p3 = new Action("throBall");
 
-		Action p1 = new Action("kickBall");
-		Action p2 = new Action("kickBall");
-		Action p3 = new Action("throBall");
-		
-		assertTrue( p1.equals(p2));
-		assertFalse( p2.equals(p3));
-		assertFalse( p1.equals("throwBall"));
-		
+		assertEquals(p1, p2);
+		assertFalse(p2.equals(p3));
 	}
 
 	@Test
 	public void test5() {
+		final Action p1 = new Action("kick", new Identifier("ball"));
+		final Action p2 = new Action("kick", new Identifier("ball"));
+		final Action p3 = new Action("throw", new Identifier("ball"));
 
-		Action p1 = new Action("kick", new Identifier("ball"));
-		Action p2 = new Action("kick", new Identifier("ball"));
-		Action p3 = new Action("throw", new Identifier("ball"));
-		
-		assertTrue( p1.equals(p2));
-		assertFalse( p2.equals(p3));
-		assertFalse( p1.equals("blueBall"));
-		
+		assertEquals(p1, p2);
+		assertFalse(p2.equals(p3));
 	}
 
 	@Test
 	public void test6() {
+		final Function f1 = new Function("plus", new Function("minus", new Numeral(1), new Numeral(2)), new Numeral(3));
+		final Function f2 = new Function("plus", new Function("minus", new Numeral(1), new Numeral(2)), new Numeral(3));
+		final Function f3 = new Function("minus", new Function("plus", new Numeral(1), new Numeral(2)), new Numeral(3));
 
-		Function f1 = new Function("plus", new Function("minus", new Numeral(1), new Numeral(2)), new Numeral(3));
-		Function f2 = new Function("plus", new Function("minus", new Numeral(1), new Numeral(2)), new Numeral(3));
-		Function f3 = new Function("minus", new Function("plus", new Numeral(1), new Numeral(2)), new Numeral(3));
-		
-		assertTrue( f1.equals(f2));
-		assertFalse( f2.equals(f3));
-		assertFalse( f1.equals("blueBall"));
-
+		assertEquals(f1, f2);
+		assertFalse(f2.equals(f3));
 	}
 
 	@Test
 	public void test7() {
+		final Identifier id1 = new Identifier("blue");
+		final Identifier id2 = new Identifier("blue");
+		final Identifier id3 = new Identifier("red");
 
-		Identifier id1 = new Identifier("blue");
-		Identifier id2 = new Identifier("blue");
-		Identifier id3 = new Identifier("red");
-		
-		assertTrue( id1.equals(id2));
-		assertFalse( id2.equals(id3));
-		assertFalse( id1.equals("blueBall"));
-
+		assertEquals(id1, id2);
+		assertFalse(id2.equals(id3));
 	}
 
 	@Test
 	public void test8() {
-		
-		ParameterList pl1 = new ParameterList(new Numeral(1) , new Numeral(2), new Numeral(3) );
-		ParameterList pl2 = new ParameterList(new Numeral(1) , new Numeral(2), new Numeral(3) );
-		ParameterList pl3 = new ParameterList(new Numeral(1) , new Numeral(3) );
+		final ParameterList pl1 = new ParameterList(new Numeral(1), new Numeral(2), new Numeral(3));
+		final ParameterList pl2 = new ParameterList(new Numeral(1), new Numeral(2), new Numeral(3));
+		final ParameterList pl3 = new ParameterList(new Numeral(1), new Numeral(3));
 
-		assertTrue( pl1.equals(pl2));
-		assertFalse( pl2.equals(pl3));
-		assertFalse( pl1.equals("blueBall"));
-
+		assertEquals(pl1, pl2);
+		assertFalse(pl2.equals(pl3));
 	}
-
 }

@@ -9,13 +9,13 @@ public class XMLVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(final Action element, final Object object) {
-		String ret = object.toString() + "<action name=\"" + element.name + "\">" + newline;
+		String ret = object + "<action name=\"" + element.name + "\">" + newline;
 		for (final Parameter p : element.getParameters()) {
-			ret += object.toString() + indent + "<actionParameter>" + newline;
-			ret += p.accept(this, object.toString() + indent + indent);
-			ret += object.toString() + indent + "</actionParameter>" + newline;
+			ret += object + indent + "<actionParameter>" + newline;
+			ret += p.accept(this, object + indent + indent);
+			ret += object + indent + "</actionParameter>" + newline;
 		}
-		ret += object.toString() + "</action>";
+		ret += object + "</action>";
 
 		return ret;
 	}
@@ -28,18 +28,18 @@ public class XMLVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(final Function element, final Object object) {
-		String ret = object.toString() + "<function name=\"" + element.getName() + "\">" + newline;
+		String ret = object + "<function name=\"" + element.getName() + "\">" + newline;
 		for (final Parameter p : element.getParameters()) {
-			ret += p.accept(this, object.toString() + indent);
+			ret += p.accept(this, object + indent);
 		}
-		ret += object.toString() + "</function>" + newline;
+		ret += object + "</function>" + newline;
 
 		return ret;
 	}
 
 	@Override
 	public Object visit(final Identifier element, final Object object) {
-		return object.toString() + "<identifier value=\"" + element.getValue() + "\"/>" + newline;
+		return object + "<identifier value=\"" + element.getValue() + "\"/>" + newline;
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class XMLVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(final Numeral element, final Object object) {
-		return object.toString() + "<number value=\"" + element.getValue() + "\"/>" + newline;
+		return object + "<number value=\"" + element.getValue() + "\"/>" + newline;
 	}
 
 	@Override
@@ -61,31 +61,31 @@ public class XMLVisitor implements IILObjectVisitor {
 
 	@Override
 	public Object visit(final ParameterList element, final Object object) {
-		String ret = object.toString() + "<parameterList>" + newline;
+		String ret = object + "<parameterList>" + newline;
 		for (final Parameter p : element) {
-			ret += p.accept(this, object.toString() + indent);
+			ret += p.accept(this, object + indent);
 		}
-		ret += object.toString() + "</parameterList>" + newline;
+		ret += object + "</parameterList>" + newline;
 
 		return ret;
 	}
 
 	@Override
 	public Object visit(final Percept element, final Object object) {
-		String ret = object.toString() + "<percept name=\"" + element.name + "\">" + newline;
+		String ret = object + "<percept name=\"" + element.name + "\">" + newline;
 		for (final Parameter p : element.getParameters()) {
-			ret += object.toString() + indent + "<perceptParameter>" + newline;
-			ret += p.accept(this, object.toString() + indent + indent);
-			ret += object.toString() + indent + "</perceptParameter>" + newline;
+			ret += object + indent + "<perceptParameter>" + newline;
+			ret += p.accept(this, object + indent + indent);
+			ret += object + indent + "</perceptParameter>" + newline;
 		}
-		ret += object.toString() + "</percept>" + newline;
+		ret += object + "</percept>" + newline;
 
 		return ret;
 	}
 
 	@Override
 	public Object visit(final TruthValue element, final Object object) {
-		return object.toString() + "<truthvalue value=\"" + element.getValue() + "\"/>" + newline;
+		return object + "<truthvalue value=\"" + element.getValue() + "\"/>" + newline;
 	}
 
 	/**

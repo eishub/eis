@@ -5,6 +5,7 @@ package eis.iilang;
  */
 public class Identifier extends Parameter {
 	private static final long serialVersionUID = -2932464954431024965L;
+
 	/** The identifier itself. */
 	private String value = null;
 
@@ -15,7 +16,6 @@ public class Identifier extends Parameter {
 	 */
 	public Identifier(final String value) {
 		this.value = value;
-
 	}
 
 	/**
@@ -44,16 +44,15 @@ public class Identifier extends Parameter {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
-		return result;
+		return ((this.value == null) ? 0 : this.value.hashCode());
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
+		} else if (obj == null) {
+			return false;
 		} else if (!(obj instanceof Identifier)) {
 			return false;
 		}

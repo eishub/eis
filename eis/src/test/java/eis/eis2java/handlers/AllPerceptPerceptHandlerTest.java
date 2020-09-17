@@ -6,14 +6,10 @@ import eis.exceptions.EntityException;
 
 /**
  * Apply the test getAllPercept test to the {@link AllPerceptPerceptHandler}.
- * 
- * @author Lennard de Rijk
- * 
  */
 public class AllPerceptPerceptHandlerTest extends PerceptHandlerTest {
-
 	@Override
-	public PerceptHandler getHandler(Object entity) throws EntityException {
+	public PerceptHandler getHandler(final Object entity) throws EntityException {
 		return new AllPerceptPerceptHandler((AllPerceptsProvider) entity);
 	}
 
@@ -21,5 +17,4 @@ public class AllPerceptPerceptHandlerTest extends PerceptHandlerTest {
 	public ValidPerceptEntity getValidEntity() throws EntityException {
 		return new ValidPerceptEntity();
 	}
-
 }

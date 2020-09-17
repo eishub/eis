@@ -4,16 +4,16 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import eis.PerceptUpdate;
 import eis.eis2java.annotation.AsPercept;
 import eis.eis2java.exception.TranslationException;
 import eis.eis2java.translation.Filter;
 import eis.eis2java.translation.Translator;
 import eis.exceptions.PerceiveException;
-import eis.iilang.Function;
 import eis.iilang.Parameter;
 import eis.iilang.ParameterList;
 import eis.iilang.Percept;
@@ -39,7 +39,11 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 	/**
 	 * map of previous percepts that we got for each method.
 	 */
-	protected final Map<Method, List<Object>> previousPercepts = new HashMap<>();
+	protected final Map<Method, List<Percept>> previousPercepts = new HashMap<>();
+	/**
+	 * a shadow copy for on-change percepts only
+	 */
+	protected final Map<Method, List<Percept>> shadow = new HashMap<>();
 
 	/**
 	 * Translates the percept objects and applies filtering as described by
@@ -53,45 +57,28 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 	 * @throws PerceiveException if an attempt to perform an action or to retrieve
 	 *                           percepts has failed
 	 */
-	protected final List<Percept> translatePercepts(final Method method, final List<Object> perceptObjects)
+	protected final PerceptUpdate translatePercepts(final Method method, final List<Object> perceptObjects)
 			throws PerceiveException {
-		// the add and delete list based on the perceived objects
-		// list of object that we had last round but not at this moment.
-		List<Object> addList = new ArrayList<>(0);
-		final List<Object> delList = new ArrayList<>(0);
-
 		final AsPercept annotation = method.getAnnotation(AsPercept.class);
 		final Filter.Type filter = annotation.filter();
 		final String perceptName = annotation.name();
 
-		List<Object> previous = this.previousPercepts.get(method);
+		List<Percept> previous = this.previousPercepts.get(method);
 
 		// Avoid translating objects that don't need to be translated.
 		if (filter == Filter.Type.ONCE && previous != null) {
-			return new ArrayList<>(0);
+			final PerceptUpdate returned = new PerceptUpdate(new ArrayList<>(0), previous);
+			this.previousPercepts.put(method, new ArrayList<>(0));
+			return returned;
 		}
 
 		if (previous == null) {
-			previous = new ArrayList<>(1);
-			this.previousPercepts.put(method, previous);
+			previous = new ArrayList<>(0);
 		}
 
-		// do the proper filtering.
-		switch (filter) {
-		case ALWAYS:
-		case ONCE:
-			addList = perceptObjects;
-			break;
-		case ON_CHANGE:
-			if (!perceptObjects.equals(previous)) {
-				addList = perceptObjects;
-			}
-			break;
-		}
-
-		// Translate addList.
-		final List<Percept> percepts = new LinkedList<>();
-		for (final Object javaObject : addList) {
+		// Translate objects.
+		final List<Percept> percepts = new ArrayList<>(perceptObjects.size());
+		for (final Object javaObject : perceptObjects) {
 			Parameter[] parameters;
 			try {
 				parameters = Translator.getInstance().translate2Parameter(javaObject);
@@ -104,22 +91,40 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 			percepts.add(new Percept(perceptName, parameters));
 		}
 
-		// Translate delList.
-		for (final Object javaObject : delList) {
-			Parameter[] parameters;
-			try {
-				parameters = Translator.getInstance().translate2Parameter(javaObject);
-				if (annotation.multipleArguments()) {
-					parameters = extractMultipleParameters(parameters);
+		// do the proper filtering.
+		List<Percept> addList = new ArrayList<>(0);
+		List<Percept> delList = new ArrayList<>(0);
+		switch (filter) {
+		case ONCE:
+			addList = percepts;
+			break;
+		case ALWAYS:
+			addList = percepts;
+			addList.removeAll(previous);
+			delList = previous;
+			delList.removeAll(percepts);
+			break;
+		case ON_CHANGE: // FIXME: how to do this?!
+			addList = percepts;
+			final List<Percept> shadow = this.shadow.get(method);
+			if (shadow == null) {
+				this.shadow.put(method, percepts);
+			} else {
+				addList.removeAll(previous);
+				final Iterator<Percept> iterator = shadow.iterator();
+				while (iterator.hasNext()) {
+					final Percept next = iterator.next();
+					if (!addList.contains(next)) {
+						delList.add(next);
+						iterator.remove();
+					}
 				}
-			} catch (final TranslationException e) {
-				throw new PerceiveException("Unable to translate percept " + perceptName, e);
 			}
-			percepts.add(new Percept("not", new Function(perceptName, parameters)));
+			break;
 		}
 
-		this.previousPercepts.put(method, perceptObjects);
-		return percepts;
+		this.previousPercepts.put(method, percepts);
+		return new PerceptUpdate(addList, delList);
 	}
 
 	/**
@@ -159,6 +164,7 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 	 * @throws PerceiveException if an attempt to perform an action or to retrieve
 	 *                           percepts has failed
 	 */
+	@SuppressWarnings("unchecked")
 	protected final List<Object> unpackPerceptObject(final Method method, final Object perceptObject)
 			throws PerceiveException {
 		final AsPercept annotation = method.getAnnotation(AsPercept.class);
@@ -183,9 +189,12 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 
 		// The multiple percepts are a collection, put them in a list.
 		final Collection<?> javaCollection = (Collection<?>) perceptObject;
-		final List<Object> unpacked = new ArrayList<>(javaCollection);
-
-		return unpacked;
+		if (javaCollection instanceof List<?>) {
+			return (List<Object>) javaCollection;
+		} else {
+			final List<Object> unpacked = new ArrayList<>(javaCollection);
+			return unpacked;
+		}
 	}
 
 	@Override

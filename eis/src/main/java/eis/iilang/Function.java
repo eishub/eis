@@ -2,10 +2,11 @@ package eis.iilang;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents a function over parameters. It consits of a name and a list of
+ * Represents a function over parameters. It consists of a name and a list of
  * parameters.
  */
 public class Function extends Parameter {
@@ -33,7 +34,7 @@ public class Function extends Parameter {
 	 * @param parameters the parameters.
 	 */
 	public Function(final String name, final List<Parameter> parameters) {
-		setName(name);
+		this.name = name;
 		this.params = parameters;
 	}
 
@@ -47,31 +48,12 @@ public class Function extends Parameter {
 	}
 
 	/**
-	 * Sets the name of the function
-	 *
-	 * @param name the name of the function
-	 */
-	public void setName(final String name) {
-		assert Character.isLowerCase(name.charAt(0)) : name + " should start with a lowercase letter";
-		this.name = name;
-	}
-
-	/**
 	 * Returns the parameters of the function.
 	 *
 	 * @return the parameters of the function.
 	 */
 	public List<Parameter> getParameters() {
-		return this.params;
-	}
-
-	/**
-	 * Sets the parameters.
-	 *
-	 * @param parameters the new parameters
-	 */
-	public void setParameters(final List<Parameter> parameters) {
-		this.params = parameters;
+		return Collections.unmodifiableList(this.params);
 	}
 
 	/**
@@ -136,9 +118,7 @@ public class Function extends Parameter {
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
-		} else if (obj == null) {
-			return false;
-		} else if (!(obj instanceof Function)) {
+		} else if (obj == null || !(obj instanceof Function)) {
 			return false;
 		}
 

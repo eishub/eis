@@ -1,6 +1,5 @@
-import java.util.LinkedList;
-
 import eis.EIDefaultImpl;
+import eis.PerceptUpdate;
 import eis.exceptions.ActException;
 import eis.exceptions.EntityException;
 import eis.exceptions.ManagementException;
@@ -8,14 +7,9 @@ import eis.exceptions.NoEnvironmentException;
 import eis.exceptions.PerceiveException;
 import eis.iilang.Action;
 import eis.iilang.EnvironmentState;
-import eis.iilang.Percept;
 
 /**
  * A test environment implementing EIDefaultImpl
- * 
- * @author Tristan
- * @modified W.Pasman 5nov14 added default entity for testing.
- *
  */
 @SuppressWarnings("serial")
 public class TestEnvironmentInterface extends EIDefaultImpl {
@@ -24,45 +18,35 @@ public class TestEnvironmentInterface extends EIDefaultImpl {
 	}
 
 	@Override
-	protected LinkedList<Percept> getAllPerceptsFromEntity(String entity)
-			throws PerceiveException, NoEnvironmentException {
-		// TODO Auto-generated method stub
+	protected PerceptUpdate getPerceptsForEntity(final String entity) throws PerceiveException, NoEnvironmentException {
 		return null;
 	}
 
 	@Override
-	protected boolean isSupportedByEntity(Action action, String entity) {
-		// TODO Auto-generated method stub
+	protected boolean isSupportedByEntity(final Action action, final String entity) {
 		return false;
 	}
 
 	@Override
-	protected boolean isSupportedByEnvironment(Action action) {
-		// TODO Auto-generated method stub
+	protected boolean isSupportedByEnvironment(final Action action) {
 		return false;
 	}
 
 	@Override
-	protected boolean isSupportedByType(Action action, String type) {
-		// TODO Auto-generated method stub
+	protected boolean isSupportedByType(final Action action, final String type) {
 		return false;
 	}
 
 	@Override
-	protected Percept performEntityAction(String entity, Action action)
-			throws ActException {
-		// TODO Auto-generated method stub
-		return null;
+	protected void performEntityAction(final Action action, final String entity) throws ActException {
 	}
 
 	@Override
 	public String requiredVersion() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void doAddEntity() throws EntityException {
 		addEntity("entityname", "entity");
 	}
-
 }

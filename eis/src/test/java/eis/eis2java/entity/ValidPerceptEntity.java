@@ -21,16 +21,12 @@ import eis.iilang.Percept;
  * Entity for testing. It has the normal @AsPercept annotated functions, but
  * also for each @AsPercept(X) an associated getX() function that returns what
  * the percept SHOULD return after calling.
- * 
- * @author Lennard de Rijk?
- * 
  */
 public class ValidPerceptEntity implements AllPerceptsProvider {
-
-	private AllPerceptsModule percepts;
+	private final AllPerceptsModule percepts;
 
 	public ValidPerceptEntity() throws EntityException {
-		percepts = new AllPerceptsModule(this);
+		this.percepts = new AllPerceptsModule(this);
 	}
 
 	@AsPercept(filter = Type.ALWAYS, multiplePercepts = false, name = "always")
@@ -55,8 +51,8 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 
 	@AsPercept(filter = Type.ON_CHANGE, multiplePercepts = false, name = "onChange")
 	public String onChange() {
-		onChange = !onChange;
-		return onChange ? "A" : "B";
+		this.onChange = !this.onChange;
+		return this.onChange ? "A" : "B";
 	}
 
 	public Percept getOnChange() {
@@ -71,46 +67,49 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 
 	@AsPercept(filter = Type.ALWAYS, multiplePercepts = true, name = "multipleAlways")
 	public List<String> multipleAlways() {
-		ArrayList<String> list = new ArrayList<String>(2);
-
+		final List<String> list = new ArrayList<>(2);
 		list.add("One");
 		list.add("Two");
 		return list;
 	}
 
 	public List<Percept> getMultipleAlways() {
-		return Arrays.asList(new Percept[] { new Percept("multipleAlways", new Identifier("One")),
-				new Percept("multipleAlways", new Identifier("Two")) });
+		return Arrays.asList(new Percept("multipleAlways", new Identifier("One")),
+				new Percept("multipleAlways", new Identifier("Two")));
 	}
 
 	int count = 0;
 
 	@AsPercept(filter = Type.ON_CHANGE, multiplePercepts = true, name = "multipleOnChange")
 	public List<String> multipleOnChange() {
+		this.count++;
+		final List<String> list = new ArrayList<>(this.count);
 
-		count++;
-		ArrayList<String> list = new ArrayList<String>(count);
-
-		if (count >= 1)
+		if (this.count >= 1) {
 			list.add("One");
-		if (count >= 2)
+		}
+		if (this.count >= 2) {
 			list.add("Two");
-		if (count >= 3)
+		}
+		if (this.count >= 3) {
 			list.add("Three");
+		}
 
 		return list;
 	}
 
 	public List<Percept> getMultipleOnChange() {
+		final List<Percept> list = new ArrayList<>();
 
-		ArrayList<Percept> list = new ArrayList<Percept>();
-
-		if (count >= 1)
+		if (this.count >= 1) {
 			list.add(new Percept("multipleOnChange", new Identifier("One")));
-		if (count >= 2)
+		}
+		if (this.count >= 2) {
 			list.add(new Percept("multipleOnChange", new Identifier("Two")));
-		if (count >= 3)
+		}
+		if (this.count >= 3) {
 			list.add(new Percept("multipleOnChange", new Identifier("Three")));
+		}
 
 		return list;
 	}
@@ -120,7 +119,7 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 	 */
 	@AsPercept(name = "multiArgs", multipleArguments = true, filter = Type.ALWAYS)
 	public List<Integer> multiArgs() {
-		ArrayList<Integer> list = new ArrayList<Integer>(2);
+		final List<Integer> list = new ArrayList<>(2);
 		list.add(1);
 		list.add(2);
 		return list;
@@ -131,21 +130,18 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 	 */
 	public Percept getMultiArgs() {
 		return new Percept("multiArgs", new Numeral(1), new Numeral(2));
-
 	}
 
 	/**
-	 * 
-	 * 
 	 * @return combined multiple Arguments and MultiplePercepts
 	 */
 	@AsPercept(name = "multipleMultiArgs", multipleArguments = true, multiplePercepts = true, filter = Type.ALWAYS)
 	public List<List<Integer>> multipleMultiArgs() {
-		List<List<Integer>> list = new ArrayList<List<Integer>>();
-		List<Integer> list1 = new ArrayList<Integer>();
+		final List<List<Integer>> list = new ArrayList<>();
+		final List<Integer> list1 = new ArrayList<>();
 		list1.add(1);
 		list1.add(2);
-		List<Integer> list2 = new ArrayList<Integer>();
+		final List<Integer> list2 = new ArrayList<>();
 		list2.add(3);
 		list2.add(4);
 		list.add(list1);
@@ -154,8 +150,8 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 	}
 
 	public List<Percept> getMultipleMultiArgs() {
-		return Arrays.asList(new Percept[] { new Percept("multipleMultiArgs", new Numeral(1), new Numeral(2)),
-				new Percept("multipleMultiArgs", new Numeral(3), new Numeral(4)) });
+		return Arrays.asList(new Percept("multipleMultiArgs", new Numeral(1), new Numeral(2)),
+				new Percept("multipleMultiArgs", new Numeral(3), new Numeral(4)));
 
 	}
 
@@ -163,10 +159,9 @@ public class ValidPerceptEntity implements AllPerceptsProvider {
 		return Collections.emptyList();
 	}
 
-	public Map<Method, Object> getAllPercepts() throws PerceiveException {
-		percepts.updatePercepts();
-		return percepts.getAllPercepts();
-
+	@Override
+	public Map<Method, Object> getPercepts() throws PerceiveException {
+		this.percepts.updatePercepts();
+		return this.percepts.getPercepts();
 	}
-
 }

@@ -1,10 +1,10 @@
 package eis.eis2java.environment;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import eis.EIDefaultImpl;
+import eis.PerceptUpdate;
 import eis.eis2java.handlers.ActionHandler;
 import eis.eis2java.handlers.DefaultActionHandler;
 import eis.eis2java.handlers.DefaultPerceptHandler;
@@ -17,7 +17,6 @@ import eis.exceptions.PerceiveException;
 import eis.exceptions.RelationException;
 import eis.iilang.Action;
 import eis.iilang.Parameter;
-import eis.iilang.Percept;
 
 /**
  * Base implementation for environments that want to work with automated percept
@@ -130,30 +129,31 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	}
 
 	@Override
-	protected final List<Percept> getAllPerceptsFromEntity(final String name)
+	protected final PerceptUpdate getPerceptsForEntity(final String name)
 			throws PerceiveException, NoEnvironmentException {
 		final PerceptHandler handler = this.perceptHandlers.get(name);
 		if (handler == null) {
 			throw new PerceiveException("Entity with name " + name + " has no handler");
 		}
 
-		return handler.getAllPercepts();
+		return handler.getPercepts();
 	}
 
 	@Override
 	protected final boolean isSupportedByEntity(final Action action, final String name) {
 		final ActionHandler handler = this.actionHandlers.get(name);
+
 		return handler.isSupportedByEntity(action);
 	}
 
 	@Override
-	protected final Percept performEntityAction(final String name, final Action action) throws ActException {
+	protected final void performEntityAction(final Action action, final String name) throws ActException {
 		final ActionHandler handler = this.actionHandlers.get(name);
 		if (handler == null) {
 			throw new ActException(ActException.FAILURE, "Entity with name " + name + " has no handler");
 		}
 
-		return handler.performAction(action);
+		handler.performAction(action);
 	}
 
 	@Override
