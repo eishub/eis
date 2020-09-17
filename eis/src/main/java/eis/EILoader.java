@@ -13,7 +13,6 @@ import java.util.jar.JarFile;
  */
 public class EILoader {
 	public static final String version = "0.7.0";
-	private static final EISClassloader classLoader = new EISClassloader();
 
 	/**
 	 * Loads an environment-interface from a jar-file. Firstly, the jar-file is
@@ -43,9 +42,10 @@ public class EILoader {
 			throw new IOException(file + "does not specify a main-class");
 		}
 
-		// 3. add the jar file to the classpath
-		final URL url = file.toURI().toURL();
-		classLoader.addURL(url);
+		// 3. make a classloader for the jar file
+		final URLClassLoader classLoader = new URLClassLoader(new URL[] { file.toURI().toURL() },
+				ClassLoader.getSystemClassLoader());
+		Thread.currentThread().setContextClassLoader(classLoader);
 
 		// 4. load the class
 		Class<?> envInterfaceClass = null;
@@ -69,17 +69,6 @@ public class EILoader {
 		} else {
 			throw new IOException("Loaded environment interface version does not match the required one \"" + version
 					+ "\" vs. \"" + ei.requiredVersion() + "\"");
-		}
-	}
-
-	private static class EISClassloader extends URLClassLoader {
-		public EISClassloader() {
-			super(new URL[0], ClassLoader.getSystemClassLoader());
-		}
-
-		@Override
-		public void addURL(final URL url) {
-			super.addURL(url);
 		}
 	}
 }
