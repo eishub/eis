@@ -97,19 +97,21 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 		switch (filter) {
 		case ONCE:
 			addList = percepts;
+			delList = previous;
 			break;
 		case ALWAYS:
-			addList = percepts;
+			addList = new ArrayList<>(percepts);
 			addList.removeAll(previous);
-			delList = previous;
+			delList = new ArrayList<>(previous);
 			delList.removeAll(percepts);
 			break;
-		case ON_CHANGE: // FIXME: how to do this?!
-			addList = percepts;
+		case ON_CHANGE:
 			final List<Percept> shadow = this.shadow.get(method);
 			if (shadow == null) {
-				this.shadow.put(method, percepts);
+				addList = percepts;
+				this.shadow.put(method, addList);
 			} else {
+				addList = new ArrayList<>(percepts);
 				addList.removeAll(previous);
 				final Iterator<Percept> iterator = shadow.iterator();
 				while (iterator.hasNext()) {
