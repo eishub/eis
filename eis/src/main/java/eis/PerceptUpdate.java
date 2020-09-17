@@ -1,12 +1,16 @@
 package eis;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import eis.iilang.Percept;
 
-public class PerceptUpdate {
+public class PerceptUpdate implements Serializable, Cloneable {
+	private static final long serialVersionUID = 5046532402504828412L;
+
 	private final List<Percept> addlist;
 	private final List<Percept> dellist;
 
@@ -34,6 +38,11 @@ public class PerceptUpdate {
 	public void merge(final PerceptUpdate other) {
 		this.addlist.addAll(other.addlist);
 		this.dellist.addAll(other.dellist);
+	}
+
+	@Override
+	public Object clone() {
+		return new PerceptUpdate(new ArrayList<>(this.addlist), new ArrayList<>(this.dellist));
 	}
 
 	@Override
@@ -71,5 +80,12 @@ public class PerceptUpdate {
 		}
 
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("PerceptUpdate [add=").append(this.addlist).append(", del=").append(this.dellist).append("]");
+		return builder.toString();
 	}
 }
