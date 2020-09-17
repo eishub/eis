@@ -3,6 +3,7 @@ package eis.eis2java.translation;
 import java.util.AbstractCollection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import eis.eis2java.exception.NoTranslatorException;
 import eis.eis2java.exception.TranslationException;
@@ -15,11 +16,8 @@ import eis.iilang.TruthValue;
 /**
  * Singleton class that supports translation from {@link Object} to
  * {@link Parameter} and vice versa.
- * 
- * @author Lennard de Rijk
  */
 public class Translator {
-
 	/** Singleton instance of the translator */
 	private static Translator singleton;
 
@@ -30,41 +28,42 @@ public class Translator {
 		if (singleton == null) {
 			singleton = new Translator();
 		}
+
 		return singleton;
 	}
 
 	/**
 	 * All translators for {@link Object} to {@link Parameter} are located here.
 	 */
-	private final HashMap<Class<?>, Java2Parameter<?>> java2ParameterTranslators;
+	private final Map<Class<?>, Java2Parameter<?>> java2ParameterTranslators;
 	/**
 	 * All translators for {@link Parameter} to {@link Object} are located here.
 	 */
-	private final HashMap<Class<?>, Parameter2Java<?>> parameter2JavaTranslators;
+	private final Map<Class<?>, Parameter2Java<?>> parameter2JavaTranslators;
 
 	private Translator() {
 		// Non-instantiable outside of class.
-		java2ParameterTranslators = new HashMap<>();
-		parameter2JavaTranslators = new HashMap<>();
+		this.java2ParameterTranslators = new HashMap<>();
+		this.parameter2JavaTranslators = new HashMap<>();
 
-		NumberTranslator numberTranslator = new NumberTranslator();
+		final NumberTranslator numberTranslator = new NumberTranslator();
 		registerJava2ParameterTranslator(numberTranslator);
 		registerParameter2JavaTranslator(numberTranslator);
 
-		BooleanTranslator booleanTranslator = new BooleanTranslator();
+		final BooleanTranslator booleanTranslator = new BooleanTranslator();
 		registerJava2ParameterTranslator(booleanTranslator);
 		registerParameter2JavaTranslator(booleanTranslator);
 
-		CharTranslator charTranslator = new CharTranslator();
+		final CharTranslator charTranslator = new CharTranslator();
 		registerJava2ParameterTranslator(charTranslator);
 		registerParameter2JavaTranslator(charTranslator);
 
-		StringTranslator stringTranslator = new StringTranslator();
+		final StringTranslator stringTranslator = new StringTranslator();
 		registerJava2ParameterTranslator(stringTranslator);
 		registerParameter2JavaTranslator(stringTranslator);
 
 		@SuppressWarnings("rawtypes")
-		CollectionTranslator<?> collectionTranslator = new CollectionTranslator();
+		final CollectionTranslator<?> collectionTranslator = new CollectionTranslator();
 		registerJava2ParameterTranslator(collectionTranslator);
 
 		registerParameter2JavaTranslator(new IntegerTranslator());
@@ -76,51 +75,44 @@ public class Translator {
 
 	/**
 	 * Registers a translator for Java to {@link Parameter}.
-	 * 
-	 * @param translator
-	 *            the translator to register.
+	 *
+	 * @param translator the translator to register.
 	 */
-	public void registerJava2ParameterTranslator(Java2Parameter<?> translator) {
-		java2ParameterTranslators.put(translator.translatesFrom(), translator);
+	public void registerJava2ParameterTranslator(final Java2Parameter<?> translator) {
+		this.java2ParameterTranslators.put(translator.translatesFrom(), translator);
 	}
 
 	/**
 	 * Registers a translator for {@link Parameter} to Java.
-	 * 
-	 * @param translator
-	 *            the translator to register.
+	 *
+	 * @param translator the translator to register.
 	 */
-	public void registerParameter2JavaTranslator(Parameter2Java<?> translator) {
-		parameter2JavaTranslators.put(translator.translatesTo(), translator);
+	public void registerParameter2JavaTranslator(final Parameter2Java<?> translator) {
+		this.parameter2JavaTranslators.put(translator.translatesTo(), translator);
 	}
 
 	/**
 	 * Translates the given object into a {@link Parameter}. The Translator must
 	 * contain a translator for the type T or of a superclass of T. Otherwise no
 	 * translation can be made.
-	 * 
-	 * @param <T>
-	 *            The type of the object to translate.
-	 * 
-	 * @param o
-	 *            the object to translate.
+	 *
+	 * @param <T> The type of the object to translate.
+	 *
+	 * @param o   the object to translate.
 	 * @return The object translated into the parameter.
-	 * @throws TranslationException
-	 *             If the translation could not be made.
+	 * @throws TranslationException If the translation could not be made.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> Parameter[] translate2Parameter(T o) throws TranslationException {
-		Java2Parameter<?> rawTranslator = null;
-
+	public <T> Parameter[] translate2Parameter(final T o) throws TranslationException {
 		Class<?> clazz = o.getClass();
-
 		if (clazz.isPrimitive()) {
 			clazz = getWrapper(clazz);
 		}
 
 		// Go up the super class tree until we find a class we can translate
+		Java2Parameter<?> rawTranslator = null;
 		while (clazz != null && rawTranslator == null) {
-			rawTranslator = java2ParameterTranslators.get(clazz);
+			rawTranslator = this.java2ParameterTranslators.get(clazz);
 			clazz = clazz.getSuperclass();
 		}
 
@@ -128,51 +120,44 @@ public class Translator {
 			throw new NoTranslatorException(o.getClass());
 		}
 
-		Java2Parameter<T> translator = (Java2Parameter<T>) rawTranslator;
+		final Java2Parameter<T> translator = (Java2Parameter<T>) rawTranslator;
 		return translator.translate(o);
 	}
 
 	/**
-	 * Translates the given parameter into an object of type T. The Translator
-	 * must contain a translator to type T otherwise no translation can be made.
-	 * 
-	 * @param <T>
-	 *            The type to translate to.
-	 * @param parameter
-	 *            The parameter to translate.
-	 * @param parameterClass
-	 *            The class to which the parameter should be translated.
+	 * Translates the given parameter into an object of type T. The Translator must
+	 * contain a translator to type T otherwise no translation can be made.
+	 *
+	 * @param <T>            The type to translate to.
+	 * @param parameter      The parameter to translate.
+	 * @param parameterClass The class to which the parameter should be translated.
 	 * @return The parameter translated into the object of class T. .
-	 * @throws NoTranslatorException
-	 *             if a translator is missing
-	 * @throws TranslationException
-	 *             if the translation could not be made
+	 * @throws NoTranslatorException if a translator is missing
+	 * @throws TranslationException  if the translation could not be made
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T translate2Java(Parameter parameter, Class<T> parameterClass)
+	public <T> T translate2Java(final Parameter parameter, final Class<T> parameterClass)
 			throws TranslationException, NoTranslatorException {
 		Class<?> clazz = parameterClass;
 		if (clazz.isPrimitive()) {
 			clazz = getWrapper(clazz);
 		}
 
-		Parameter2Java<?> rawTranslator = parameter2JavaTranslators.get(clazz);
-
+		final Parameter2Java<?> rawTranslator = this.parameter2JavaTranslators.get(clazz);
 		if (rawTranslator == null) {
 			throw new NoTranslatorException(clazz);
 		}
 
-		Parameter2Java<T> translator = (Parameter2Java<T>) rawTranslator;
+		final Parameter2Java<T> translator = (Parameter2Java<T>) rawTranslator;
 		return translator.translate(parameter);
 	}
 
 	/**
 	 * Returns the class that wraps the given primitive class.
-	 * 
-	 * @param clazz
-	 *            primitive class to get the wrapper class for.
+	 *
+	 * @param clazz primitive class to get the wrapper class for.
 	 */
-	private Class<?> getWrapper(Class<?> clazz) {
+	private Class<?> getWrapper(final Class<?> clazz) {
 		if (Integer.TYPE.equals(clazz)) {
 			return Integer.class;
 		} else if (Boolean.TYPE.equals(clazz)) {
@@ -191,8 +176,9 @@ public class Translator {
 			return Short.class;
 		} else if (Void.TYPE.equals(clazz)) {
 			return Void.class;
+		} else {
+			return null;
 		}
-		return null;
 	}
 
 	/**
@@ -200,7 +186,7 @@ public class Translator {
 	 */
 	private static class NumberTranslator implements Java2Parameter<Number>, Parameter2Java<Number> {
 		@Override
-		public Parameter[] translate(Number n) throws TranslationException {
+		public Parameter[] translate(final Number n) throws TranslationException {
 			return new Parameter[] { new Numeral(n) };
 		}
 
@@ -210,10 +196,11 @@ public class Translator {
 		}
 
 		@Override
-		public Number translate(Parameter parameter) throws TranslationException {
+		public Number translate(final Parameter parameter) throws TranslationException {
 			if (!(parameter instanceof Numeral)) {
 				throw new TranslationException("Expected a numeral parameter but got " + parameter);
 			}
+
 			return ((Numeral) parameter).getValue();
 		}
 
@@ -224,12 +211,11 @@ public class Translator {
 	}
 
 	/**
-	 * Default translator for {@link Boolean} to {@link TruthValue} and vice
-	 * versa.
+	 * Default translator for {@link Boolean} to {@link TruthValue} and vice versa.
 	 */
 	private static class BooleanTranslator implements Java2Parameter<Boolean>, Parameter2Java<Boolean> {
 		@Override
-		public Parameter[] translate(Boolean b) throws TranslationException {
+		public Parameter[] translate(final Boolean b) throws TranslationException {
 			return new Parameter[] { new TruthValue(b) };
 		}
 
@@ -239,10 +225,11 @@ public class Translator {
 		}
 
 		@Override
-		public Boolean translate(Parameter parameter) throws TranslationException {
+		public Boolean translate(final Parameter parameter) throws TranslationException {
 			if (!(parameter instanceof TruthValue)) {
 				throw new TranslationException("Expected a Truthvalue parameter but got " + parameter);
 			}
+
 			return ((TruthValue) parameter).getBooleanValue();
 		}
 
@@ -257,13 +244,13 @@ public class Translator {
 	 */
 	private static class CharTranslator implements Java2Parameter<Character>, Parameter2Java<Character> {
 		@Override
-		public Character translate(Parameter parameter) throws TranslationException {
+		public Character translate(final Parameter parameter) throws TranslationException {
 			if (!(parameter instanceof Identifier)) {
 				throw new TranslationException("Expected an Identifier parameter but got " + parameter);
 			}
 
-			Identifier id = (Identifier) parameter;
-			String value = id.getValue();
+			final Identifier id = (Identifier) parameter;
+			final String value = id.getValue();
 
 			if (value.length() > 1) {
 				throw new TranslationException("A single character was expected instead a string of length "
@@ -279,7 +266,7 @@ public class Translator {
 		}
 
 		@Override
-		public Parameter[] translate(Character value) throws TranslationException {
+		public Parameter[] translate(final Character value) throws TranslationException {
 			return new Parameter[] { new Identifier(String.valueOf(value)) };
 		}
 
@@ -294,12 +281,12 @@ public class Translator {
 	 */
 	private static class StringTranslator implements Java2Parameter<String>, Parameter2Java<String> {
 		@Override
-		public String translate(Parameter parameter) throws TranslationException {
+		public String translate(final Parameter parameter) throws TranslationException {
 			if (!(parameter instanceof Identifier)) {
 				throw new TranslationException("Expected an Identifier parameter but got " + parameter);
 			}
 
-			Identifier id = (Identifier) parameter;
+			final Identifier id = (Identifier) parameter;
 			return id.getValue();
 		}
 
@@ -309,7 +296,7 @@ public class Translator {
 		}
 
 		@Override
-		public Parameter[] translate(String value) throws TranslationException {
+		public Parameter[] translate(final String value) throws TranslationException {
 			return new Parameter[] { new Identifier(value) };
 		}
 
@@ -324,15 +311,14 @@ public class Translator {
 	 */
 	private static class CollectionTranslator<T> implements Java2Parameter<AbstractCollection<T>> {
 		@Override
-		public Parameter[] translate(AbstractCollection<T> value) throws TranslationException {
-			Parameter[] parameters = new Parameter[value.size()];
+		public Parameter[] translate(final AbstractCollection<T> value) throws TranslationException {
+			final Parameter[] parameters = new Parameter[value.size()];
 
 			int i = 0;
-			Iterator<T> it = value.iterator();
-			Translator translator = Translator.getInstance();
-
+			final Iterator<T> it = value.iterator();
+			final Translator translator = Translator.getInstance();
 			while (it.hasNext()) {
-				Parameter[] translation = translator.translate2Parameter(it.next());
+				final Parameter[] translation = translator.translate2Parameter(it.next());
 				if (translation.length == 1) {
 					// Translations into single parameters are unwrapped.
 					parameters[i] = translation[0];
@@ -341,6 +327,7 @@ public class Translator {
 				}
 				i++;
 			}
+
 			return new Parameter[] { new ParameterList(parameters) };
 		}
 
@@ -348,12 +335,11 @@ public class Translator {
 		@Override
 		public Class<? extends AbstractCollection<T>> translatesFrom() {
 			// mpkorstanje 2012-05-24: When using OpenJDK we can't cast directly
-			// from
-			// Class<AbstractCollection> to Class<? extends
-			// AbstractCollection<T>>. This is a work around.
+			// from Class<AbstractCollection> to Class<? extends
+			// AbstractCollection<T>>. This is a work-around.
 			@SuppressWarnings("rawtypes")
-			Class cls = AbstractCollection.class;
-			return (Class<? extends AbstractCollection<T>>) cls;
+			final Class cls = AbstractCollection.class;
+			return cls;
 		}
 	}
 
@@ -362,10 +348,11 @@ public class Translator {
 	 */
 	private static class IntegerTranslator implements Parameter2Java<Integer> {
 		@Override
-		public Integer translate(Parameter parameter) throws TranslationException {
+		public Integer translate(final Parameter parameter) throws TranslationException {
 			if (!(parameter instanceof Numeral)) {
 				throw new TranslationException("Expected a numeral parameter but got " + parameter);
 			}
+
 			return ((Numeral) parameter).getValue().intValue();
 		}
 
@@ -380,10 +367,11 @@ public class Translator {
 	 */
 	private static class LongTranslator implements Parameter2Java<Long> {
 		@Override
-		public Long translate(Parameter parameter) throws TranslationException {
+		public Long translate(final Parameter parameter) throws TranslationException {
 			if (!(parameter instanceof Numeral)) {
 				throw new TranslationException("Expected a numeral parameter but got " + parameter);
 			}
+
 			return ((Numeral) parameter).getValue().longValue();
 		}
 
@@ -398,10 +386,11 @@ public class Translator {
 	 */
 	private static class ShortTranslator implements Parameter2Java<Short> {
 		@Override
-		public Short translate(Parameter parameter) throws TranslationException {
+		public Short translate(final Parameter parameter) throws TranslationException {
 			if (!(parameter instanceof Numeral)) {
 				throw new TranslationException("Expected a numeral parameter but got " + parameter);
 			}
+
 			return ((Numeral) parameter).getValue().shortValue();
 		}
 
@@ -416,10 +405,11 @@ public class Translator {
 	 */
 	private static class DoubleTranslator implements Parameter2Java<Double> {
 		@Override
-		public Double translate(Parameter parameter) throws TranslationException {
+		public Double translate(final Parameter parameter) throws TranslationException {
 			if (!(parameter instanceof Numeral)) {
 				throw new TranslationException("Expected a numeral parameter but got " + parameter);
 			}
+
 			return ((Numeral) parameter).getValue().doubleValue();
 		}
 
@@ -434,10 +424,11 @@ public class Translator {
 	 */
 	private static class FloatTranslator implements Parameter2Java<Float> {
 		@Override
-		public Float translate(Parameter parameter) throws TranslationException {
+		public Float translate(final Parameter parameter) throws TranslationException {
 			if (!(parameter instanceof Numeral)) {
 				throw new TranslationException("Expected a numeral parameter but got " + parameter);
 			}
+
 			return ((Numeral) parameter).getValue().floatValue();
 		}
 

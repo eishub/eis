@@ -17,14 +17,13 @@ public class Filter {
 		ALWAYS,
 		/**
 		 * Return the percepts only the first time
-		 * {@link AbstractEnvironment#getAllPercepts(String, String...)} is
-		 * called.
+		 * {@link AbstractEnvironment#getAllPercepts(String, String...)} is called.
 		 */
 		ONCE,
 		/**
-		 * Return only the percepts if something in the percepts changed. Return
-		 * empty list if nothing changed.
+		 * Return only the percepts if something in the percepts changed. Return empty
+		 * list if nothing changed.
 		 */
 		ON_CHANGE
-	};
+	}
 }

@@ -5,26 +5,22 @@ import eis.eis2java.translation.Translator;
 /**
  * Exception raised when the {@link Translator} is unable to complete the
  * translation.
- * 
- * @author Lennard de Rijk
  */
 public class TranslationException extends Exception {
-
 	private static final long serialVersionUID = 1L;
 
 	public TranslationException() {
 	}
 
-	public TranslationException(String message) {
+	public TranslationException(final String message) {
 		super(message);
 	}
 
-	public TranslationException(Throwable cause) {
+	public TranslationException(final Throwable cause) {
 		super(cause);
 	}
 
-	public TranslationException(String message, Throwable cause) {
+	public TranslationException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
-
 }

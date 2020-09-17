@@ -23,6 +23,6 @@ The environment interface project uses [Apache's Maven](http://maven.apache.org)
 <dependency>
  <groupId>eishub</groupId>
  <artifactId>eis</artifactId>
- <version>0.4</version>
+ <version>0.7.0</version>
 </dependency>
 ```

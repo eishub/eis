@@ -17,48 +17,40 @@ import eis.iilang.Percept;
  * The {@link AllPerceptPerceptHandler} assumes the agent can not provide all
  * its percepts one at a time but that instead the agent prepares a batch of
  * percepts ahead of time.
- * 
+ *
  * This is useful when using agents that run in their own thread. The time to
  * acquire such an agent and request percepts without causing racing conditions
  * would cause a significant slow down.
- * 
+ *
  * This class requires the agent to implement the {@link AllPerceptsProvider}
  * interface. Implementing this interface is simplified by using the
  * {@link AllPerceptsModule}.
- * 
+ *
  * This handler should be passed to the {@link AbstractEnvironment} while
  * registering the agent.
- * 
+ *
  * @see AllPerceptsModule
  * @see AllPerceptsProvider
- * 
- * @author mpkorstanje
- * 
  */
 public final class AllPerceptPerceptHandler extends AbstractPerceptHandler {
-
 	/** Maps a Class to a map of percept method */
 	private final AllPerceptsProvider allPercepProvider;
 
-	public AllPerceptPerceptHandler(AllPerceptsProvider entity)
-			throws EntityException {
+	public AllPerceptPerceptHandler(final AllPerceptsProvider entity) throws EntityException {
 		super(entity);
 		this.allPercepProvider = entity;
 	}
 
 	@Override
-	public final List<Percept> getAllPercepts() throws PerceiveException {
-		Map<Method, Object> batchPerceptObjects = allPercepProvider.getAllPercepts();
-		List<Percept> percepts = new LinkedList<>();
+	public List<Percept> getAllPercepts() throws PerceiveException {
+		final Map<Method, Object> batchPerceptObjects = this.allPercepProvider.getAllPercepts();
+		final List<Percept> percepts = new LinkedList<>();
 
-		for (Entry<Method, Object> entry : batchPerceptObjects.entrySet()) {
-			Method method = (Method) entry.getKey();
-			Object perceptObject = entry.getValue();
-
-			List<Object> perceptObjects = unpackPerceptObject(method,
-					perceptObject);
-			List<Percept> translatedPercepts = translatePercepts(method,
-					perceptObjects);
+		for (final Entry<Method, Object> entry : batchPerceptObjects.entrySet()) {
+			final Method method = entry.getKey();
+			final Object perceptObject = entry.getValue();
+			final List<Object> perceptObjects = unpackPerceptObject(method, perceptObject);
+			final List<Percept> translatedPercepts = translatePercepts(method, perceptObjects);
 			percepts.addAll(translatedPercepts);
 		}
 

@@ -32,14 +32,14 @@ import eis.iilang.Percept;
  * <li>event. True when the percepts are event based and the results from all
  * calls to this method should be passed to the agent.
  * </ol>
- * 
+ *
  * <p>
  * It is possible to combine multiplePercepts and multipleArguments, in which
  * case the function should return a list of lists. The outside list is used for
  * the multiplePercepts, the inner for the multipleArguments. E.g., "on"
  * returning [[1,2],[3,4,5]] then results in the percepts {on(1,2),on(3,4,5)}.
  * </p>
- * 
+ *
  * The filter type determines the way percepts are filtered before sending out
  * through EIS:
  * <TABLE border='1'>
@@ -81,9 +81,6 @@ import eis.iilang.Percept;
  * that you <em>must return</em> a static (non-changing) object as percept, and
  * that that percept object must have a functioning equals.
  * </p>
- * 
- * @author Lennard de Rijk
- * @author W.Pasman 27sep2011 added filter annotation
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
@@ -92,42 +89,38 @@ public @interface AsPercept {
 	String name();
 
 	/**
-	 * If defined as true the return value of the annotated function must be of
-	 * type {@link Collection}. The return value will be used to generate
-	 * multiple percepts with the same name.
-	 * 
+	 * If defined as true the return value of the annotated function must be of type
+	 * {@link Collection}. The return value will be used to generate multiple
+	 * percepts with the same name.
+	 *
 	 * @return true iff this returns multiple percepts. Default is false.
 	 */
 	boolean multiplePercepts() default false;
 
 	/**
-	 * if defined as true the return value of the annotated function must be of
-	 * type {@link Collection}. The return value will be used to generate
-	 * multiple arguments for the percept. If {@link #multiplePercepts()} is
-	 * also true, {@link #multiplePercepts()} takes the outer {@link Collection}
-	 * , and each element inside that collection is a {@link Collection} for
-	 * multipleActions.
-	 * 
+	 * if defined as true the return value of the annotated function must be of type
+	 * {@link Collection}. The return value will be used to generate multiple
+	 * arguments for the percept. If {@link #multiplePercepts()} is also true,
+	 * {@link #multiplePercepts()} takes the outer {@link Collection} , and each
+	 * element inside that collection is a {@link Collection} for multipleActions.
+	 *
 	 * @return true iff percept has multiple arguments. Default is false.
 	 */
 	boolean multipleArguments() default false;
 
 	/**
-	 * 
+	 *
 	 * @return filter type for this percept. Default is Filter.Type.ALWAYS
 	 */
 	Filter.Type filter() default Filter.Type.ALWAYS;
 
 	/**
 	 * If defined as true the method returns a list of events that have occurred
-	 * since its last invocation. This flag is used by {@link AllPerceptsModule}
-	 * to ensure that all events on each update are stored passed on to the
-	 * environment as a batch. This setting has no effect on the
-	 * {@link DefaultPerceptHandler}.
-	 * 
+	 * since its last invocation. This flag is used by {@link AllPerceptsModule} to
+	 * ensure that all events on each update are stored passed on to the environment
+	 * as a batch. This setting has no effect on the {@link DefaultPerceptHandler}.
+	 *
 	 * @return true iff this returns list of events. Default is false.
-	 * 
 	 */
 	boolean event() default false;
-
 }

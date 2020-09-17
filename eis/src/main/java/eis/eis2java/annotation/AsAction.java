@@ -14,8 +14,6 @@ import eis.iilang.Action;
  * is allowed to take any arguments for which a {@link Parameter2Java}
  * translator has been registered. The method may also return a value of any
  * type for which a {@link Java2Parameter} translator has been registered.
- * 
- * @author Lennard de Rijk
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

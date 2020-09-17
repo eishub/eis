@@ -22,9 +22,6 @@ import eis.iilang.Percept;
 /**
  * Base implementation for environments that want to work with automated percept
  * and action discovery in EIS2Java.
- * 
- * @author Lennard de Rijk
- * @author M.P. Korstanje
  */
 public abstract class AbstractEnvironment extends EIDefaultImpl {
 	private static final long serialVersionUID = 1L;
@@ -38,64 +35,49 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	/**
 	 * Couples a name to an entity and parses it's annotations for percepts and
 	 * actions.
-	 * 
-	 * @param name
-	 *            The name of the entity.
-	 * @param entity
-	 *            The entity itself.
-	 * @param <T>
-	 *            the type of the entity
-	 * @throws EntityException
-	 *             if the entity could not be added.
+	 *
+	 * @param name   The name of the entity.
+	 * @param entity The entity itself.
+	 * @param <T>    the type of the entity
+	 * @throws EntityException if the entity could not be added.
 	 */
-	public final <T> void registerEntity(String name, T entity) throws EntityException {
+	public final <T> void registerEntity(final String name, final T entity) throws EntityException {
 		registerEntity(name, entity, new DefaultActionHandler(entity), new DefaultPerceptHandler(entity));
 	}
 
 	/**
 	 * Couples a name to an entity and parses it's annotations for percepts and
 	 * actions using the specified handlers.
-	 * 
-	 * @param name
-	 *            The name of the entity.
-	 * @param entity
-	 *            The entity itself.
-	 * @param actionHandler
-	 *            the associated action handler.
-	 * @param <T>
-	 *            the type of the entity
-	 * 
-	 * @param perceptHandler
-	 *            the associated percept handler.
-	 * @throws EntityException
-	 *             if the entity could not be added.
+	 *
+	 * @param name           The name of the entity.
+	 * @param entity         The entity itself.
+	 * @param actionHandler  the associated action handler.
+	 * @param <T>            the type of the entity
+	 *
+	 * @param perceptHandler the associated percept handler.
+	 * @throws EntityException if the entity could not be added.
 	 */
-	public final <T> void registerEntity(String name, T entity, ActionHandler actionHandler,
-			PerceptHandler perceptHandler) throws EntityException {
-		actionHandlers.put(name, actionHandler);
-		perceptHandlers.put(name, perceptHandler);
+	public final <T> void registerEntity(final String name, final T entity, final ActionHandler actionHandler,
+			final PerceptHandler perceptHandler) throws EntityException {
+		this.actionHandlers.put(name, actionHandler);
+		this.perceptHandlers.put(name, perceptHandler);
 
-		entities.put(name, entity);
+		this.entities.put(name, entity);
 		addEntity(name);
 	}
 
 	/**
 	 * Couples a name to an entity and parses it's annotations for percepts and
 	 * actions.
-	 * 
-	 * @param <T>
-	 *            the type of the entity
-	 * 
-	 * @param name
-	 *            The name of the entity.
-	 * @param type
-	 *            The type of entity
-	 * @param entity
-	 *            The entity itself.
-	 * @throws EntityException
-	 *             if the entity could not be added.
+	 *
+	 * @param <T>    the type of the entity
+	 *
+	 * @param name   The name of the entity.
+	 * @param type   The type of entity
+	 * @param entity The entity itself.
+	 * @throws EntityException if the entity could not be added.
 	 */
-	public final <T> void registerEntity(String name, String type, T entity) throws EntityException {
+	public final <T> void registerEntity(final String name, final String type, final T entity) throws EntityException {
 		registerEntity(name, type, entity, new DefaultActionHandler(entity), new DefaultPerceptHandler(entity));
 	}
 
@@ -106,60 +88,51 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	 * Your environment must be able to handle
 	 * {@link #getAllPercepts(String, String...)} and
 	 * {@link #getAllPerceptsFromEntity(String)} when this is called.
-	 * 
-	 * 
-	 * @param name
-	 *            The name of the entity.
-	 * @param type
-	 *            The type of entity
-	 * @param entity
-	 *            The entity itself.
-	 * @param actionHandler
-	 *            the associated action handler.
-	 * @param <T>
-	 *            the type of the entity
-	 * 
-	 * @param perceptHandler
-	 *            the associated percept handler.
-	 * @throws EntityException
-	 *             if the entity could not be added.
+	 *
+	 *
+	 * @param name           The name of the entity.
+	 * @param type           The type of entity
+	 * @param entity         The entity itself.
+	 * @param actionHandler  the associated action handler.
+	 * @param <T>            the type of the entity
+	 *
+	 * @param perceptHandler the associated percept handler.
+	 * @throws EntityException if the entity could not be added.
 	 */
 
-	public final <T> void registerEntity(String name, String type, T entity, ActionHandler actionHandler,
-			PerceptHandler perceptHandler) throws EntityException {
-		actionHandlers.put(name, actionHandler);
-		perceptHandlers.put(name, perceptHandler);
+	public final <T> void registerEntity(final String name, final String type, final T entity,
+			final ActionHandler actionHandler, final PerceptHandler perceptHandler) throws EntityException {
+		this.actionHandlers.put(name, actionHandler);
+		this.perceptHandlers.put(name, perceptHandler);
 
-		entities.put(name, entity);
+		this.entities.put(name, entity);
 		addEntity(name, type);
 	}
 
 	@Override
-	public final void deleteEntity(String name) throws EntityException, RelationException {
+	public final void deleteEntity(final String name) throws EntityException, RelationException {
 		super.deleteEntity(name);
-		entities.remove(name);
-		actionHandlers.remove(name);
-		perceptHandlers.remove(name);
+		this.entities.remove(name);
+		this.actionHandlers.remove(name);
+		this.perceptHandlers.remove(name);
 	}
 
 	/**
 	 * Retrieve an entity for a given name.
-	 * 
-	 * @param <T>
-	 *            The class of entity to return.
-	 * @param name
-	 *            The name of the entity.
+	 *
+	 * @param <T>  The class of entity to return.
+	 * @param name The name of the entity.
 	 * @return the entity behind this name
 	 */
 	@SuppressWarnings("unchecked")
-	public final <T> T getEntity(String name) {
-		return (T) entities.get(name);
+	public final <T> T getEntity(final String name) {
+		return (T) this.entities.get(name);
 	}
 
 	@Override
-	protected final List<Percept> getAllPerceptsFromEntity(String name)
+	protected final List<Percept> getAllPerceptsFromEntity(final String name)
 			throws PerceiveException, NoEnvironmentException {
-		PerceptHandler handler = perceptHandlers.get(name);
+		final PerceptHandler handler = this.perceptHandlers.get(name);
 		if (handler == null) {
 			throw new PerceiveException("Entity with name " + name + " has no handler");
 		}
@@ -168,28 +141,28 @@ public abstract class AbstractEnvironment extends EIDefaultImpl {
 	}
 
 	@Override
-	protected final boolean isSupportedByEntity(Action action, String name) {
-		ActionHandler handler = actionHandlers.get(name);
+	protected final boolean isSupportedByEntity(final Action action, final String name) {
+		final ActionHandler handler = this.actionHandlers.get(name);
 		return handler.isSupportedByEntity(action);
 	}
 
 	@Override
-	protected final Percept performEntityAction(String name, Action action) throws ActException {
-		ActionHandler handler = actionHandlers.get(name);
+	protected final Percept performEntityAction(final String name, final Action action) throws ActException {
+		final ActionHandler handler = this.actionHandlers.get(name);
 		if (handler == null) {
 			throw new ActException(ActException.FAILURE, "Entity with name " + name + " has no handler");
 		}
-		
+
 		return handler.performAction(action);
 	}
 
 	@Override
-	public void reset(Map<String, Parameter> parameters) throws ManagementException {
+	public void reset(final Map<String, Parameter> parameters) throws ManagementException {
 		super.reset(parameters);
-		for (PerceptHandler handler : perceptHandlers.values()) {
+		for (final PerceptHandler handler : this.perceptHandlers.values()) {
 			handler.reset();
 		}
-		for (ActionHandler handler : actionHandlers.values()) {
+		for (final ActionHandler handler : this.actionHandlers.values()) {
 			handler.reset();
 		}
 	}

@@ -16,56 +16,46 @@ import eis.iilang.Action;
  *
  */
 public class EIS2JavaUtil {
-
 	/**
 	 * Processes all {@link AsPercept} annotations for the given class.
-	 * 
-	 * @param clazz
-	 *            the class to process the annotations of
-	 * 
+	 *
+	 * @param clazz the class to process the annotations of
+	 *
 	 * @return processed annotations
-	 * 
-	 * @throws EntityException
-	 *             Thrown when the annotations are not used properly.
+	 *
+	 * @throws EntityException Thrown when the annotations are not used properly.
 	 */
-	public static Set<Method> processPerceptAnnotations(Class<?> clazz) throws EntityException {
-		Set<Method> percepts = new HashSet<>();
-
-		for (Method method : clazz.getMethods()) {
-			AsPercept asPercept = method.getAnnotation(AsPercept.class);
+	public static Set<Method> processPerceptAnnotations(final Class<?> clazz) throws EntityException {
+		final Set<Method> percepts = new HashSet<>();
+		for (final Method method : clazz.getMethods()) {
+			final AsPercept asPercept = method.getAnnotation(AsPercept.class);
 			if (asPercept != null) {
-
 				if (method.getParameterTypes().length != 0) {
 					throw new EntityException("Percepts may not have any arguments");
 				}
-
 				percepts.add(method);
 			}
-
 		}
 
 		return percepts;
 	}
 
 	/**
-	 * Processes all annotations for the given class. The annotations are
-	 * provided as map action names and methods.
-	 * 
-	 * @param clazz
-	 *            the class to get annotations from
-	 * 
+	 * Processes all annotations for the given class. The annotations are provided
+	 * as map action names and methods.
+	 *
+	 * @param clazz the class to get annotations from
+	 *
 	 * @return processed annotations
-	 * 
-	 * @throws EntityException
-	 *             Thrown when the annotations are not used properly.
+	 *
+	 * @throws EntityException Thrown when the annotations are not used properly.
 	 */
-	public static Map<String, Method> processActionAnnotations(Class<?> clazz) throws EntityException {
-		Map<String, Method> actions = new HashMap<>();
-
-		for (Method method : clazz.getMethods()) {
-			AsAction asAction = method.getAnnotation(AsAction.class);
+	public static Map<String, Method> processActionAnnotations(final Class<?> clazz) throws EntityException {
+		final Map<String, Method> actions = new HashMap<>();
+		for (final Method method : clazz.getMethods()) {
+			final AsAction asAction = method.getAnnotation(AsAction.class);
 			if (asAction != null) {
-				String name = getNameOfAction(method);
+				final String name = getNameOfAction(method);
 				if (actions.containsKey(name)) {
 					throw new EntityException("Found two action definitions with the same name: " + name);
 				}
@@ -73,61 +63,51 @@ public class EIS2JavaUtil {
 			}
 
 		}
-		
+
 		return actions;
 	}
 
 	/**
-	 * Returns the name of the action used for storage. The name of the given
-	 * action and the number of parameters are used as an identifier.
-	 * 
-	 * @param action
-	 *            The action to get the name of.
+	 * Returns the name of the action used for storage. The name of the given action
+	 * and the number of parameters are used as an identifier.
+	 *
+	 * @param action The action to get the name of.
 	 * @return name of the action, in prolog-signature style
 	 */
-	public static String getNameOfAction(Action action) {
-		return action.getName() + "/" + action.getParameters().size();
+	public static String getNameOfAction(final Action action) {
+		return (action.getName() + "/" + action.getParameters().size());
 	}
 
 	/**
-	 * Returns the name of the action method as name/number. The name given in
-	 * the {@link AsAction#name()}. The number is the number of parameters.
-	 * 
+	 * Returns the name of the action method as name/number. The name given in the
+	 * {@link AsAction#name()}. The number is the number of parameters.
+	 *
 	 * Action names can be used to uniquely identify the action.
-	 * 
-	 * @param method
-	 *            The method to get the name of.
-	 * 
-	 * @return the name/number of the action or null when the method does not
-	 *         have the AsAction annotation.
+	 *
+	 * @param method The method to get the name of.
+	 *
+	 * @return the name/number of the action or null when the method does not have
+	 *         the AsAction annotation.
 	 */
-	public static String getNameOfAction(Method method) {
-		AsAction annotation = method.getAnnotation(AsAction.class);
+	public static String getNameOfAction(final Method method) {
+		final AsAction annotation = method.getAnnotation(AsAction.class);
 
-		if (annotation == null) {
-			return null;
-		}
-
-		return annotation.name() + "/" + method.getParameterTypes().length;
+		return (annotation == null) ? null : (annotation.name() + "/" + method.getParameterTypes().length);
 	}
 
 	/**
 	 * Returns the name of the percept method. The name is given in the
 	 * {@link AsPercept#name()}.
-	 * 
+	 *
 	 * Percept names can not be used to uniquely identify percepts.
-	 * 
-	 * @param method
-	 *            the name of given method
+	 *
+	 * @param method the name of given method
 	 * @return the name of the percept or null when the method does not have the
 	 *         AsPercept annotation.
 	 */
-	public static String getNameOfPercept(Method method) {
-		AsPercept annotation = method.getAnnotation(AsPercept.class);
-		if (annotation == null) {
-			return null;
-		}
+	public static String getNameOfPercept(final Method method) {
+		final AsPercept annotation = method.getAnnotation(AsPercept.class);
 
-		return annotation.name();
+		return (annotation == null) ? null : annotation.name();
 	}
 }

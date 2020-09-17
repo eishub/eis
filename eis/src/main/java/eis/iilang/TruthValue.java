@@ -3,132 +3,110 @@ package eis.iilang;
 /**
  * Encapsulates a truth value. That is either true or false or anything else
  * (multi-valued logic).
- * 
- * @author tristanbehrens
- * 
  */
 public class TruthValue extends Parameter {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 377656049621872537L;
-	/** The value of the numner. */
+
+	/** The string value of the boolean. */
 	private String value;
 
 	/**
-	 * Contructs a truth-value.
-	 * 
-	 * @param value
-	 *            new value for this
+	 * Constructs a truth-value.
+	 *
+	 * @param value new value for this
 	 */
-	public TruthValue(String value) {
-
+	public TruthValue(final String value) {
 		this.value = value;
-
 	}
 
 	/**
 	 * Constructs a truth-value from a boolean one.
-	 * 
-	 * @param bool
-	 *            new value for this
+	 *
+	 * @param bool new value for this
 	 */
-	public TruthValue(boolean bool) {
-
-		if (bool == true)
-			value = "true";
-		else
-			value = "false";
-
+	public TruthValue(final boolean bool) {
+		if (bool) {
+			this.value = "true";
+		} else {
+			this.value = "false";
+		}
 	}
 
 	@Override
-	protected String toXML(int depth) {
-
-		return indent(depth) + "<truthvalue value=\"" + value + "\"/>" + "\n";
-
+	protected String toXML(final int depth) {
+		return indent(depth) + "<truthvalue value=\"" + this.value + "\"/>" + "\n";
 	}
 
 	@Override
 	public String toProlog() {
-
-		String ret = "";
-
-		ret += value;
-
-		return ret;
-
+		return this.value;
 	}
 
 	/**
 	 * Returns the value.
-	 * 
+	 *
 	 * @return the value of this
 	 */
 	public String getValue() {
-
-		return value;
-
+		return this.value;
 	}
 
 	/**
-	 * Gets the value as a boolean. Not that this only works iff the value
-	 * itself is either true or false.
-	 * 
+	 * Gets the value as a boolean. Not that this only works iff the value itself is
+	 * either true or false.
+	 *
 	 * @return the value of this
 	 */
 	public boolean getBooleanValue() {
-
-		if (value.equals("true"))
+		if (this.value.equals("true")) {
 			return true;
-		else if (value.equals("false"))
+		} else if (this.value.equals("false")) {
 			return false;
-		else
-			throw new AssertionError(value + "cannot be converted to boolean");
-
+		} else {
+			throw new AssertionError(this.value + "cannot be converted to boolean");
+		}
 	}
 
 	@Override
 	public Object clone() {
-		return new TruthValue(value);
+		return new TruthValue(this.value);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (!(obj instanceof TruthValue))
+		} else if (!(obj instanceof TruthValue)) {
 			return false;
-		TruthValue other = (TruthValue) obj;
-		if (value == null) {
-			if (other.value != null)
+		}
+
+		final TruthValue other = (TruthValue) obj;
+		if (this.value == null) {
+			if (other.value != null) {
 				return false;
-		} else if (!value.equals(other.value))
+			}
+		} else if (!this.value.equals(other.value)) {
 			return false;
+		}
+
 		return true;
 	}
 
 	@Override
-	public Object accept(IILObjectVisitor visitor, Object object) {
-
+	public Object accept(final IILObjectVisitor visitor, final Object object) {
 		return visitor.visit(this, object);
-
 	}
 
 	@Override
-	public void accept(IILVisitor visitor) {
-
+	public void accept(final IILVisitor visitor) {
 		visitor.visit(this);
-
 	}
-
 }
