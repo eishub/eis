@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -68,33 +67,32 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 		// Avoid translating objects that don't need to be translated.
 		if (filter == Filter.Type.ONCE && previous != null) {
 			final PerceptUpdate returned = new PerceptUpdate(new ArrayList<>(0), previous);
-			this.previousPercepts.put(method, new ArrayList<>(0));
+			this.previousPercepts.put(method, new ArrayList<>(0)); // save memory
 			return returned;
-		}
-
-		if (previous == null) {
-			previous = new ArrayList<>(0);
 		}
 
 		// Translate objects.
 		final List<Percept> percepts = new ArrayList<>(perceptObjects.size());
 		for (final Object javaObject : perceptObjects) {
-			Parameter[] parameters;
 			try {
-				parameters = Translator.getInstance().translate2Parameter(javaObject);
+				Parameter[] parameters = Translator.getInstance().translate2Parameter(javaObject);
 				if (annotation.multipleArguments()) {
 					parameters = extractMultipleParameters(parameters);
 				}
+				percepts.add(new Percept(perceptName, parameters));
 			} catch (final TranslationException e) {
 				throw new PerceiveException("Unable to translate percept " + perceptName, e);
 			}
-			percepts.add(new Percept(perceptName, parameters));
 		}
 
 		// do the proper filtering.
-		List<Percept> addList = new ArrayList<>(0);
-		List<Percept> delList = new ArrayList<>(0);
+		List<Percept> addList;
+		List<Percept> delList;
+		if (previous == null) {
+			previous = new ArrayList<>(0);
+		}
 		switch (filter) {
+		default:
 		case ONCE:
 			addList = percepts;
 			delList = previous;
@@ -106,22 +104,9 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 			delList.removeAll(percepts);
 			break;
 		case ON_CHANGE:
-			final List<Percept> shadow = this.shadow.get(method);
-			if (shadow == null) {
-				addList = percepts;
-				this.shadow.put(method, addList);
-			} else {
-				addList = new ArrayList<>(percepts);
-				addList.removeAll(previous);
-				final Iterator<Percept> iterator = shadow.iterator();
-				while (iterator.hasNext()) {
-					final Percept next = iterator.next();
-					if (!addList.contains(next)) {
-						delList.add(next);
-						iterator.remove();
-					}
-				}
-			}
+			addList = new ArrayList<>(percepts);
+			addList.removeAll(previous);
+			delList = previous;
 			break;
 		}
 
