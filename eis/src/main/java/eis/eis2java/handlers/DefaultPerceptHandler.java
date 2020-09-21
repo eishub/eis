@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import eis.PerceptUpdate;
 import eis.eis2java.annotation.AsPercept;
@@ -55,7 +54,7 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 	 */
 	private PerceptUpdate getPercepts(final Method method) throws PerceiveException {
 		// list of new objects for the percepts
-		List<Object> perceptObjects = new ArrayList<>(0);
+		Collection<Object> perceptObjects = new ArrayList<>(0);
 
 		// Optimization, don't call methods for once percepts if they have been
 		// called before.
@@ -79,13 +78,14 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 	 *         empty list
 	 * @throws PerceiveException
 	 */
-	private List<Object> getPerceptObjects(final Method method) throws PerceiveException {
+	private Collection<Object> getPerceptObjects(final Method method) throws PerceiveException {
 		final AsPercept annotation = method.getAnnotation(AsPercept.class);
 		final String perceptName = annotation.name();
 
-		Object returnValue;
 		try {
-			returnValue = method.invoke(this.entity);
+			final Object returnValue = method.invoke(this.entity);
+
+			return unpackPerceptObject(method, returnValue);
 		} catch (final IllegalArgumentException e) {
 			throw new PerceiveException("Unable to perceive " + perceptName, e);
 		} catch (final IllegalAccessException e) {
@@ -93,7 +93,5 @@ public final class DefaultPerceptHandler extends AbstractPerceptHandler {
 		} catch (final InvocationTargetException e) {
 			throw new PerceiveException("Unable to perceive " + perceptName, e);
 		}
-
-		return unpackPerceptObject(method, returnValue);
 	}
 }

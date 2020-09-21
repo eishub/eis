@@ -1,7 +1,7 @@
 package eis.eis2java.handlers;
 
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -49,7 +49,7 @@ public final class AllPerceptPerceptHandler extends AbstractPerceptHandler {
 			final Method method = entry.getKey();
 			final Object perceptObject = entry.getValue();
 
-			final List<Object> perceptObjects = unpackPerceptObject(method, perceptObject);
+			final Collection<Object> perceptObjects = unpackPerceptObject(method, perceptObject);
 			final PerceptUpdate translatedPercepts = translatePercepts(method, perceptObjects);
 			percepts.merge(translatedPercepts);
 		}

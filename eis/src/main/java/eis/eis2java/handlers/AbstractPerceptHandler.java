@@ -56,7 +56,7 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 	 * @throws PerceiveException if an attempt to perform an action or to retrieve
 	 *                           percepts has failed
 	 */
-	protected final PerceptUpdate translatePercepts(final Method method, final List<Object> perceptObjects)
+	protected final PerceptUpdate translatePercepts(final Method method, final Collection<Object> perceptObjects)
 			throws PerceiveException {
 		final AsPercept annotation = method.getAnnotation(AsPercept.class);
 		final Filter.Type filter = annotation.filter();
@@ -131,11 +131,11 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 			for (int i = 0; i < params.size(); i++) {
 				parameters[i] = params.get(i);
 			}
+			return parameters;
 		} else {
 			throw new PerceiveException(
 					"multipleArguments parameter is set and therefore expecting a set but got " + parameters);
 		}
-		return parameters;
 	}
 
 	/**
@@ -152,35 +152,26 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 	 *                           percepts has failed
 	 */
 	@SuppressWarnings("unchecked")
-	protected final List<Object> unpackPerceptObject(final Method method, final Object perceptObject)
+	protected final Collection<Object> unpackPerceptObject(final Method method, final Object perceptObject)
 			throws PerceiveException {
 		final AsPercept annotation = method.getAnnotation(AsPercept.class);
 		final String perceptName = annotation.name();
 
-		if (!annotation.multiplePercepts()) {
+		if (annotation.multiplePercepts()) {
+			if (perceptObject instanceof Collection<?>) {
+				return (Collection<Object>) perceptObject;
+			} else {
+				throw new PerceiveException(
+						"Unable to perceive " + perceptName + " because a collection was expected but a "
+								+ perceptObject.getClass() + " was returned instead");
+			}
+		} else if (perceptObject != null) {
 			// This is percept does not provide multiples.
 			final List<Object> unpacked = new ArrayList<>(1);
-			if (perceptObject != null) {
-				unpacked.add(perceptObject);
-			}
-
+			unpacked.add(perceptObject);
 			return unpacked;
-		}
-
-		// The method claims to provide multiple but doesn't provide a
-		// collection.
-		if (!(perceptObject instanceof Collection<?>)) {
-			throw new PerceiveException("Unable to perceive " + perceptName
-					+ " because a collection was expected but a " + perceptObject.getClass() + " was returned instead");
-		}
-
-		// The multiple percepts are a collection, put them in a list.
-		final Collection<?> javaCollection = (Collection<?>) perceptObject;
-		if (javaCollection instanceof List<?>) {
-			return (List<Object>) javaCollection;
 		} else {
-			final List<Object> unpacked = new ArrayList<>(javaCollection);
-			return unpacked;
+			return new ArrayList<>(0);
 		}
 	}
 
