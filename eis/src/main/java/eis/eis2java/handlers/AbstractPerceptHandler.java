@@ -155,14 +155,12 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 	protected final Collection<Object> unpackPerceptObject(final Method method, final Object perceptObject)
 			throws PerceiveException {
 		final AsPercept annotation = method.getAnnotation(AsPercept.class);
-		final String perceptName = annotation.name();
-
 		if (annotation.multiplePercepts()) {
 			if (perceptObject instanceof Collection<?>) {
 				return (Collection<Object>) perceptObject;
 			} else {
 				throw new PerceiveException(
-						"Unable to perceive " + perceptName + " because a collection was expected but a "
+						"Unable to perceive " + annotation.name() + " because a collection was expected but a "
 								+ perceptObject.getClass() + " was returned instead");
 			}
 		} else if (perceptObject != null) {
