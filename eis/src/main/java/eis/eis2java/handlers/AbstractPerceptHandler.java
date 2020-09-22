@@ -39,10 +39,6 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 	 * map of previous percepts that we got for each method.
 	 */
 	protected final Map<Method, List<Percept>> previousPercepts = new HashMap<>();
-	/**
-	 * a shadow copy for on-change percepts only
-	 */
-	protected final Map<Method, List<Percept>> shadow = new HashMap<>();
 
 	/**
 	 * Translates the percept objects and applies filtering as described by
@@ -60,18 +56,18 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 			throws PerceiveException {
 		final AsPercept annotation = method.getAnnotation(AsPercept.class);
 		final Filter.Type filter = annotation.filter();
-		final String perceptName = annotation.name();
 
 		List<Percept> previous = this.previousPercepts.get(method);
 
-		// Avoid translating objects that don't need to be translated.
+		// Avoid translating when we don't need to.
 		if (filter == Filter.Type.ONCE && previous != null) {
 			final PerceptUpdate returned = new PerceptUpdate(new ArrayList<>(0), previous);
-			this.previousPercepts.put(method, new ArrayList<>(0)); // save memory
+			this.previousPercepts.put(method, returned.getAddList()); // save memory
 			return returned;
 		}
 
-		// Translate objects.
+		// Translate the raw objects into percepts.
+		final String perceptName = annotation.name();
 		final List<Percept> percepts = new ArrayList<>(perceptObjects.size());
 		for (final Object javaObject : perceptObjects) {
 			try {
@@ -85,7 +81,7 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 			}
 		}
 
-		// do the proper filtering.
+		// Apply the proper filtering.
 		List<Percept> addList;
 		List<Percept> delList;
 		if (previous == null) {
@@ -106,6 +102,8 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 		case ON_CHANGE:
 			addList = new ArrayList<>(percepts);
 			addList.removeAll(previous);
+			// this is not strictly the most efficient, but it works
+			// without requiring advanced bookkeeping here:
 			delList = previous;
 			break;
 		}
@@ -164,7 +162,6 @@ public abstract class AbstractPerceptHandler implements PerceptHandler {
 								+ perceptObject.getClass() + " was returned instead");
 			}
 		} else if (perceptObject != null) {
-			// This is percept does not provide multiples.
 			final List<Object> unpacked = new ArrayList<>(1);
 			unpacked.add(perceptObject);
 			return unpacked;
