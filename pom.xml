@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>eishub</groupId>
   <artifactId>eispackage</artifactId>
-  <version>0.6.0</version>
+  <version>0.7.0</version>
   <packaging>pom</packaging>
   
   <scm>
