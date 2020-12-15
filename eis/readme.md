@@ -1,8 +1,8 @@
 # The Environment Interface
 
-The environment interface framework provides support for connecting agents to an environment. By implementing this interface (see the wiki for a how-to-guide), agents developed using any platform that supports EIS can connect to the environment.
+The environment interface framework provides support for connecting agents to an environment. By implementing this interface, agents developed using any platform that supports EIS can connect to the environment.
 
-For mroe information, please see the [wiki](https://github.com/eishub/eis/wiki).
+For more information, please see the [wiki](https://github.com/eishub/eis/wiki).
 
 ## Releases
 
